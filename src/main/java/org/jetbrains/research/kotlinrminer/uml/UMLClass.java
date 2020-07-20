@@ -2,6 +2,7 @@ package org.jetbrains.research.kotlinrminer.uml;
 
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
+import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 
 import java.io.Serializable;
 import java.util.*;
@@ -335,5 +336,13 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
             }
         }
         return new LinkedHashMap<>();
+    }
+
+    public double normalizedSourceFolderDistance(UMLClass c) {
+        String s1 = sourceFolder.toLowerCase();
+        String s2 = c.sourceFolder.toLowerCase();
+        int distance = StringDistance.editDistance(s1, s2);
+        double normalized = (double) distance / (double) Math.max(s1.length(), s2.length());
+        return normalized;
     }
 }

@@ -1,5 +1,6 @@
 package org.jetbrains.research.kotlinrminer.api;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.Repository;
@@ -100,7 +101,7 @@ public class GitHistoryRefactoringMiner {
                     ObjectId objectId = treeWalk.getObjectId(0);
                     ObjectLoader loader = repository.open(objectId);
                     StringWriter writer = new StringWriter();
-                    //TODO: IOUtils.copy(loader.openStream(), writer);
+                    IOUtils.copy(loader.openStream(), writer);
                     fileContents.put(pathString, writer.toString());
                 }
                 if (pathString.endsWith(".kt") && pathString.contains("/")) {

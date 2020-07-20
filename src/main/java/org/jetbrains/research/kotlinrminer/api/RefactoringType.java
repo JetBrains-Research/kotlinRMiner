@@ -122,8 +122,22 @@ public enum RefactoringType {
             MODIFY_PARAMETER_ANNOTATION
     };
 
+    private String displayName;
+    private Pattern regex;
+    private int[] aggregateGroups;
+
     RefactoringType(String displayName, String regex, int... aggregateGroups) {
-        Pattern regex1 = Pattern.compile(regex);
+        this.displayName = displayName;
+        this.regex = Pattern.compile(regex);
+        this.aggregateGroups = aggregateGroups;
+    }
+
+    public String getDisplayName() {
+        return this.displayName;
+    }
+
+    public Pattern getRegex() {
+        return regex;
     }
 
 }

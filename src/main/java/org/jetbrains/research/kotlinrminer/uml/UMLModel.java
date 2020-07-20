@@ -68,12 +68,21 @@ public class UMLModel {
     }
 
     public UMLModelDiff diff(UMLModel umlModel) {
-        return this.diff(umlModel, Collections.<String, String>emptyMap());
+        return this.diff(umlModel, Collections.emptyMap());
     }
 
     public UMLModelDiff diff(UMLModel umlModel, Map<String, String> renamedFileHints) {
-        //TODO: implement comparison
         UMLModelDiff modelDiff = new UMLModelDiff();
+        for (UMLClass umlClass : classList) {
+            if (!umlModel.classList.contains(umlClass))
+                modelDiff.reportRemovedClass(umlClass);
+        }
+        for (UMLClass umlClass : umlModel.classList) {
+            if (!this.classList.contains(umlClass))
+                modelDiff.reportAddedClass(umlClass);
+        }
+
+        modelDiff.checkForMovedClasses(renamedFileHints, umlModel.repositoryDirectories, new UMLClassMatcher.Move());
         return modelDiff;
     }
 }
