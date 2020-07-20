@@ -342,7 +342,20 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
         String s1 = sourceFolder.toLowerCase();
         String s2 = c.sourceFolder.toLowerCase();
         int distance = StringDistance.editDistance(s1, s2);
-        double normalized = (double) distance / (double) Math.max(s1.length(), s2.length());
-        return normalized;
+        return (double) distance / (double) Math.max(s1.length(), s2.length());
+    }
+
+    public double normalizedNameDistance(UMLClass c) {
+        String s1 = name.toLowerCase();
+        String s2 = c.name.toLowerCase();
+        int distance = StringDistance.editDistance(s1, s2);
+        return (double) distance / (double) Math.max(s1.length(), s2.length());
+    }
+
+    public double normalizedPackageNameDistance(UMLClass c) {
+        String s1 = packageName.toLowerCase();
+        String s2 = c.packageName.toLowerCase();
+        int distance = StringDistance.editDistance(s1, s2);
+        return (double) distance / (double) Math.max(s1.length(), s2.length());
     }
 }

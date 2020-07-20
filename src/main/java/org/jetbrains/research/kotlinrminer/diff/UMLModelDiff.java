@@ -12,6 +12,7 @@ public class UMLModelDiff {
     private List<UMLClass> removedClasses;
     private Set<String> deletedFolderPaths;
     private List<UMLClassMoveDiff> innerClassMoveDiffList;
+    private List<UMLClassRenameDiff> classRenameDiffList;
 
     public UMLModelDiff() {
         this.addedClasses = new ArrayList<>();
@@ -19,6 +20,7 @@ public class UMLModelDiff {
         this.classMoveDiffList = new ArrayList<>();
         this.deletedFolderPaths = new LinkedHashSet<>();
         this.innerClassMoveDiffList = new ArrayList<>();
+        this.classRenameDiffList = new ArrayList<>();
     }
 
     public void reportAddedClass(UMLClass umlClass) {
@@ -32,8 +34,23 @@ public class UMLModelDiff {
     }
 
     public List<Refactoring> getRefactorings() {
-        Set<Refactoring> refactorings = new LinkedHashSet<>(getMoveClassRefactorings());
+        Set<Refactoring> refactorings = new LinkedHashSet<>();
+        refactorings.addAll(getMoveClassRefactorings());
+        refactorings.addAll(getRenameClassRefactorings());
         return new ArrayList<>(refactorings);
+    }
+
+    private List<Refactoring> getRenameClassRefactorings() {
+        List<Refactoring> refactorings = new ArrayList<>();
+        for (UMLClassRenameDiff classRenameDiff : classRenameDiffList) {
+            Refactoring refactoring;
+            if (classRenameDiff.samePackage())
+                refactoring = new RenameClassRefactoring(classRenameDiff.getOriginalClass(), classRenameDiff.getRenamedClass());
+            else
+                refactoring = new MoveAndRenameClassRefactoring(classRenameDiff.getOriginalClass(), classRenameDiff.getRenamedClass());
+            refactorings.add(refactoring);
+        }
+        return refactorings;
     }
 
     private List<Refactoring> getMoveClassRefactorings() {
@@ -158,6 +175,41 @@ public class UMLModelDiff {
         this.classMoveDiffList.removeAll(innerClassMoveDiffList);
     }
 
+    public void checkForRenamedClasses(Map<String, String> renamedFileHints, UMLClassMatcher matcher) {
+        for (Iterator<UMLClass> removedClassIterator = removedClasses.iterator(); removedClassIterator.hasNext(); ) {
+            UMLClass removedClass = removedClassIterator.next();
+            TreeSet<UMLClassRenameDiff> diffSet = new TreeSet<>(new ClassRenameComparator());
+            for (UMLClass addedClass : addedClasses) {
+                String renamedFile = renamedFileHints.get(removedClass.getSourceFile());
+                if (matcher.match(removedClass, addedClass, renamedFile)) {
+                    if (!conflictingMoveOfTopLevelClass(removedClass, addedClass) && !innerClassWithTheSameName(removedClass, addedClass)) {
+                        UMLClassRenameDiff classRenameDiff = new UMLClassRenameDiff(removedClass, addedClass, this);
+                        diffSet.add(classRenameDiff);
+                    }
+                }
+            }
+            if (!diffSet.isEmpty()) {
+                UMLClassRenameDiff minClassRenameDiff = diffSet.first();
+                //TODO: minClassRenameDiff.process();
+                classRenameDiffList.add(minClassRenameDiff);
+                addedClasses.remove(minClassRenameDiff.getRenamedClass());
+                removedClassIterator.remove();
+            }
+        }
+
+        List<UMLClassMoveDiff> allClassMoves = new ArrayList<>(this.classMoveDiffList);
+        Collections.sort(allClassMoves);
+
+        for (UMLClassRenameDiff classRename : classRenameDiffList) {
+            for (UMLClassMoveDiff classMove : allClassMoves) {
+                if (classRename.isInnerClassMove(classMove)) {
+                    innerClassMoveDiffList.add(classMove);
+                }
+            }
+        }
+        this.classMoveDiffList.removeAll(innerClassMoveDiffList);
+    }
+
     private boolean conflictingMoveOfTopLevelClass(UMLClass removedClass, UMLClass addedClass) {
         if (!removedClass.isTopLevel() && !addedClass.isTopLevel()) {
             //check if classMoveDiffList contains already a move for the outer class to a different target
@@ -182,6 +234,17 @@ public class UMLModelDiff {
             if (deletedFolderPath.endsWith(convertedPackageToFilePath)) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    private boolean innerClassWithTheSameName(UMLClass removedClass, UMLClass addedClass) {
+        if (!removedClass.isTopLevel() && !addedClass.isTopLevel()) {
+            String removedClassName = removedClass.getName();
+            String removedName = removedClassName.substring(removedClassName.lastIndexOf(".") + 1);
+            String addedClassName = addedClass.getName();
+            String addedName = addedClassName.substring(addedClassName.lastIndexOf(".") + 1);
+            return removedName.equals(addedName);
         }
         return false;
     }
