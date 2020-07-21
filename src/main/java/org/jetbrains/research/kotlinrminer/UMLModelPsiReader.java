@@ -286,7 +286,7 @@ public class UMLModelPsiReader {
         umlCompanionObject.setLocationInfo(objectLocationInfo);
         List<KtDeclaration> declarations = object.getDeclarations();
         for (KtDeclaration declaration : declarations) {
-            LocationInfo locationInfo = generateLocationInfo(declaration.getContainingKtFile(), sourceFile, declaration, LocationInfo.CodeElementType.COMPANION_OBJECT);
+            LocationInfo locationInfo = generateLocationInfo(declaration.getContainingKtFile(), sourceFile, declaration, LocationInfo.CodeElementType.METHOD_DECLARATION);
             UMLOperation method = new UMLOperation(declaration.getName(), locationInfo);
             umlCompanionObject.addMethod(method);
         }
