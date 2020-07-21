@@ -16,6 +16,7 @@ public abstract class UMLAbstractClass {
     protected String name;
     protected List<UMLOperation> operations;
     protected List<UMLAttribute> attributes;
+    protected List<UMLCompanionObject> companionObjects;
 
     public UMLAbstractClass() {
         this.operations = new ArrayList<>();
@@ -34,12 +35,20 @@ public abstract class UMLAbstractClass {
         this.attributes.add(attribute);
     }
 
+    public void addCompanionObject(UMLCompanionObject operation) {
+        this.companionObjects.add(operation);
+    }
+
     public List<UMLOperation> getOperations() {
         return operations;
     }
 
     public List<UMLAttribute> getAttributes() {
         return attributes;
+    }
+
+    public List<UMLCompanionObject> getCompanionObjects() {
+        return companionObjects;
     }
 
     public UMLOperation operationWithTheSameSignature(UMLOperation operation) {

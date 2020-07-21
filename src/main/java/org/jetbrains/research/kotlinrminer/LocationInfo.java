@@ -151,6 +151,7 @@ public class LocationInfo {
     }
 
     public enum CodeElementType {
+        COMPANION_OBJECT,
         TYPE_DECLARATION,
         METHOD_DECLARATION,
         FIELD_DECLARATION,

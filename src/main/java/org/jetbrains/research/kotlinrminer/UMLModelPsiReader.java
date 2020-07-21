@@ -137,6 +137,13 @@ public class UMLModelPsiReader {
             }
         }
 
+        List<KtObjectDeclaration> companionObjects = ktClass.getCompanionObjects();
+        for (KtObjectDeclaration companionObject : companionObjects) {
+            UMLCompanionObject umlCompanionObject = processCompanionObject(companionObject, sourceFile);
+            umlCompanionObject.setClassName(umlClass.getName());
+            umlClass.addCompanionObject(umlCompanionObject);
+        }
+
         this.getUmlModel().addClass(umlClass);
     }
 
@@ -270,6 +277,20 @@ public class UMLModelPsiReader {
         }
 
         return umlOperation;
+    }
+
+    public UMLCompanionObject processCompanionObject(KtObjectDeclaration object, String sourceFile) {
+        UMLCompanionObject umlCompanionObject = new UMLCompanionObject();
+        umlCompanionObject.setName(object.getName());
+        LocationInfo objectLocationInfo = generateLocationInfo(object.getContainingKtFile(), sourceFile, object, LocationInfo.CodeElementType.COMPANION_OBJECT);
+        umlCompanionObject.setLocationInfo(objectLocationInfo);
+        List<KtDeclaration> declarations = object.getDeclarations();
+        for (KtDeclaration declaration : declarations) {
+            LocationInfo locationInfo = generateLocationInfo(declaration.getContainingKtFile(), sourceFile, declaration, LocationInfo.CodeElementType.COMPANION_OBJECT);
+            UMLOperation method = new UMLOperation(declaration.getName(), locationInfo);
+            umlCompanionObject.addMethod(method);
+        }
+        return umlCompanionObject;
     }
 
     private void processModifiers(String sourceFile, KtClass typeDeclaration, UMLClass umlClass) {
