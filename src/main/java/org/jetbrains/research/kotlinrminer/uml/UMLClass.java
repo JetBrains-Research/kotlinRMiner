@@ -12,6 +12,9 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
     private String sourceFile;
     private String sourceFolder;
     private String visibility;
+    private boolean isSealed;
+    private boolean isData;
+    private boolean isInner;
     private boolean isAbstract;
     private boolean isInterface;
     private boolean isEnum;
@@ -59,6 +62,9 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
                 }
             }
         }
+        this.isData = false;
+        this.isSealed = false;
+        this.isInner = false;
         this.isAbstract = false;
         this.isInterface = false;
         this.topLevel = topLevel;
@@ -357,5 +363,17 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
         String s2 = c.packageName.toLowerCase();
         int distance = StringDistance.editDistance(s1, s2);
         return (double) distance / (double) Math.max(s1.length(), s2.length());
+    }
+
+    public void setSealed(boolean sealed) {
+        isSealed = sealed;
+    }
+
+    public void setData(boolean data) {
+        isData = data;
+    }
+
+    public void setInner(boolean inner) {
+        isInner = inner;
     }
 }

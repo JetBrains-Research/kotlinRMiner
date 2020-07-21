@@ -90,6 +90,14 @@ public class UMLModelPsiReader {
 
         processModifiers(sourceFile, ktClass, umlClass);
 
+        if (ktClass.isData()) {
+            umlClass.setData(true);
+        } else if (ktClass.isSealed()) {
+            umlClass.setSealed(true);
+        } else if (ktClass.isInner()) {
+            umlClass.setInner(true);
+        }
+
         List<KtTypeParameter> parameters = ktClass.getTypeParameters();
 
         for (KtTypeParameter parameter : parameters) {
