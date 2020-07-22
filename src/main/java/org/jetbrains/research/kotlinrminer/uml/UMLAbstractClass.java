@@ -21,6 +21,7 @@ public abstract class UMLAbstractClass {
     public UMLAbstractClass() {
         this.operations = new ArrayList<>();
         this.attributes = new ArrayList<>();
+        this.companionObjects = new ArrayList<>();
     }
 
     public LocationInfo getLocationInfo() {
