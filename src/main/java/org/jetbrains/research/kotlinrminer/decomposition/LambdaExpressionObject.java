@@ -16,8 +16,9 @@ public class LambdaExpressionObject implements LocationInfoProvider {
         this.locationInfo = new LocationInfo(cu, filePath, lambdaExpression,
             CodeElementType.LAMBDA_EXPRESSION);
         this.body = new OperationBody(cu, filePath, lambdaExpression.getBodyExpression());
-        //TODO: find out if an abstract expression can be obtained from lambda
     }
+
+
 
     public OperationBody getBody() {
         return body;
