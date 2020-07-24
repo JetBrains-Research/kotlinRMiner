@@ -14,6 +14,7 @@ public class AbstractExpression extends AbstractCodeFragment {
     private List<String> variables;
     private List<String> types;
     private List<VariableDeclaration> variableDeclarations;
+    private List<LambdaExpressionObject> lambdas;
 
     public AbstractExpression(KtFile cu, String filePath, KtExpression expression, LocationInfo.CodeElementType codeElementType) {
         this.locationInfo = new LocationInfo(cu, filePath, expression, codeElementType);
@@ -83,6 +84,11 @@ public class AbstractExpression extends AbstractCodeFragment {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<LambdaExpressionObject> getLambdas() {
+        return lambdas;
     }
 
     public CodeRange codeRange() {
