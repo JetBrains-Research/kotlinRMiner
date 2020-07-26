@@ -1,6 +1,7 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.kotlin.com.intellij.psi.PsiLocalVariable;
 import org.jetbrains.kotlin.com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.kotlin.psi.*;
 
@@ -36,17 +37,11 @@ public class Visitor extends KtVisitor {
 
     @Override
     public Object visitDeclaration(@NotNull KtDeclaration dcl, Object data) {
+        if (dcl instanceof KtVariableDeclaration) {
+            variableDeclarations.add(new VariableDeclaration(ktFile, filePath, dcl));
+            variables.add(dcl.getName());
+        }
         return super.visitDeclaration(dcl, data);
-    }
-
-    @Override
-    public Object visitClass(@NotNull KtClass klass, Object data) {
-        return super.visitClass(klass, data);
-    }
-
-    @Override
-    public Object visitObjectDeclaration(@NotNull KtObjectDeclaration declaration, Object data) {
-        return super.visitObjectDeclaration(declaration, data);
     }
 
     @Override
@@ -65,6 +60,7 @@ public class Visitor extends KtVisitor {
         invocations.addAll(PsiTreeUtil.findChildrenOfType(function, KtCallExpression.class));
         Collection<KtVariableDeclaration> variableDecl = PsiTreeUtil.findChildrenOfType(function, KtVariableDeclaration.class);
         variableDecl.forEach(v -> variableDeclarations.add(new VariableDeclaration(ktFile, filePath, v)));
+        variableDecl.forEach(v -> variables.add(v.getName()));
         return super.visitNamedFunction(function, data);
     }
 
@@ -98,6 +94,13 @@ public class Visitor extends KtVisitor {
             anonymous.getLambdas().add(expression);
         }
         return super.visitLambdaExpression(expression, data);
+    }
+
+    @Override
+    public Object visitCallExpression(@NotNull KtCallExpression expression, Object data) {
+        List<KtCallExpression> invocations = methodInvocationMap.getOrDefault(expression.getName(), new ArrayList<>());
+        invocations.addAll(PsiTreeUtil.findChildrenOfType(expression, KtCallExpression.class));
+        return super.visitCallExpression(expression, data);
     }
 
     @Override
