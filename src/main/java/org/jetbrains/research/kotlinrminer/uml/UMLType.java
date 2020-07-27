@@ -225,11 +225,18 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
         } else if (type instanceof KtTypeReference) {
             KtTypeReference typeReference = (KtTypeReference) type;
             KtTypeElement element = typeReference.getTypeElement();
+            if (element instanceof KtFunctionType) {
+                KtFunctionType functionType = (KtFunctionType) element;
+                UMLType returnType = extractTypeObject(functionType.getReturnTypeReference().getText());
+                UMLType receiver = extractTypeObject(functionType.getReceiverTypeReference().getText());
+                return new UMLFunctionType(receiver, returnType);
+            }
             UMLType result = extractTypeObject(element.getText());
             List<KtTypeReference> types = element.getTypeArgumentsAsTypes();
             for (KtTypeReference t : types) {
                 result.typeArguments.add(extractTypeObject(ktFile, filePath, t));
             }
+
             final List<KtAnnotation> annotations = typeReference.getAnnotations();
             for (KtAnnotation annotation : annotations) {
                 result.annotations.add(new UMLAnnotation(ktFile, filePath, annotation));
@@ -249,4 +256,5 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
         }
         return null;
     }
+
 }
