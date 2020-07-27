@@ -14,6 +14,7 @@ public class StatementObject extends AbstractStatement {
     private List<String> variables;
     private List<String> types;
     private List<VariableDeclaration> variableDeclarations;
+    private List<LambdaExpressionObject> lambdas;
 
     public StatementObject(KtFile cu, String filePath, KtExpression statement, int depth, LocationInfo.CodeElementType codeElementType) {
         super();
@@ -74,5 +75,10 @@ public class StatementObject extends AbstractStatement {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<LambdaExpressionObject> getLambdas() {
+        return lambdas;
     }
 }

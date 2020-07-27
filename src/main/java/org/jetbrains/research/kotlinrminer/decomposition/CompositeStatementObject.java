@@ -147,11 +147,11 @@ public class CompositeStatementObject extends AbstractStatement {
             } else if (statement instanceof StatementObject) {
                 StatementObject statementObject = (StatementObject) statement;
                 variableDeclarations.addAll(statementObject.getVariableDeclarations());
-/*                TODO: for(LambdaExpressionObject lambda : statementObject.getLambdas()) {
+                 for(LambdaExpressionObject lambda : statementObject.getLambdas()) {
                     if(lambda.getBody() != null) {
                         variableDeclarations.addAll(lambda.getBody().getAllVariableDeclarations());
                     }
-                }*/
+                }
             }
         }
         return variableDeclarations;
@@ -190,6 +190,15 @@ public class CompositeStatementObject extends AbstractStatement {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<LambdaExpressionObject> getLambdas() {
+        List<LambdaExpressionObject> lambdas = new ArrayList<LambdaExpressionObject>();
+        for(AbstractExpression expression : expressionList) {
+            lambdas.addAll(expression.getLambdas());
+        }
+        return lambdas;
     }
 
     public Map<String, Set<String>> aliasedAttributes() {
