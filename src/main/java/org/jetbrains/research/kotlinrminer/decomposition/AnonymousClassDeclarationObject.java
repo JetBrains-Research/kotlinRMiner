@@ -1,6 +1,5 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
-
 import org.jetbrains.kotlin.psi.KtCallExpression;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -14,21 +13,24 @@ import java.util.List;
 import java.util.Map;
 
 public class AnonymousClassDeclarationObject implements LocationInfoProvider {
-
     private final String anonName;
     private LocationInfo locationInfo;
     private KtElement elementNode;
-    private List<String> variables = new ArrayList<String>();
-    private List<String> types = new ArrayList<String>();
-    private Map<String, List<KtCallExpression>> methodInvocationMap = new LinkedHashMap<String, List<KtCallExpression>>();
-    private List<VariableDeclaration> variableDeclarations = new ArrayList<VariableDeclaration>();
-    private List<AnonymousClassDeclarationObject> anonymousClassDeclarations = new ArrayList<AnonymousClassDeclarationObject>();
-    private List<String> stringLiterals = new ArrayList<String>();
-    private List<String> numberLiterals = new ArrayList<String>();
-    private List<String> nullLiterals = new ArrayList<String>();
-    private List<String> booleanLiterals = new ArrayList<String>();
-    private List<String> typeLiterals = new ArrayList<String>();
-    private List<KtLambdaExpression> lambdas = new ArrayList<KtLambdaExpression>();
+    private List<String> variables = new ArrayList<>();
+    private List<String> types = new ArrayList<>();
+    private Map<String, List<KtCallExpression>> methodInvocationMap = new LinkedHashMap<>();
+    private List<VariableDeclaration> variableDeclarations = new ArrayList<>();
+    private List<AnonymousClassDeclarationObject> anonymousClassDeclarations = new ArrayList<>();
+    private List<String> stringLiterals = new ArrayList<>();
+    private List<String> numberLiterals = new ArrayList<>();
+    private List<String> nullLiterals = new ArrayList<>();
+    private List<String> booleanLiterals = new ArrayList<>();
+    private List<String> typeLiterals = new ArrayList<>();
+    private List<String> prefixExpressions = new ArrayList<>();
+    private List<String> postfixExpressions = new ArrayList<>();
+    private List<KtLambdaExpression> lambdas = new ArrayList<>();
+    private List<String> arrayAccesses = new ArrayList<>();
+    private List<String> arguments = new ArrayList<>();
 
     public AnonymousClassDeclarationObject(KtFile ktFile, String filePath, KtElement anonymous) {
         this.locationInfo = new LocationInfo(ktFile, filePath, anonymous, LocationInfo.CodeElementType.ANONYMOUS_CLASS_DECLARATION);
@@ -87,6 +89,22 @@ public class AnonymousClassDeclarationObject implements LocationInfoProvider {
 
     public List<String> getVariables() {
         return variables;
+    }
+
+    public List<String> getPrefixExpressions() {
+        return prefixExpressions;
+    }
+
+    public List<String> getArrayAccesses() {
+        return arrayAccesses;
+    }
+
+    public List<String> getPostfixExpressions() {
+        return postfixExpressions;
+    }
+
+    public List<String> getArguments() {
+        return this.arguments;
     }
 
     public List<KtLambdaExpression> getLambdas() {

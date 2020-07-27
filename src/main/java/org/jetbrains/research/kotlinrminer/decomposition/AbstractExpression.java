@@ -13,14 +13,36 @@ public class AbstractExpression extends AbstractCodeFragment {
     private CompositeStatementObject owner;
     private List<String> variables;
     private List<String> types;
+    private List<String> stringLiterals;
+    private List<String> numberLiterals;
+    private List<String> nullLiterals;
+    private List<String> booleanLiterals;
+    private List<String> typeLiterals;
     private List<VariableDeclaration> variableDeclarations;
+    private List<String> arrayAccesses;
+    private List<String> prefixExpressions;
+    private List<String> postfixExpressions;
     private List<LambdaExpressionObject> lambdas;
 
     public AbstractExpression(KtFile cu, String filePath, KtExpression expression, LocationInfo.CodeElementType codeElementType) {
         this.locationInfo = new LocationInfo(cu, filePath, expression, codeElementType);
-        //TODO: to adapt Visitor
+        Visitor visitor = new Visitor(cu, filePath);
+        expression.accept(visitor);
+        this.variables = visitor.getVariables();
+        this.types = visitor.getTypes();
+        this.variableDeclarations = visitor.getVariableDeclarations();
+        this.stringLiterals = visitor.getStringLiterals();
+        this.numberLiterals = visitor.getNumberLiterals();
+        this.nullLiterals = visitor.getNullLiterals();
+        this.booleanLiterals = visitor.getBooleanLiterals();
+        this.typeLiterals = visitor.getTypeLiterals();
+        this.arrayAccesses = visitor.getArrayAccesses();
+        this.prefixExpressions = visitor.getPrefixExpressions();
+        this.postfixExpressions = visitor.getPostfixExpressions();
+        this.lambdas = visitor.getLambdas();
+        this.expression = expression.getText();
+        this.owner = null;
     }
-
 
     public void setOwner(CompositeStatementObject owner) {
         this.owner = owner;

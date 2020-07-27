@@ -14,12 +14,41 @@ public class StatementObject extends AbstractStatement {
     private List<String> variables;
     private List<String> types;
     private List<VariableDeclaration> variableDeclarations;
+    //TODO private Map<String, List<OperationInvocation>> methodInvocationMap;
+    //TODO private List<AnonymousClassDeclarationObject> anonymousClassDeclarations;
+    private List<String> stringLiterals;
+    private List<String> numberLiterals;
+    private List<String> nullLiterals;
+    private List<String> booleanLiterals;
+    private List<String> typeLiterals;
+    //TODO private Map<String, List<ObjectCreation>> creationMap;
+    private List<String> arrayAccesses;
+    private List<String> prefixExpressions;
+    private List<String> postfixExpressions;
+    private List<String> arguments;
+    //TODO private List<LambdaExpressionObject> lambdas;
     private List<LambdaExpressionObject> lambdas;
 
     public StatementObject(KtFile cu, String filePath, KtExpression statement, int depth, LocationInfo.CodeElementType codeElementType) {
         super();
-        /*		TODO: to adapt Visitor
-         */
+        this.locationInfo = new LocationInfo(cu, filePath, statement, codeElementType);
+        Visitor visitor = new Visitor(cu, filePath);
+        statement.accept(visitor);
+        this.variables = visitor.getVariables();
+        this.types = visitor.getTypes();
+        this.variableDeclarations = visitor.getVariableDeclarations();
+        this.stringLiterals = visitor.getStringLiterals();
+        this.numberLiterals = visitor.getNumberLiterals();
+        this.nullLiterals = visitor.getNullLiterals();
+        this.booleanLiterals = visitor.getBooleanLiterals();
+        this.typeLiterals = visitor.getTypeLiterals();
+        this.arrayAccesses = visitor.getArrayAccesses();
+        this.prefixExpressions = visitor.getPrefixExpressions();
+        this.postfixExpressions = visitor.getPostfixExpressions();
+        this.arguments = visitor.getArguments();
+        //this.lambdas = visitor.getLambdas();
+        setDepth(depth);
+        this.statement = statement.getText();
     }
 
     public List<String> stringRepresentation() {
