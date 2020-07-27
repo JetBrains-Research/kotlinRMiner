@@ -26,7 +26,6 @@ public class StatementObject extends AbstractStatement {
     private List<String> prefixExpressions;
     private List<String> postfixExpressions;
     private List<String> arguments;
-    //TODO private List<LambdaExpressionObject> lambdas;
     private List<LambdaExpressionObject> lambdas;
 
     public StatementObject(KtFile cu, String filePath, KtExpression statement, int depth, LocationInfo.CodeElementType codeElementType) {
@@ -46,7 +45,7 @@ public class StatementObject extends AbstractStatement {
         this.prefixExpressions = visitor.getPrefixExpressions();
         this.postfixExpressions = visitor.getPostfixExpressions();
         this.arguments = visitor.getArguments();
-        //this.lambdas = visitor.getLambdas();
+        this.lambdas = visitor.getLambdas();
         setDepth(depth);
         this.statement = statement.getText();
     }
