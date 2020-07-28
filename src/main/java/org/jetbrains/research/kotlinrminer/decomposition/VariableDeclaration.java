@@ -53,6 +53,17 @@ public class VariableDeclaration implements LocationInfoProvider, VariableDeclar
             int startOffset = fragment.getStartOffsetInParent();
             int endOffset = startOffset + fragment.getTextLength();
             this.scope = new VariableScope(ktFile, filePath, startOffset, endOffset);
+        } else if (fragment instanceof KtVariableDeclaration) {
+            KtVariableDeclaration variableDeclaration = (KtVariableDeclaration) fragment;
+            variableDeclaration.getAnnotations().forEach(ktAnnotation
+                    -> this.annotations.add(new UMLAnnotation(ktFile, filePath, ktAnnotation)));
+            //TODO check for the code element type
+            this.locationInfo = new LocationInfo(ktFile, filePath, fragment, CodeElementType.VARIABLE_DECLARATION_EXPRESSION);
+            this.variableName = fragment.getName();
+            this.type = UMLType.extractTypeObject(ktFile, filePath, variableDeclaration.getTypeReference(), 0);
+            int startOffset = fragment.getStartOffsetInParent();
+            int endOffset = startOffset + fragment.getTextLength();
+            this.scope = new VariableScope(ktFile, filePath, startOffset, endOffset);
         }
     }
 
