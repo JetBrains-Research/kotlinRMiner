@@ -7,18 +7,24 @@ import java.util.*;
 public class UMLModel {
     private Set<String> repositoryDirectories;
     private List<UMLClass> classList;
+    private List<UMLObject> objectList;
     private List<UMLGeneralization> generalizationList;
     private List<UMLRealization> realizationList;
 
     public UMLModel(Set<String> repositoryDirectories) {
         this.repositoryDirectories = repositoryDirectories;
         classList = new ArrayList<>();
+        objectList = new ArrayList<>();
         generalizationList = new ArrayList<>();
         realizationList = new ArrayList<>();
     }
 
     public void addClass(UMLClass umlClass) {
         classList.add(umlClass);
+    }
+
+    public void addObject(UMLObject umlObject) {
+        objectList.add(umlObject);
     }
 
     public void addGeneralization(UMLGeneralization umlGeneralization) {

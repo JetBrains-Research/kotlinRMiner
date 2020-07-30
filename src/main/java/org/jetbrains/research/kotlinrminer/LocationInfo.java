@@ -153,6 +153,7 @@ public class LocationInfo {
     public enum CodeElementType {
         WHEN_EXPRESSION,
         COMPANION_OBJECT,
+        OBJECT,
         TYPE_DECLARATION,
         METHOD_DECLARATION,
         FIELD_DECLARATION,
