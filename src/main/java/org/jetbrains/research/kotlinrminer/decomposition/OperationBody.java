@@ -66,14 +66,24 @@ public class OperationBody {
             }
         } else if (statement instanceof KtForExpression) {
             KtForExpression forStatement = (KtForExpression) statement;
-            CompositeStatementObject child = new CompositeStatementObject(ktFile, filePath, forStatement, parent.getDepth() + 1, CodeElementType.FOR_STATEMENT);
+            CompositeStatementObject child = new CompositeStatementObject(ktFile, filePath,
+                forStatement, parent.getDepth() + 1, CodeElementType.ENHANCED_FOR_STATEMENT);
             parent.addStatement(child);
             KtExpression ktDeclaration = forStatement.getDestructuringDeclaration();
+            VariableDeclaration variableDeclaration = new VariableDeclaration(ktFile, filePath, forStatement.getLoopParameter());
+            child.addVariableDeclaration(variableDeclaration);
+            AbstractExpression abstractEx = new AbstractExpression(ktFile, filePath, forStatement.getLoopParameter(),
+                CodeElementType.ENHANCED_FOR_STATEMENT_PARAMETER_NAME);
+            child.addExpression(abstractEx);
             if (ktDeclaration != null) {
                 KtExpression initializer = forStatement.getDestructuringDeclaration().getInitializer();
-                AbstractExpression abstractExpression = new AbstractExpression(ktFile, filePath, initializer, CodeElementType.FOR_STATEMENT_INITIALIZER);
+                AbstractExpression abstractExpression = new AbstractExpression(ktFile, filePath, initializer,
+                    CodeElementType.FOR_STATEMENT_INITIALIZER);
                 child.addExpression(abstractExpression);
             }
+            AbstractExpression abstractExpr = new AbstractExpression(ktFile, filePath, ktDeclaration,
+                CodeElementType.ENHANCED_FOR_STATEMENT_EXPRESSION);
+            child.addExpression(abstractExpr);
             processStatement(ktFile, filePath, child, forStatement.getBody());
         } else if (statement instanceof KtWhileExpression) {
             KtWhileExpression whileStatement = (KtWhileExpression) statement;
