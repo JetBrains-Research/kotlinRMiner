@@ -81,6 +81,10 @@ public class OperationBody {
                     CodeElementType.FOR_STATEMENT_INITIALIZER);
                 child.addExpression(abstractExpression);
             }
+            KtExpression rangeExpr = forStatement.getLoopRange();
+            AbstractExpression range = new AbstractExpression(ktFile, filePath, rangeExpr,
+                CodeElementType.ENHANCED_FOR_STATEMENT_RANGE);
+            child.addExpression(range);
             AbstractExpression abstractExpr = new AbstractExpression(ktFile, filePath, ktDeclaration,
                 CodeElementType.ENHANCED_FOR_STATEMENT_EXPRESSION);
             child.addExpression(abstractExpr);
