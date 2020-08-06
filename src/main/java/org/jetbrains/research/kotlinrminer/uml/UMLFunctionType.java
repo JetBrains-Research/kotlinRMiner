@@ -3,6 +3,8 @@ package org.jetbrains.research.kotlinrminer.uml;
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
+import java.util.List;
+
 /**
  * Wrapper for function types in Kotlin.
  * The examples of function types:
@@ -13,10 +15,12 @@ import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 public class UMLFunctionType extends UMLType {
     private final UMLType receiver;
     private final UMLType returnType;
+    private final List<UMLType> parametersList;
 
-    public UMLFunctionType(UMLType receiver, UMLType returnType) {
+    public UMLFunctionType(UMLType receiver, UMLType returnType, List<UMLType> parametersList) {
         this.receiver = receiver;
         this.returnType = returnType;
+        this.parametersList = parametersList;
     }
 
     @Override
@@ -72,4 +76,7 @@ public class UMLFunctionType extends UMLType {
         return receiver;
     }
 
+    public List<UMLType> getParametersList() {
+        return parametersList;
+    }
 }
