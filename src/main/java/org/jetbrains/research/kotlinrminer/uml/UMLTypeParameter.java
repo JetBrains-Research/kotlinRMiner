@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UMLTypeParameter {
-    private String name;
-    private List<UMLType> typeBounds;
-    private List<UMLAnnotation> annotations;
+    private final String name;
+    private final List<UMLType> typeBounds;
+    private final List<UMLAnnotation> annotations;
 
     public UMLTypeParameter(String name) {
         this.name = name;
@@ -39,7 +39,7 @@ public class UMLTypeParameter {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((typeBounds == null) ? 0 : typeBounds.hashCode());
+        result = prime * result + ((typeBounds.isEmpty()) ? 0 : typeBounds.hashCode());
         return result;
     }
 
@@ -57,8 +57,8 @@ public class UMLTypeParameter {
                 return false;
         } else if (!name.equals(other.name))
             return false;
-        if (typeBounds == null) {
-            return other.typeBounds == null;
+        if (typeBounds.isEmpty()) {
+            return other.typeBounds.isEmpty();
         } else return typeBounds.equals(other.typeBounds);
     }
 }

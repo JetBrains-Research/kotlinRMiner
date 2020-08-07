@@ -160,7 +160,7 @@ public class UMLModelDiff {
             }
         }
 
-        List<UMLClassMoveDiff> allClassMoves = new ArrayList<UMLClassMoveDiff>(this.classMoveDiffList);
+        List<UMLClassMoveDiff> allClassMoves = new ArrayList<>(this.classMoveDiffList);
         Collections.sort(allClassMoves);
 
         for (int i = 0; i < allClassMoves.size(); i++) {

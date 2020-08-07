@@ -4,7 +4,7 @@ import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 
 public interface LocationInfoProvider {
-    public LocationInfo getLocationInfo();
+    LocationInfo getLocationInfo();
 
-    public CodeRange codeRange();
+    CodeRange codeRange();
 }

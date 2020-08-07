@@ -40,9 +40,7 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
 
     protected String typeArgumentsToString() {
         StringBuilder sb = new StringBuilder();
-        if (typeArguments.isEmpty()) {
-            sb.append("");
-        } else {
+        if (!typeArguments.isEmpty()) {
             sb.append("<");
             for (int i = 0; i < typeArguments.size(); i++) {
                 sb.append(typeArguments.get(i).toQualifiedString());
@@ -51,15 +49,6 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
             }
             sb.append(">");
         }
-        return sb.toString();
-    }
-
-    protected String typeArgumentsAndArrayDimensionToString() {
-        StringBuilder sb = new StringBuilder();
-        if (isParameterized())
-            sb.append(typeArgumentsToString());
-        for (int i = 0; i < getArrayDimension(); i++)
-            sb.append("[]");
         return sb.toString();
     }
 
@@ -161,12 +150,6 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
     public static LeafType extractTypeObject(String qualifiedName) {
         int arrayDimension = 0;
         List<UMLType> typeArgumentDecomposition = new ArrayList<>();
-        if (qualifiedName.endsWith("[]")) {
-            while (qualifiedName.endsWith("[]")) {
-                qualifiedName = qualifiedName.substring(0, qualifiedName.lastIndexOf("[]"));
-                arrayDimension++;
-            }
-        }
         if (qualifiedName.contains("<") && qualifiedName.contains(">")) {
             String typeArguments = qualifiedName.substring(qualifiedName.indexOf("<") + 1, qualifiedName.lastIndexOf(">"));
             StringBuilder sb = new StringBuilder();
