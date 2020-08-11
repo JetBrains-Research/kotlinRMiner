@@ -119,11 +119,7 @@ public class OperationBody {
                 catchClauseStatementObject.addVariableDeclaration(vd);
                 AbstractExpression variableDeclarationName = new AbstractExpression(ktFile, filePath, variableDeclaration, CodeElementType.CATCH_CLAUSE_EXCEPTION_NAME);
                 catchClauseStatementObject.addExpression(variableDeclarationName);
-                //TODO: intializer
-//                if (variableDeclaration.getInitializer() != null) {
-//                    AbstractExpression variableDeclarationInitializer = new AbstractExpression(cu, filePath, variableDeclaration.getInitializer(), CodeElementType.VARIABLE_DECLARATION_INITIALIZER);
-//                    catchClauseStatementObject.addExpression(variableDeclarationInitializer);
-//                }
+
                 if(catchClauseBody instanceof KtBlockExpression) {
                     KtBlockExpression block = (KtBlockExpression) catchClauseBody;
                     List<KtExpression> blockStatements = block.getStatements();
