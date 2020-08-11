@@ -107,16 +107,6 @@ public class OperationBody {
             KtTryExpression tryStatement = (KtTryExpression) statement;
             TryStatementObject child = new TryStatementObject(ktFile, filePath, tryStatement, parent.getDepth() + 1);
             parent.addStatement(child);
-/*          TODO: process resources
-            List<Expression> resources = tryStatement.resources();
-            for (Expression resource : resources) {
-                AbstractExpression expression = new AbstractExpression(cu, filePath, resource, CodeElementType.TRY_STATEMENT_RESOURCE);
-                child.addExpression(expression);
-            }*/
-/*            List<KtExpression> tryStatements = tryStatement.getTryBlock().getStatements();
-            for (KtExpression blockStatement : tryStatements) {
-                processStatement(cu, filePath, child, blockStatement);
-            }*/
             List<KtCatchClause> catchClauses = tryStatement.getCatchClauses();
             for (KtCatchClause catchClause : catchClauses) {
                 KtExpression catchClauseBody = catchClause.getCatchBody();
