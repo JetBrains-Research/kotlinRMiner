@@ -38,7 +38,10 @@ public class UMLModelPsiReader {
 
             PsiElement[] elementsInFile = ktFile.getChildren();
             for (PsiElement psiElement : elementsInFile) {
-                if (psiElement instanceof KtClass) {
+                if (psiElement instanceof KtObjectDeclaration) {
+                    KtObjectDeclaration objectDeclaration = (KtObjectDeclaration) psiElement;
+                    processObject(objectDeclaration, objectDeclaration.getContainingKtFile().getPackageFqName().asString());
+                } else if (psiElement instanceof KtClass) {
                     KtClass ktClass = (KtClass) psiElement;
                     if (ktClass.isEnum()) {
                         processKtEnum(ktClass, ktFile.getPackageFqName().asString(), ktFile.getVirtualFilePath(), importedTypes);
@@ -120,11 +123,9 @@ public class UMLModelPsiReader {
 
         List<KtProperty> ktClassProperties = ktClass.getProperties();
         for (KtProperty ktProperty : ktClassProperties) {
-            List<UMLAttribute> attributes = processFieldDeclaration(ktClass.getContainingKtFile(), ktProperty, umlClass.isInterface(), sourceFile);
-            for (UMLAttribute attribute : attributes) {
-                attribute.setClassName(umlClass.getName());
-                umlClass.addAttribute(attribute);
-            }
+            UMLAttribute attribute = processFieldDeclaration(ktClass.getContainingKtFile(), ktProperty, umlClass.isInterface(), sourceFile);
+            attribute.setClassName(umlClass.getName());
+            umlClass.addAttribute(attribute);
         }
 
         List<KtDeclaration> declarations = ktClass.getDeclarations();
@@ -147,9 +148,8 @@ public class UMLModelPsiReader {
         this.getUmlModel().addClass(umlClass);
     }
 
-    private List<UMLAttribute> processFieldDeclaration(KtFile ktFile, KtProperty fieldDeclaration, boolean isInterfaceField, String sourceFile) {
+    private UMLAttribute processFieldDeclaration(KtFile ktFile, KtProperty fieldDeclaration, boolean isInterfaceField, String sourceFile) {
         UMLJavadoc javadoc = generateDocComment(fieldDeclaration);
-        List<UMLAttribute> attributes = new ArrayList<>();
         KtExpression initializer = fieldDeclaration.getInitializer();
 
         //TODO: figure out how to get dimensions
@@ -174,11 +174,9 @@ public class UMLModelPsiReader {
                 umlAttribute.setVisibility("public");
             else
                 umlAttribute.setVisibility("package");
-
         }
-        attributes.add(umlAttribute);
 
-        return attributes;
+        return umlAttribute;
     }
 
     private UMLJavadoc generateDocComment(KtNamedDeclaration bodyDeclaration) {
@@ -291,6 +289,28 @@ public class UMLModelPsiReader {
             umlCompanionObject.addMethod(method);
         }
         return umlCompanionObject;
+    }
+
+    public void processObject(KtObjectDeclaration objectDeclaration, String sourceFile) {
+        UMLObject umlObject = new UMLObject();
+        umlObject.setName(objectDeclaration.getName());
+        LocationInfo objectLocationInfo = generateLocationInfo(objectDeclaration.getContainingKtFile(), sourceFile, objectDeclaration, LocationInfo.CodeElementType.OBJECT);
+        umlObject.setLocationInfo(objectLocationInfo);
+        KtClassBody body = objectDeclaration.getBody();
+        if (body != null) {
+            List<KtNamedFunction> functions = body.getFunctions();
+            for (KtNamedFunction function : functions) {
+                LocationInfo locationInfo = generateLocationInfo(function.getContainingKtFile(), sourceFile, function, LocationInfo.CodeElementType.METHOD_DECLARATION);
+                UMLOperation umlOperation = new UMLOperation(function.getName(), locationInfo);
+                umlObject.addMethod(umlOperation);
+            }
+            List<KtProperty> properties = body.getProperties();
+            for (KtProperty property : properties) {
+                UMLAttribute umlAttribute = processFieldDeclaration(property.getContainingKtFile(), property, false, sourceFile);
+                umlObject.addProperty(umlAttribute);
+            }
+        }
+        this.getUmlModel().addObject(umlObject);
     }
 
     private void processModifiers(String sourceFile, KtClass typeDeclaration, UMLClass umlClass) {

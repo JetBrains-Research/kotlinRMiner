@@ -9,7 +9,6 @@ import org.jetbrains.research.kotlinrminer.LocationInfo.*;
 import java.util.*;
 
 public class CompositeStatementObject extends AbstractStatement {
-
     private List<AbstractStatement> statementList;
     private List<AbstractExpression> expressionList;
     private List<VariableDeclaration> variableDeclarations;
@@ -147,8 +146,8 @@ public class CompositeStatementObject extends AbstractStatement {
             } else if (statement instanceof StatementObject) {
                 StatementObject statementObject = (StatementObject) statement;
                 variableDeclarations.addAll(statementObject.getVariableDeclarations());
-                 for(LambdaExpressionObject lambda : statementObject.getLambdas()) {
-                    if(lambda.getBody() != null) {
+                for (LambdaExpressionObject lambda : statementObject.getLambdas()) {
+                    if (lambda.getBody() != null) {
                         variableDeclarations.addAll(lambda.getBody().getAllVariableDeclarations());
                     }
                 }
@@ -194,8 +193,8 @@ public class CompositeStatementObject extends AbstractStatement {
 
     @Override
     public List<LambdaExpressionObject> getLambdas() {
-        List<LambdaExpressionObject> lambdas = new ArrayList<LambdaExpressionObject>();
-        for(AbstractExpression expression : expressionList) {
+        List<LambdaExpressionObject> lambdas = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
             lambdas.addAll(expression.getLambdas());
         }
         return lambdas;

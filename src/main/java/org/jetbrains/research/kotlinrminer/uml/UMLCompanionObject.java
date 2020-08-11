@@ -36,7 +36,7 @@ public class UMLCompanionObject implements Comparable<UMLCompanionObject>, Seria
 
     @Override
     public int compareTo(UMLCompanionObject o) {
-        return this.className.compareTo(o.toString());
+        return this.name.compareTo(o.toString());
     }
 
     @Override

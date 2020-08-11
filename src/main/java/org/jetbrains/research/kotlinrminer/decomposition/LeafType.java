@@ -5,8 +5,8 @@ import org.jetbrains.research.kotlinrminer.uml.UMLType;
 import java.util.regex.Pattern;
 
 public class LeafType extends UMLType {
-    private String classType;
-    private String nonQualifiedClassType;
+    private final String classType;
+    private final String nonQualifiedClassType;
     private volatile int hashCode = 0;
     private static final Pattern CAMEL_CASE_SPLIT_PATTERN = Pattern.compile("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])");
 
@@ -66,7 +66,8 @@ public class LeafType extends UMLType {
     @Override
     public boolean equalsWithSubType(UMLType type) {
         if (this.getClass() == type.getClass()) {
-            return firstOrLastCamelCaseTokenMatch(this.nonQualifiedClassType, ((LeafType) type).nonQualifiedClassType) && equalTypeArgumentsAndArrayDimensionForSubType(type);
+            return firstOrLastCamelCaseTokenMatch(this.nonQualifiedClassType, ((LeafType) type).nonQualifiedClassType)
+                    && equalTypeArgumentsAndArrayDimensionForSubType(type);
         }
         return false;
     }
@@ -111,7 +112,8 @@ public class LeafType extends UMLType {
         String[] tokens2 = CAMEL_CASE_SPLIT_PATTERN.split(type.nonQualifiedClassType);
         for (String token1 : tokens1) {
             for (String token2 : tokens2) {
-                if ((token1.equals(token2) && token1.length() > 1) || token1.equals(token2 + "s") || token2.equals(token1 + "s")) {
+                if ((token1.equals(token2) && token1.length() > 1) || token1.equals(token2 + "s")
+                        || token2.equals(token1 + "s")) {
                     return true;
                 }
             }
@@ -135,12 +137,12 @@ public class LeafType extends UMLType {
     @Override
     public String toString() {
         return nonQualifiedClassType +
-                typeArgumentsAndArrayDimensionToString();
+                typeArgumentsToString();
     }
 
     @Override
     public String toQualifiedString() {
         return classType +
-                typeArgumentsAndArrayDimensionToString();
+                typeArgumentsToString();
     }
 }

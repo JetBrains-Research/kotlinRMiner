@@ -16,6 +16,7 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
     private int arrayDimension;
     private List<UMLType> typeArguments = new ArrayList<>();
     protected List<UMLAnnotation> annotations = new ArrayList<>();
+    private boolean isNullable;
 
     public LocationInfo getLocationInfo() {
         return locationInfo;
@@ -39,9 +40,7 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
 
     protected String typeArgumentsToString() {
         StringBuilder sb = new StringBuilder();
-        if (typeArguments.isEmpty()) {
-            sb.append("");
-        } else {
+        if (!typeArguments.isEmpty()) {
             sb.append("<");
             for (int i = 0; i < typeArguments.size(); i++) {
                 sb.append(typeArguments.get(i).toQualifiedString());
@@ -50,15 +49,6 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
             }
             sb.append(">");
         }
-        return sb.toString();
-    }
-
-    protected String typeArgumentsAndArrayDimensionToString() {
-        StringBuilder sb = new StringBuilder();
-        if (isParameterized())
-            sb.append(typeArgumentsToString());
-        for (int i = 0; i < getArrayDimension(); i++)
-            sb.append("[]");
         return sb.toString();
     }
 
@@ -160,12 +150,6 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
     public static LeafType extractTypeObject(String qualifiedName) {
         int arrayDimension = 0;
         List<UMLType> typeArgumentDecomposition = new ArrayList<>();
-        if (qualifiedName.endsWith("[]")) {
-            while (qualifiedName.endsWith("[]")) {
-                qualifiedName = qualifiedName.substring(0, qualifiedName.lastIndexOf("[]"));
-                arrayDimension++;
-            }
-        }
         if (qualifiedName.contains("<") && qualifiedName.contains(">")) {
             String typeArguments = qualifiedName.substring(qualifiedName.indexOf("<") + 1, qualifiedName.lastIndexOf(">"));
             StringBuilder sb = new StringBuilder();
@@ -225,28 +209,59 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
         } else if (type instanceof KtTypeReference) {
             KtTypeReference typeReference = (KtTypeReference) type;
             KtTypeElement element = typeReference.getTypeElement();
-            UMLType result = extractTypeObject(element.getText());
-            List<KtTypeReference> types = element.getTypeArgumentsAsTypes();
-            for (KtTypeReference t : types) {
-                result.typeArguments.add(extractTypeObject(ktFile, filePath, t));
-            }
-            final List<KtAnnotation> annotations = typeReference.getAnnotations();
-            for (KtAnnotation annotation : annotations) {
-                result.annotations.add(new UMLAnnotation(ktFile, filePath, annotation));
-            }
-
-            if (element instanceof KtUserType) {
-                KtUserType userType = (KtUserType) element;
-                if (userType.getQualifier() != null) {
-                    UMLType left = extractTypeObject(ktFile, filePath, userType.getQualifier());
-                    return new CompositeType(left, (LeafType) result);
+            if (element instanceof KtFunctionType) {
+                KtFunctionType functionType = (KtFunctionType) element;
+                UMLType returnType = functionType.getReturnTypeReference() == null ?
+                        null : extractTypeObject(functionType.getReturnTypeReference().getText());
+                if (returnType != null)
+                    returnType.isNullable = functionType.getReturnTypeReference().getTypeElement() instanceof KtNullableType;
+                UMLType receiver = functionType.getReceiverTypeReference() == null ?
+                        null : extractTypeObject(functionType.getReceiverTypeReference().getText());
+                if (receiver != null)
+                    receiver.isNullable = functionType.getReceiverTypeReference().getTypeElement() instanceof KtNullableType;
+                List<UMLType> umlTypeList = new ArrayList<>();
+                if (functionType.getParameterList() != null) {
+                    List<KtParameter> parameterList = functionType.getParameterList().getParameters();
+                    for (KtParameter ktParameter : parameterList) {
+                        UMLType umlType = extractTypeObject(ktParameter.getText());
+                        if (ktParameter.getTypeReference() != null)
+                            umlType.isNullable = ktParameter.getTypeReference().getTypeElement() instanceof KtNullableType;
+                        umlTypeList.add(umlType);
+                    }
                 }
+                return new UMLFunctionType(receiver, returnType, umlTypeList);
+            } else {
+                UMLType umlType = extractTypeObject(element.getText());
+                if (element instanceof KtNullableType)
+                    umlType.isNullable = true;
+
+                List<KtTypeReference> types = element.getTypeArgumentsAsTypes();
+                for (KtTypeReference t : types) {
+                    umlType.typeArguments.add(extractTypeObject(ktFile, filePath, t));
+                }
+
+                final List<KtAnnotation> annotations = typeReference.getAnnotations();
+                for (KtAnnotation annotation : annotations) {
+                    umlType.annotations.add(new UMLAnnotation(ktFile, filePath, annotation));
+                }
+
+                if (element instanceof KtUserType) {
+                    KtUserType userType = (KtUserType) element;
+                    if (userType.getQualifier() != null) {
+                        UMLType left = extractTypeObject(ktFile, filePath, userType.getQualifier());
+                        return new CompositeType(left, (LeafType) umlType);
+                    }
+                }
+                return umlType;
             }
-            return result;
         } else if (type instanceof KtProperty) {
             KtProperty property = (KtProperty) type;
             return extractTypeObject(ktFile, filePath, property.getTypeReference());
         }
         return null;
+    }
+
+    public boolean isNullable() {
+        return isNullable;
     }
 }
