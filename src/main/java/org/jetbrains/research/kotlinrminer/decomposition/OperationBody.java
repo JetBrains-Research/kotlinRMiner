@@ -69,14 +69,14 @@ public class OperationBody {
             CompositeStatementObject child = new CompositeStatementObject(ktFile, filePath,
                 forStatement, parent.getDepth() + 1, CodeElementType.ENHANCED_FOR_STATEMENT);
             parent.addStatement(child);
-            KtExpression ktDeclaration = forStatement.getDestructuringDeclaration();
             VariableDeclaration variableDeclaration = new VariableDeclaration(ktFile, filePath, forStatement.getLoopParameter());
             child.addVariableDeclaration(variableDeclaration);
             AbstractExpression abstractEx = new AbstractExpression(ktFile, filePath, forStatement.getLoopParameter(),
                 CodeElementType.ENHANCED_FOR_STATEMENT_PARAMETER_NAME);
             child.addExpression(abstractEx);
+            KtDestructuringDeclaration ktDeclaration = forStatement.getDestructuringDeclaration();
             if (ktDeclaration != null) {
-                KtExpression initializer = ((KtDestructuringDeclaration) ktDeclaration).getInitializer();
+                KtExpression initializer = ktDeclaration.getInitializer();
                 AbstractExpression abstractExpression = new AbstractExpression(ktFile, filePath, initializer,
                     CodeElementType.FOR_STATEMENT_INITIALIZER);
                 child.addExpression(abstractExpression);
