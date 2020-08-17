@@ -1,6 +1,9 @@
 package org.jetbrains.research.kotlinrminer.diff;
 
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
+import org.jetbrains.research.kotlinrminer.decomposition.AbstractCodeMapping;
+import org.jetbrains.research.kotlinrminer.decomposition.Replacement;
+import org.jetbrains.research.kotlinrminer.decomposition.UMLOperationBodyMapper;
 import org.jetbrains.research.kotlinrminer.uml.UMLClass;
 
 import java.util.*;
@@ -44,5 +47,26 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
 
     public UMLModelDiff getModelDiff() {
         return modelDiff;
+    }
+
+    public static boolean allMappingsAreExactMatches(UMLOperationBodyMapper operationBodyMapper) {
+        int mappings = operationBodyMapper.mappingsWithoutBlocks();
+        int tryMappings = 0;
+        int mappingsWithTypeReplacement = 0;
+        for(AbstractCodeMapping mapping : operationBodyMapper.getMappings()) {
+            if(mapping.getFragment1().getString().equals("try") && mapping.getFragment2().getString().equals("try")) {
+                tryMappings++;
+            }
+            if(mapping.containsReplacement(Replacement.ReplacementType.TYPE)) {
+                mappingsWithTypeReplacement++;
+            }
+        }
+        if(mappings == operationBodyMapper.exactMatches() + tryMappings) {
+            return true;
+        }
+        if(mappings == operationBodyMapper.exactMatches() + tryMappings + mappingsWithTypeReplacement && mappings > mappingsWithTypeReplacement) {
+            return true;
+        }
+        return false;
     }
 }
