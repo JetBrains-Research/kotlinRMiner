@@ -76,7 +76,7 @@ public class OperationBody {
                 CodeElementType.ENHANCED_FOR_STATEMENT_PARAMETER_NAME);
             child.addExpression(abstractEx);
             if (ktDeclaration != null) {
-                KtExpression initializer = forStatement.getDestructuringDeclaration().getInitializer();
+                KtExpression initializer = ((KtDestructuringDeclaration) ktDeclaration).getInitializer();
                 AbstractExpression abstractExpression = new AbstractExpression(ktFile, filePath, initializer,
                     CodeElementType.FOR_STATEMENT_INITIALIZER);
                 child.addExpression(abstractExpression);
