@@ -7,21 +7,21 @@ import org.jetbrains.research.kotlinrminer.LocationInfo.CodeElementType;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
 public class LambdaExpressionObject implements LocationInfoProvider {
-
-    private LocationInfo locationInfo;
-    private OperationBody body;
+    private final LocationInfo locationInfo;
+    private final OperationBody body;
     private AbstractExpression expression;
 
     public LambdaExpressionObject(KtFile cu, String filePath, KtLambdaExpression lambdaExpression) {
-        this.locationInfo = new LocationInfo(cu, filePath, lambdaExpression,
-            CodeElementType.LAMBDA_EXPRESSION);
+        this.locationInfo = new LocationInfo(cu, filePath, lambdaExpression, CodeElementType.LAMBDA_EXPRESSION);
         this.body = new OperationBody(cu, filePath, lambdaExpression.getBodyExpression());
     }
 
-
-
     public OperationBody getBody() {
         return body;
+    }
+
+    public AbstractExpression getExpression() {
+        return expression;
     }
 
     @Override

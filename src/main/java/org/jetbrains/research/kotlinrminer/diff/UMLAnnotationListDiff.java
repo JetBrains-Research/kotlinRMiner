@@ -11,16 +11,16 @@ public class UMLAnnotationListDiff {
   private List<UMLAnnotationDiff> annotationDiffList;
 
   public UMLAnnotationListDiff(List<UMLAnnotation> annotations1, List<UMLAnnotation> annotations2) {
-    this.removedAnnotations = new ArrayList<UMLAnnotation>();
-    this.addedAnnotations = new ArrayList<UMLAnnotation>();
-    this.annotationDiffList = new ArrayList<UMLAnnotationDiff>();
+    this.removedAnnotations = new ArrayList<>();
+    this.addedAnnotations = new ArrayList<>();
+    this.annotationDiffList = new ArrayList<>();
     List<AbstractMap.SimpleEntry<UMLAnnotation, UMLAnnotation>> matchedAnnotations
-        = new ArrayList<AbstractMap.SimpleEntry<UMLAnnotation,UMLAnnotation>>();
+        = new ArrayList<>();
     for(UMLAnnotation annotation1 : annotations1) {
       boolean found = false;
       for(UMLAnnotation annotation2 : annotations2) {
         if(annotation1.getTypeName().equals(annotation2.getTypeName())) {
-          matchedAnnotations.add(new AbstractMap.SimpleEntry<UMLAnnotation, UMLAnnotation>(annotation1, annotation2));
+          matchedAnnotations.add(new AbstractMap.SimpleEntry<>(annotation1, annotation2));
           found = true;
           break;
         }
@@ -33,7 +33,7 @@ public class UMLAnnotationListDiff {
       boolean found = false;
       for(UMLAnnotation annotation1 : annotations1) {
         if(annotation1.getTypeName().equals(annotation2.getTypeName())) {
-          matchedAnnotations.add(new AbstractMap.SimpleEntry<UMLAnnotation, UMLAnnotation>(annotation1, annotation2));
+          matchedAnnotations.add(new AbstractMap.SimpleEntry<>(annotation1, annotation2));
           found = true;
           break;
         }

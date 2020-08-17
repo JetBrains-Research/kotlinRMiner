@@ -1,6 +1,5 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
-import org.jetbrains.kotlin.psi.KtCallExpression;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtLambdaExpression;
@@ -18,7 +17,7 @@ public class AnonymousClassDeclarationObject implements LocationInfoProvider {
     private KtElement elementNode;
     private List<String> variables = new ArrayList<>();
     private List<String> types = new ArrayList<>();
-    private Map<String, List<KtCallExpression>> methodInvocationMap = new LinkedHashMap<>();
+    private Map<String, List<OperationInvocation>> methodInvocationMap = new LinkedHashMap<>();
     private List<VariableDeclaration> variableDeclarations = new ArrayList<>();
     private List<AnonymousClassDeclarationObject> anonymousClassDeclarations = new ArrayList<>();
     private List<String> stringLiterals = new ArrayList<>();
@@ -33,7 +32,8 @@ public class AnonymousClassDeclarationObject implements LocationInfoProvider {
     private List<String> arguments = new ArrayList<>();
 
     public AnonymousClassDeclarationObject(KtFile ktFile, String filePath, KtElement anonymous) {
-        this.locationInfo = new LocationInfo(ktFile, filePath, anonymous, LocationInfo.CodeElementType.ANONYMOUS_CLASS_DECLARATION);
+        this.locationInfo =
+                new LocationInfo(ktFile, filePath, anonymous, LocationInfo.CodeElementType.ANONYMOUS_CLASS_DECLARATION);
         this.elementNode = anonymous;
         this.anonName = anonymous.toString();
     }
@@ -54,7 +54,6 @@ public class AnonymousClassDeclarationObject implements LocationInfoProvider {
         return anonName;
     }
 
-
     public List<VariableDeclaration> getVariableDeclarations() {
         return variableDeclarations;
     }
@@ -65,6 +64,10 @@ public class AnonymousClassDeclarationObject implements LocationInfoProvider {
 
     public List<AnonymousClassDeclarationObject> getAnonymousClassDeclarations() {
         return anonymousClassDeclarations;
+    }
+
+    public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
+        return this.methodInvocationMap;
     }
 
     public List<String> getStringLiterals() {

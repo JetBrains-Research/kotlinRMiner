@@ -273,4 +273,17 @@ public class UMLModelDiff {
     return false;
   }
 
+  public static boolean looksLikeSameType(String parent, String addedClassName) {
+    if (addedClassName.contains(".") && !parent.contains(".")) {
+      return parent.equals(addedClassName.substring(addedClassName.lastIndexOf(".") + 1));
+    }
+    if (parent.contains(".") && !addedClassName.contains(".")) {
+      return addedClassName.equals(parent.substring(parent.lastIndexOf(".") + 1));
+    }
+    if (parent.contains(".") && addedClassName.contains(".")) {
+      return UMLType.extractTypeObject(parent).equalClassType(UMLType.extractTypeObject(addedClassName));
+    }
+    return parent.equals(addedClassName);
+  }
+
 }

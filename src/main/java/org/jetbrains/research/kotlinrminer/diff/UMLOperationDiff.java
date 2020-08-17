@@ -29,9 +29,9 @@ public class UMLOperationDiff {
   public UMLOperationDiff(UMLOperation removedOperation, UMLOperation addedOperation) {
     this.removedOperation = removedOperation;
     this.addedOperation = addedOperation;
-    this.addedParameters = new ArrayList<UMLParameter>();
-    this.removedParameters = new ArrayList<UMLParameter>();
-    this.parameterDiffList = new ArrayList<UMLParameterDiff>();
+    this.addedParameters = new ArrayList<>();
+    this.removedParameters = new ArrayList<>();
+    this.parameterDiffList = new ArrayList<>();
     this.visibilityChanged = false;
     this.abstractionChanged = false;
     this.returnTypeChanged = false;
@@ -133,13 +133,13 @@ public class UMLOperationDiff {
   }
 
   private List<SimpleEntry<UMLParameter, UMLParameter>> updateAddedRemovedParameters(UMLOperation removedOperation, UMLOperation addedOperation) {
-    List<SimpleEntry<UMLParameter, UMLParameter>> matchedParameters = new ArrayList<SimpleEntry<UMLParameter, UMLParameter>>();
+    List<SimpleEntry<UMLParameter, UMLParameter>> matchedParameters = new ArrayList<>();
     for(UMLParameter parameter1 : removedOperation.getParameters()) {
       if(!parameter1.getKind().equals("return")) {
         boolean found = false;
         for(UMLParameter parameter2 : addedOperation.getParameters()) {
           if(parameter1.equalsIncludingName(parameter2)) {
-            matchedParameters.add(new SimpleEntry<UMLParameter, UMLParameter>(parameter1, parameter2));
+            matchedParameters.add(new SimpleEntry<>(parameter1, parameter2));
             found = true;
             break;
           }
@@ -154,7 +154,7 @@ public class UMLOperationDiff {
         boolean found = false;
         for(UMLParameter parameter2 : removedOperation.getParameters()) {
           if(parameter1.equalsIncludingName(parameter2)) {
-            matchedParameters.add(new SimpleEntry<UMLParameter, UMLParameter>(parameter2, parameter1));
+            matchedParameters.add(new SimpleEntry<>(parameter2, parameter1));
             found = true;
             break;
           }
@@ -231,7 +231,7 @@ public class UMLOperationDiff {
   }
 
   public Set<Refactoring> getRefactorings() {
-    Set<Refactoring> refactorings = new LinkedHashSet<Refactoring>();
+    Set<Refactoring> refactorings = new LinkedHashSet<>();
     return refactorings;
   }
 }

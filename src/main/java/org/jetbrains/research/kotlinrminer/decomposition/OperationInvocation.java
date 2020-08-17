@@ -23,9 +23,8 @@ import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
 import org.jetbrains.research.kotlinrminer.util.ReplacementUtil;
 
 public class OperationInvocation extends AbstractCall {
-
   private String methodName;
-  private List<String> subExpressions = new ArrayList<String>();
+  private List<String> subExpressions = new ArrayList<>();
   private volatile int hashCode = 0;
 
   public OperationInvocation(KtFile ktFile, String filePath, KtNamedFunction invocation) {
@@ -33,7 +32,7 @@ public class OperationInvocation extends AbstractCall {
         LocationInfo.CodeElementType.METHOD_INVOCATION);
     this.methodName = invocation.getName();
     this.typeArguments = invocation.getValueParameters().size();
-    this.arguments = new ArrayList<String>();
+    this.arguments = new ArrayList<>();
     List<KtParameter> args = invocation.getValueParameters();
     for (KtParameter argument : args) {
       this.arguments.add(argument.getName());
@@ -49,7 +48,7 @@ public class OperationInvocation extends AbstractCall {
         LocationInfo.CodeElementType.CONSTRUCTOR_INVOCATION);
     this.methodName = "this";
     this.typeArguments = invocation.getTypeParameters().size();
-    this.arguments = new ArrayList<String>();
+    this.arguments = new ArrayList<>();
     List<KtParameter> args = invocation.getValueParameters();
     for (KtParameter argument : args) {
       this.arguments.add(argument.getName());
@@ -142,7 +141,7 @@ public class OperationInvocation extends AbstractCall {
     newOperationInvocation.methodName = this.methodName;
     newOperationInvocation.locationInfo = this.locationInfo;
     update(newOperationInvocation, oldExpression, newExpression);
-    newOperationInvocation.subExpressions = new ArrayList<String>();
+    newOperationInvocation.subExpressions = new ArrayList<>();
     for (String argument : this.subExpressions) {
       newOperationInvocation.subExpressions.add(
           ReplacementUtil.performReplacement(argument, oldExpression, newExpression));
@@ -163,12 +162,12 @@ public class OperationInvocation extends AbstractCall {
   }
 
   public boolean matchesOperation(UMLOperation operation) {
-    return matchesOperation(operation, new HashMap<String, UMLType>(), null);
+    return matchesOperation(operation, new HashMap<>(), null);
   }
 
   public boolean matchesOperation(UMLOperation operation, Map<String, UMLType> variableTypeMap,
                                   UMLModelDiff modelDiff) {
-    List<UMLType> inferredArgumentTypes = new ArrayList<UMLType>();
+    List<UMLType> inferredArgumentTypes = new ArrayList<>();
     for (String arg : arguments) {
       int indexOfOpeningParenthesis = arg.indexOf("(");
       int indexOfOpeningSquareBracket = arg.indexOf("[");
@@ -328,12 +327,12 @@ public class OperationInvocation extends AbstractCall {
   }
 
   public Set<String> callChainIntersection(OperationInvocation other) {
-    Set<String> s1 = new LinkedHashSet<String>(this.subExpressions);
+    Set<String> s1 = new LinkedHashSet<>(this.subExpressions);
     s1.add(this.actualString());
-    Set<String> s2 = new LinkedHashSet<String>(other.subExpressions);
+    Set<String> s2 = new LinkedHashSet<>(other.subExpressions);
     s2.add(other.actualString());
 
-    Set<String> intersection = new LinkedHashSet<String>(s1);
+    Set<String> intersection = new LinkedHashSet<>(s1);
     intersection.retainAll(s2);
     return intersection;
   }
@@ -341,7 +340,7 @@ public class OperationInvocation extends AbstractCall {
   private Set<String> subExpressionIntersection(OperationInvocation other) {
     Set<String> subExpressions1 = this.subExpressions();
     Set<String> subExpressions2 = other.subExpressions();
-    Set<String> intersection = new LinkedHashSet<String>(subExpressions1);
+    Set<String> intersection = new LinkedHashSet<>(subExpressions1);
     intersection.retainAll(subExpressions2);
     if (subExpressions1.size() == subExpressions2.size()) {
       Iterator<String> it1 = subExpressions1.iterator();
@@ -359,7 +358,7 @@ public class OperationInvocation extends AbstractCall {
   }
 
   private Set<String> subExpressions() {
-    Set<String> subExpressions = new LinkedHashSet<String>(this.subExpressions);
+    Set<String> subExpressions = new LinkedHashSet<>(this.subExpressions);
     String thisExpression = this.expression;
     if (thisExpression != null) {
       if (thisExpression.contains(".")) {
@@ -380,8 +379,7 @@ public class OperationInvocation extends AbstractCall {
     String s1 = getMethodName().toLowerCase();
     String s2 = ((OperationInvocation) call).getMethodName().toLowerCase();
     int distance = StringDistance.editDistance(s1, s2);
-    double normalized = (double) distance / (double) Math.max(s1.length(), s2.length());
-    return normalized;
+    return (double) distance / (double) Math.max(s1.length(), s2.length());
   }
 
   public boolean equals(Object o) {
@@ -402,9 +400,9 @@ public class OperationInvocation extends AbstractCall {
     sb.append("(");
     if (typeArguments > 0) {
       for (int i = 0; i < typeArguments - 1; i++) {
-        sb.append("arg" + i).append(", ");
+        sb.append("arg").append(i).append(", ");
       }
-      sb.append("arg" + (typeArguments - 1));
+      sb.append("arg").append(typeArguments - 1);
     }
     sb.append(")");
     return sb.toString();
@@ -489,7 +487,7 @@ public class OperationInvocation extends AbstractCall {
           !other.expression.startsWith(this.expression);
     }
     boolean differentName = !this.methodName.equals(other.methodName);
-    Set<String> argumentIntersection = new LinkedHashSet<String>(this.arguments);
+    Set<String> argumentIntersection = new LinkedHashSet<>(this.arguments);
     argumentIntersection.retainAll(other.arguments);
     boolean argumentFoundInExpression = false;
     if (this.expression != null) {
