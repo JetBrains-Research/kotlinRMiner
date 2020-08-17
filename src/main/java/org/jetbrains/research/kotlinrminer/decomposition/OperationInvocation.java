@@ -189,20 +189,18 @@ public class OperationInvocation extends AbstractCall {
       } else if (arg.startsWith("\"") && arg.endsWith("\"")) {
         inferredArgumentTypes.add(UMLType.extractTypeObject("String"));
       } else if (arg.startsWith("\'") && arg.endsWith("\'")) {
-        inferredArgumentTypes.add(UMLType.extractTypeObject("char"));
+        inferredArgumentTypes.add(UMLType.extractTypeObject("Char"));
       } else if (arg.endsWith(".class")) {
         inferredArgumentTypes.add(UMLType.extractTypeObject("Class"));
-      } else if (arg.equals("true")) {
-        inferredArgumentTypes.add(UMLType.extractTypeObject("boolean"));
-      } else if (arg.equals("false")) {
-        inferredArgumentTypes.add(UMLType.extractTypeObject("boolean"));
-      } else if (arg.startsWith("new ") && arg.contains("(") &&
-          openingParenthesisBeforeSquareBracket) {
-        String type = arg.substring(4, arg.indexOf("("));
+      } else if (arg.equals("True")) {
+        inferredArgumentTypes.add(UMLType.extractTypeObject("Boolean"));
+      } else if (arg.equals("False")) {
+        inferredArgumentTypes.add(UMLType.extractTypeObject("Boolean"));
+      } else if (arg.contains("(") && openingParenthesisBeforeSquareBracket) {
+        String type = arg.substring(0, arg.indexOf("("));
         inferredArgumentTypes.add(UMLType.extractTypeObject(type));
-      } else if (arg.startsWith("new ") && arg.contains("[") &&
-          openingSquareBracketBeforeParenthesis) {
-        String type = arg.substring(4, arg.indexOf("["));
+      } else if (arg.contains("[") && openingSquareBracketBeforeParenthesis) {
+        String type = arg.substring(0, arg.indexOf("["));
         for (int i = 0; i < arg.length(); i++) {
           if (arg.charAt(i) == '[') {
             type = type + "[]";
