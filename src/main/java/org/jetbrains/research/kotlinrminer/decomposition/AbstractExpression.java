@@ -6,10 +6,11 @@ import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public class AbstractExpression extends AbstractCodeFragment {
-    private String expression;
-    private LocationInfo locationInfo;
+    private final String expression;
+    private final LocationInfo locationInfo;
     private CompositeStatementObject owner;
     private List<String> variables;
     private List<String> types;
@@ -20,11 +21,16 @@ public class AbstractExpression extends AbstractCodeFragment {
     private List<String> typeLiterals;
     private List<VariableDeclaration> variableDeclarations;
     private List<String> arrayAccesses;
+    private List<String> arguments;
     private List<String> prefixExpressions;
     private List<String> postfixExpressions;
     private List<LambdaExpressionObject> lambdas;
+    private Map<String, List<ObjectCreation>> creationMap;
 
-    public AbstractExpression(KtFile cu, String filePath, KtExpression expression, LocationInfo.CodeElementType codeElementType) {
+    public AbstractExpression(KtFile cu,
+                              String filePath,
+                              KtExpression expression,
+                              LocationInfo.CodeElementType codeElementType) {
         this.locationInfo = new LocationInfo(cu, filePath, expression, codeElementType);
         Visitor visitor = new Visitor(cu, filePath);
         expression.accept(visitor);
@@ -37,11 +43,13 @@ public class AbstractExpression extends AbstractCodeFragment {
         this.booleanLiterals = visitor.getBooleanLiterals();
         this.typeLiterals = visitor.getTypeLiterals();
         this.arrayAccesses = visitor.getArrayAccesses();
+        this.arguments = visitor.getArguments();
         this.prefixExpressions = visitor.getPrefixExpressions();
         this.postfixExpressions = visitor.getPostfixExpressions();
         this.lambdas = visitor.getLambdas();
         this.expression = expression.getText();
         this.owner = null;
+        this.creationMap = visitor.getCreationMap();
     }
 
     public void setOwner(CompositeStatementObject owner) {
@@ -82,6 +90,68 @@ public class AbstractExpression extends AbstractCodeFragment {
     @Override
     public List<VariableDeclaration> getVariableDeclarations() {
         return variableDeclarations;
+    }
+
+    @Override
+    public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
+        //TODO: Implement collecting of methods' invocations
+        return null;
+    }
+
+    @Override
+    public List<AnonymousClassDeclarationObject> getAnonymousClassDeclarations() {
+        //TODO: Implement collecting of anonymous class declarations
+        return null;
+    }
+
+    @Override
+    public List<String> getStringLiterals() {
+        return stringLiterals;
+    }
+
+    @Override
+    public List<String> getNumberLiterals() {
+        return numberLiterals;
+    }
+
+    @Override
+    public List<String> getNullLiterals() {
+        return nullLiterals;
+    }
+
+    @Override
+    public List<String> getBooleanLiterals() {
+        return booleanLiterals;
+    }
+
+    @Override
+    public List<String> getTypeLiterals() {
+        return typeLiterals;
+    }
+
+    @Override
+    public Map<String, List<ObjectCreation>> getCreationMap() {
+        return creationMap;
+    }
+
+    @Override
+    public List<String> getArrayAccesses() {
+        return arrayAccesses;
+    }
+
+    @Override
+    public List<String> getPrefixExpressions() {
+        return prefixExpressions;
+    }
+
+    @Override
+    public List<String> getPostfixExpressions() {
+        return postfixExpressions;
+    }
+
+    @Override
+    public List<String> getArguments() {
+        return arguments;
     }
 
     public LocationInfo getLocationInfo() {

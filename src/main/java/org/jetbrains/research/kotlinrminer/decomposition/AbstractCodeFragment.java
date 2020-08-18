@@ -60,8 +60,6 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
 
     public abstract Map<String, List<ObjectCreation>> getCreationMap();
 
-    public abstract List<String> getInfixOperators();
-
     public abstract List<String> getArrayAccesses();
 
     public abstract List<String> getPrefixExpressions();
@@ -123,13 +121,13 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
         for (String objectCreation : creationMap.keySet()) {
             List<ObjectCreation> creations = creationMap.get(objectCreation);
             for (ObjectCreation creation : creations) {
-                if ((objectCreation + ";\n").equals(statement) || objectCreation.equals(statement)) {
+                if ((objectCreation + "\n").equals(statement) || objectCreation.equals(statement)) {
                     creation.coverage = AbstractCall.StatementCoverageType.ONLY_CALL;
                     return creation;
-                } else if (("return " + objectCreation + ";\n").equals(statement)) {
+                } else if (("return " + objectCreation + "\n").equals(statement)) {
                     creation.coverage = AbstractCall.StatementCoverageType.RETURN_CALL;
                     return creation;
-                } else if (("throw " + objectCreation + ";\n").equals(statement)) {
+                } else if (("throw " + objectCreation + "\n").equals(statement)) {
                     creation.coverage = AbstractCall.StatementCoverageType.THROW_CALL;
                     return creation;
                 } else if (expressionIsTheInitializerOfVariableDeclaration(objectCreation)) {
@@ -201,12 +199,12 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
 
     private boolean isCastExpressionCoveringEntireFragment(String expression) {
         String statement = getString();
-        int index = statement.indexOf(expression + ";\n");
+        int index = statement.indexOf(expression + "\n");
         if (index != -1) {
             String prefix = statement.substring(0, index);
             if (prefix.contains("(") && prefix.contains(")")) {
                 String casting = prefix.substring(prefix.indexOf("("), prefix.indexOf(")") + 1);
-                return ("return " + casting + expression + ";\n").equals(statement);
+                return ("return " + casting + expression + "\n").equals(statement);
             }
         }
         return false;
@@ -242,7 +240,7 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
         if (statement.contains("=")) {
             List<String> variables = getVariables();
             if (variables.size() > 0) {
-                String s = variables.get(0) + "=" + expression + ";\n";
+                String s = variables.get(0) + "=" + expression + "\n";
                 return statement.equals(s);
             }
         }
@@ -250,7 +248,7 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
     }
 
     public boolean throwsNewException() {
-        return getString().startsWith("throw new ");
+        return getString().startsWith("throw ");
     }
 
     public boolean countableStatement() {
@@ -260,15 +258,15 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
             return true;
         }
         //covers the cases of methods with only one statement in their body
-        if (this instanceof AbstractStatement && ((AbstractStatement) this).getParent() != null &&
-                ((AbstractStatement) this).getParent().statementCount() == 1 && ((AbstractStatement) this).getParent().getParent() == null) {
+        if (this instanceof AbstractStatement && this.getParent() != null &&
+                this.getParent().statementCount() == 1 && this.getParent().getParent() == null) {
             return true;
         }
         return !statement.equals("{") && !statement.startsWith("catch(") && !statement.startsWith(
-                "case ") && !statement.startsWith("default :") &&
-                !statement.startsWith("return true;") && !statement.startsWith(
-                "return false;") && !statement.startsWith("return this;") && !statement.startsWith(
-                "return null;") && !statement.startsWith("return;");
+                "case ") && !statement.startsWith("else ") &&
+                !statement.startsWith("return True") && !statement.startsWith(
+                "return False") && !statement.startsWith("return this") && !statement.startsWith(
+                "return null") && !statement.startsWith("return");
     }
 
     public OperationInvocation invocationCoveringEntireFragment() {
@@ -280,7 +278,7 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
                 if ((methodInvocation + ";\n").equals(statement) || methodInvocation.equals(statement)) {
                     invocation.coverage = AbstractCall.StatementCoverageType.ONLY_CALL;
                     return invocation;
-                } else if (("return " + methodInvocation + ";\n").equals(statement)) {
+                } else if (("return " + methodInvocation + "\n").equals(statement)) {
                     invocation.coverage = AbstractCall.StatementCoverageType.RETURN_CALL;
                     return invocation;
                 } else if (isCastExpressionCoveringEntireFragment(methodInvocation)) {
