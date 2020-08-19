@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
  * Performs matching of statements from methods' bodies from parent and child commit.
  */
 public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper> {
+
     private final UMLOperation operation1;
     private final UMLOperation operation2;
     private final Set<AbstractCodeMapping> mappings;
@@ -431,6 +432,26 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
                 leaves2.remove(minStatementMapping.getFragment2());
             }
         }
+    }
+
+    public UMLOperation getOperation1() {
+        return operation1;
+    }
+
+    public UMLOperation getOperation2() {
+        return operation2;
+    }
+
+    public List<UMLOperationBodyMapper> getChildMappers() {
+        return childMappers;
+    }
+
+    public UMLOperationBodyMapper getParentMapper() {
+        return parentMapper;
+    }
+
+    public UMLOperation getCallSiteOperation() {
+        return callSiteOperation;
     }
 
     private boolean variableDeclarationMappingsWithSameReplacementTypes(Set<LeafMapping> mappingSet) {
