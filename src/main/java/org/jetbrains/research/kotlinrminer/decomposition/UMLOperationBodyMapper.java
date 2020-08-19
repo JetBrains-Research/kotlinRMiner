@@ -1182,7 +1182,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         findReplacements(numberLiterals1, numberLiterals2, replacementInfo, ReplacementType.NUMBER_LITERAL);
         if (!statement1.containsInitializerOfVariableDeclaration(numberLiterals1) &&
                 !statement2.containsInitializerOfVariableDeclaration(variables2) &&
-                !statement1.getString().endsWith("=0;\n")) {
+                !statement1.getString().endsWith("=0\n")) {
             findReplacements(numberLiterals1, variables2, replacementInfo,
                              ReplacementType.VARIABLE_REPLACED_WITH_NUMBER_LITERAL);
         }
@@ -1231,11 +1231,11 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
                 findReplacements(ternaryExpressions1, nullLiterals2, replacementInfo, ReplacementType.NULL_LITERAL_REPLACED_WITH_CONDITIONAL_EXPRESSION);
             }
         }*/
-        if (!statement1.getString().endsWith("=true;\n") && !statement1.getString().endsWith("=false;\n")) {
+        if (!statement1.getString().endsWith("=True\n") && !statement1.getString().endsWith("=False\n")) {
             findReplacements(booleanLiterals1, variables2, replacementInfo,
                              Replacement.ReplacementType.BOOLEAN_REPLACED_WITH_VARIABLE);
         }
-        if (!statement2.getString().endsWith("=true;\n") && !statement2.getString().endsWith("=false;\n")) {
+        if (!statement2.getString().endsWith("=True\n") && !statement2.getString().endsWith("=False\n")) {
             findReplacements(arguments1, booleanLiterals2, replacementInfo,
                              Replacement.ReplacementType.BOOLEAN_REPLACED_WITH_ARGUMENT);
         }
@@ -1508,7 +1508,8 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
                         methodInvocationMap1.get(invocationCoveringTheEntireStatement1.getExpression());
                 List<? extends AbstractCall> invokedOperationsAfter =
                         methodInvocationMap2.get(invocationCoveringTheEntireStatement2.getExpression());
-                if (invokedOperationsBefore != null && invokedOperationsBefore.size() > 0 && invokedOperationsAfter != null && invokedOperationsAfter.size() > 0) {
+                if (invokedOperationsBefore != null && invokedOperationsBefore.size() > 0 &&
+                        invokedOperationsAfter != null && invokedOperationsAfter.size() > 0) {
                     OperationInvocation invokedOperationBefore = (OperationInvocation) invokedOperationsBefore.get(0);
                     OperationInvocation invokedOperationAfter = (OperationInvocation) invokedOperationsAfter.get(0);
                     Replacement replacement =
@@ -1710,7 +1711,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         }
         for (String methodInvocation1 : methodInvocations1) {
             for (AbstractCall operationInvocation1 : methodInvocationMap1.get(methodInvocation1)) {
-                if (statement1.getString().endsWith(methodInvocation1 + ";\n") && (r =
+                if (statement1.getString().endsWith(methodInvocation1 + "\n") && (r =
                         operationInvocation1.makeReplacementForReturnedArgument(
                                 replacementInfo.getArgumentizedString2())) != null) {
                     if (operationInvocation1.makeReplacementForReturnedArgument(statement2.getString()) != null) {
@@ -1729,7 +1730,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         }
         for (String methodInvocation2 : methodInvocations2) {
             for (AbstractCall operationInvocation2 : methodInvocationMap2.get(methodInvocation2)) {
-                if (statement2.getString().endsWith(methodInvocation2 + ";\n") && (r =
+                if (statement2.getString().endsWith(methodInvocation2 + "\n") && (r =
                         operationInvocation2.makeReplacementForWrappedCall(
                                 replacementInfo.getArgumentizedString1())) != null) {
                     if (operationInvocation2.makeReplacementForWrappedCall(statement1.getString()) != null) {
@@ -1751,7 +1752,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         if (invocationCoveringTheEntireStatement2 != null) {
             for (String key1 : methodInvocationMap1.keySet()) {
                 for (AbstractCall invocation1 : methodInvocationMap1.get(key1)) {
-                    if (statement1.getString().endsWith(key1 + ";\n") &&
+                    if (statement1.getString().endsWith(key1 + "\n") &&
                             methodInvocationMap2.containsKey(invocation1.getExpression())) {
                         Replacement replacement = new MethodInvocationReplacement(invocation1.actualString(),
                                                                                   invocationCoveringTheEntireStatement2.actualString(),
@@ -1768,7 +1769,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         if (invocationCoveringTheEntireStatement1 != null) {
             for (String key2 : methodInvocationMap2.keySet()) {
                 for (AbstractCall invocation2 : methodInvocationMap2.get(key2)) {
-                    if (statement2.getString().endsWith(key2 + ";\n") &&
+                    if (statement2.getString().endsWith(key2 + "\n") &&
                             methodInvocationMap1.containsKey(invocation2.getExpression())) {
                         Replacement replacement =
                                 new MethodInvocationReplacement(invocationCoveringTheEntireStatement1.actualString(),
@@ -1786,7 +1787,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         if (creationCoveringTheEntireStatement1 != null) {
             for (String key2 : methodInvocationMap2.keySet()) {
                 for (AbstractCall invocation2 : methodInvocationMap2.get(key2)) {
-                    if (statement2.getString().endsWith(key2 + ";\n") &&
+                    if (statement2.getString().endsWith(key2 + "\n") &&
                             creationCoveringTheEntireStatement1.getArguments().contains(invocation2.getExpression())) {
 /*                        TODO: Implement ClassInstanceCreationWithMethodInvocationReplacement
 
@@ -1945,7 +1946,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         }
         for (String creation1 : creations1) {
             for (AbstractCall objectCreation1 : creationMap1.get(creation1)) {
-                if (statement1.getString().endsWith(creation1 + ";\n")
+                if (statement1.getString().endsWith(creation1 + "\n")
                         && (r = objectCreation1.makeReplacementForReturnedArgument(
                         replacementInfo.getArgumentizedString2())) != null) {
                     replacementInfo.addReplacement(r);
@@ -1979,9 +1980,9 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         }
 
         if (invocationCoveringTheEntireStatement2 != null && statement2.getString().equals(
-                invocationCoveringTheEntireStatement2.actualString() + ";\n") &&
+                invocationCoveringTheEntireStatement2.actualString() + "\n") &&
                 invocationCoveringTheEntireStatement2.getArguments().size() == 1 && statement1.getString().endsWith(
-                "=" + invocationCoveringTheEntireStatement2.getArguments().get(0) + ";\n") &&
+                "=" + invocationCoveringTheEntireStatement2.getArguments().get(0) + "\n") &&
                 invocationCoveringTheEntireStatement2.expressionIsNullOrThis() && invocationCoveringTheEntireStatement2.getName().startsWith(
                 "set")) {
             String prefix1 = statement1.getString().substring(0, statement1.getString().lastIndexOf("="));
@@ -2415,11 +2416,11 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         if (containsMethodSignatureOfAnonymousClass(string2)) {
             string2 = string2.substring(0, string2.indexOf("\n"));
         }
-        if (string1.contains("=") && string1.endsWith(";\n") && string2.startsWith("return ") && string2.endsWith(
-                ";\n")) {
+        if (string1.contains("=") && string1.endsWith("\n") && string2.startsWith("return ") && string2.endsWith(
+                "\n")) {
             boolean typeReplacement = false, compatibleTypes = false, classInstanceCreationReplacement = false;
-            String assignment1 = string1.substring(string1.indexOf("=") + 1, string1.lastIndexOf(";\n"));
-            String assignment2 = string2.substring(7, string2.lastIndexOf(";\n"));
+            String assignment1 = string1.substring(string1.indexOf("=") + 1, string1.lastIndexOf("\n"));
+            String assignment2 = string2.substring(7, string2.lastIndexOf("\n"));
             UMLType type1 = null, type2 = null;
             ObjectCreation objectCreation1 = null, objectCreation2 = null;
             Map<String, String> argumentToParameterMap = new LinkedHashMap<>();
@@ -2466,11 +2467,11 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
                     classInstanceCreationReplacement = true;
             }
             return typeReplacement && !compatibleTypes && replacedArguments == minArguments && classInstanceCreationReplacement;
-        } else if (string1.startsWith("return ") && string1.endsWith(";\n") && string2.contains(
-                "=") && string2.endsWith(";\n")) {
+        } else if (string1.startsWith("return ") && string1.endsWith("\n") && string2.contains(
+                "=") && string2.endsWith("\n")) {
             boolean typeReplacement = false, compatibleTypes = false, classInstanceCreationReplacement = false;
-            String assignment1 = string1.substring(7, string1.lastIndexOf(";\n"));
-            String assignment2 = string2.substring(string2.indexOf("=") + 1, string2.lastIndexOf(";\n"));
+            String assignment1 = string1.substring(7, string1.lastIndexOf("\n"));
+            String assignment2 = string2.substring(string2.indexOf("=") + 1, string2.lastIndexOf("\n"));
             UMLType type1 = null, type2 = null;
             ObjectCreation objectCreation1 = null, objectCreation2 = null;
             Map<String, String> argumentToParameterMap = new LinkedHashMap<>();
@@ -2533,13 +2534,13 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         if (containsMethodSignatureOfAnonymousClass(string2)) {
             string2 = string2.substring(0, string2.indexOf("\n"));
         }
-        if (string1.contains("=") && string1.endsWith(";\n") && string2.contains("=") && string2.endsWith(";\n")) {
+        if (string1.contains("=") && string1.endsWith("\n") && string2.contains("=") && string2.endsWith("\n")) {
             boolean typeReplacement = false, variableRename = false,
                     classInstanceCreationReplacement = false;
             String variableName1 = string1.substring(0, string1.indexOf("="));
             String variableName2 = string2.substring(0, string2.indexOf("="));
-            String assignment1 = string1.substring(string1.indexOf("=") + 1, string1.lastIndexOf(";\n"));
-            String assignment2 = string2.substring(string2.indexOf("=") + 1, string2.lastIndexOf(";\n"));
+            String assignment1 = string1.substring(string1.indexOf("=") + 1, string1.lastIndexOf("\n"));
+            String assignment2 = string2.substring(string2.indexOf("=") + 1, string2.lastIndexOf("\n"));
             Map<String, List<ObjectCreation>> creationMap1 = statement1.getCreationMap();
             Map<String, List<ObjectCreation>> creationMap2 = statement2.getCreationMap();
             boolean compatibleTypes = isCompatibleTypes(assignment1, assignment2, creationMap1, creationMap2);
@@ -3189,9 +3190,9 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
     private String preprocessInput(AbstractCodeFragment leaf1, AbstractCodeFragment leaf2) {
         String argumentizedString = leaf1.getArgumentizedString();
         if (leaf1 instanceof StatementObject && leaf2 instanceof AbstractExpression) {
-            if (argumentizedString.startsWith("return ") && argumentizedString.endsWith(";\n")) {
+            if (argumentizedString.startsWith("return ") && argumentizedString.endsWith("\n")) {
                 argumentizedString = argumentizedString.substring("return ".length(),
-                                                                  argumentizedString.lastIndexOf(";\n"));
+                                                                  argumentizedString.lastIndexOf("\n"));
             }
         }
         return argumentizedString;
