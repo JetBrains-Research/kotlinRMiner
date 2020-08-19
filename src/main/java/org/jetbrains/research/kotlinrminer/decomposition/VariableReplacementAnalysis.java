@@ -657,6 +657,7 @@ public class VariableReplacementAnalysis {
       AbstractCodeMapping mapping = mappings.iterator().next();
       String fragment1 = mapping.getFragment1().getString();
       String fragment2 = mapping.getFragment2().getString();
+      //TODO check if this corresponds to the assignment of attributes in kotlin
       if (fragment1.contains("=") && fragment1.endsWith("\n") && fragment2.contains("=") &&
           fragment2.endsWith("\n")) {
         String value1 =
