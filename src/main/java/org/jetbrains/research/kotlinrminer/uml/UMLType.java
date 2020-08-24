@@ -6,6 +6,7 @@ import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.CompositeType;
 import org.jetbrains.research.kotlinrminer.decomposition.LeafType;
 import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
+import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -91,7 +92,8 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
             return equalTypeArguments(typeObject) && this.arrayDimension == typeObject.arrayDimension;
         else if (this.isParameterized() && this.typeArgumentsToString().equals("<?>") && !typeObject.isParameterized())
             return this.arrayDimension == typeObject.arrayDimension;
-        else if (!this.isParameterized() && typeObject.isParameterized() && typeObject.typeArgumentsToString().equals("<?>"))
+        else if (!this.isParameterized() && typeObject.isParameterized() && typeObject.typeArgumentsToString().equals(
+                "<?>"))
             return this.arrayDimension == typeObject.arrayDimension;
         return false;
     }
@@ -151,7 +153,8 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
         int arrayDimension = 0;
         List<UMLType> typeArgumentDecomposition = new ArrayList<>();
         if (qualifiedName.contains("<") && qualifiedName.contains(">")) {
-            String typeArguments = qualifiedName.substring(qualifiedName.indexOf("<") + 1, qualifiedName.lastIndexOf(">"));
+            String typeArguments =
+                    qualifiedName.substring(qualifiedName.indexOf("<") + 1, qualifiedName.lastIndexOf(">"));
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < typeArguments.length(); i++) {
                 char charAt = typeArguments.charAt(i);
@@ -214,18 +217,21 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
                 UMLType returnType = functionType.getReturnTypeReference() == null ?
                         null : extractTypeObject(functionType.getReturnTypeReference().getText());
                 if (returnType != null)
-                    returnType.isNullable = functionType.getReturnTypeReference().getTypeElement() instanceof KtNullableType;
+                    returnType.isNullable =
+                            functionType.getReturnTypeReference().getTypeElement() instanceof KtNullableType;
                 UMLType receiver = functionType.getReceiverTypeReference() == null ?
                         null : extractTypeObject(functionType.getReceiverTypeReference().getText());
                 if (receiver != null)
-                    receiver.isNullable = functionType.getReceiverTypeReference().getTypeElement() instanceof KtNullableType;
+                    receiver.isNullable =
+                            functionType.getReceiverTypeReference().getTypeElement() instanceof KtNullableType;
                 List<UMLType> umlTypeList = new ArrayList<>();
                 if (functionType.getParameterList() != null) {
                     List<KtParameter> parameterList = functionType.getParameterList().getParameters();
                     for (KtParameter ktParameter : parameterList) {
                         UMLType umlType = extractTypeObject(ktParameter.getText());
                         if (ktParameter.getTypeReference() != null)
-                            umlType.isNullable = ktParameter.getTypeReference().getTypeElement() instanceof KtNullableType;
+                            umlType.isNullable =
+                                    ktParameter.getTypeReference().getTypeElement() instanceof KtNullableType;
                         umlTypeList.add(umlType);
                     }
                 }
@@ -259,6 +265,13 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
             return extractTypeObject(ktFile, filePath, property.getTypeReference());
         }
         return null;
+    }
+
+    public double normalizedNameDistance(UMLType type) {
+        String s1 = this.toString();
+        String s2 = type.toString();
+        int distance = StringDistance.editDistance(s1, s2);
+        return (double) distance / (double) Math.max(s1.length(), s2.length());
     }
 
     public boolean isNullable() {

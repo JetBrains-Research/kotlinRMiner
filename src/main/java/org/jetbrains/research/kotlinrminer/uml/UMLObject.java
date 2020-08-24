@@ -6,6 +6,7 @@ import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +17,11 @@ public class UMLObject implements Comparable<UMLObject>, Serializable, LocationI
     private String name;
     private List<UMLOperation> methods;
     private List<UMLAttribute> properties;
+
+    public UMLObject() {
+        this.methods = new ArrayList<>();
+        this.properties = new ArrayList<>();
+    }
 
     @Override
     public int compareTo(@NotNull UMLObject o) {

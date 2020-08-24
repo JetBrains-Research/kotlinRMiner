@@ -29,5 +29,7 @@ public abstract class AbstractStatement extends AbstractCodeFragment {
 
     public abstract List<StatementObject> getLeaves();
 
+    public abstract List<String> stringRepresentation();
+
     public abstract int statementCount();
 }

@@ -36,12 +36,18 @@ public class KotlinRMiner {
         }
     }
 
-    private static void commitJSON(StringBuilder sb, String cloneURL, String currentCommitId, List<Refactoring> refactoringsAtRevision) {
+    private static void commitJSON(StringBuilder sb,
+                                   String cloneURL,
+                                   String currentCommitId,
+                                   List<Refactoring> refactoringsAtRevision) {
         sb.append("{").append("\n");
-        sb.append("\t").append("\"").append("repository").append("\"").append(": ").append("\"").append(cloneURL).append("\"").append(",").append("\n");
-        sb.append("\t").append("\"").append("sha1").append("\"").append(": ").append("\"").append(currentCommitId).append("\"").append(",").append("\n");
+        sb.append("\t").append("\"").append("repository").append("\"").append(": ").append("\"").append(
+                cloneURL).append("\"").append(",").append("\n");
+        sb.append("\t").append("\"").append("sha1").append("\"").append(": ").append("\"").append(
+                currentCommitId).append("\"").append(",").append("\n");
         String url = GitHistoryRefactoringMiner.extractCommitURL(cloneURL, currentCommitId);
-        sb.append("\t").append("\"").append("url").append("\"").append(": ").append("\"").append(url).append("\"").append(",").append("\n");
+        sb.append("\t").append("\"").append("url").append("\"").append(": ").append("\"").append(url).append(
+                "\"").append(",").append("\n");
         sb.append("\t").append("\"").append("refactorings").append("\"").append(": ");
         sb.append("[");
         int counter = 0;

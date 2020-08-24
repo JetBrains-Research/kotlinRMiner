@@ -26,7 +26,11 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
     private UMLJavadoc javadoc;
     private List<UMLAnnotation> annotations;
 
-    public UMLClass(String packageName, String name, LocationInfo locationInfo, boolean topLevel, List<String> importedTypes) {
+    public UMLClass(String packageName,
+                    String name,
+                    LocationInfo locationInfo,
+                    boolean topLevel,
+                    List<String> importedTypes) {
         super();
         this.locationInfo = locationInfo;
         this.packageName = packageName;
@@ -120,6 +124,7 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
         this.topLevel = topLevel;
     }
 
+    //TODO: fix the bug with extracting the visibility modifier
     public String getVisibility() {
         return visibility;
     }
@@ -198,15 +203,18 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
                 int otherArrayDimension = otherAttribute.getType().getArrayDimension();
                 String thisAttributeTypeComparedString = null;
                 if (thisAttributeType.contains("."))
-                    thisAttributeTypeComparedString = thisAttributeType.substring(thisAttributeType.lastIndexOf(".") + 1);
+                    thisAttributeTypeComparedString =
+                            thisAttributeType.substring(thisAttributeType.lastIndexOf(".") + 1);
                 else
                     thisAttributeTypeComparedString = thisAttributeType;
                 String otherAttributeTypeComparedString = null;
                 if (otherAttributeType.contains("."))
-                    otherAttributeTypeComparedString = otherAttributeType.substring(otherAttributeType.lastIndexOf(".") + 1);
+                    otherAttributeTypeComparedString =
+                            otherAttributeType.substring(otherAttributeType.lastIndexOf(".") + 1);
                 else
                     otherAttributeTypeComparedString = otherAttributeType;
-                if (thisAttributeTypeComparedString.equals(otherAttributeTypeComparedString) && thisArrayDimension == otherArrayDimension)
+                if (thisAttributeTypeComparedString.equals(
+                        otherAttributeTypeComparedString) && thisArrayDimension == otherArrayDimension)
                     return attribute;
             }
         }
@@ -227,15 +235,18 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
                         int otherArrayDimension = otherParameter.getType().getArrayDimension();
                         String thisParameterTypeComparedString = null;
                         if (thisParameterType.contains("."))
-                            thisParameterTypeComparedString = thisParameterType.substring(thisParameterType.lastIndexOf(".") + 1);
+                            thisParameterTypeComparedString =
+                                    thisParameterType.substring(thisParameterType.lastIndexOf(".") + 1);
                         else
                             thisParameterTypeComparedString = thisParameterType;
                         String otherParameterTypeComparedString = null;
                         if (otherParameterType.contains("."))
-                            otherParameterTypeComparedString = otherParameterType.substring(otherParameterType.lastIndexOf(".") + 1);
+                            otherParameterTypeComparedString =
+                                    otherParameterType.substring(otherParameterType.lastIndexOf(".") + 1);
                         else
                             otherParameterTypeComparedString = otherParameterType;
-                        if (!thisParameterTypeComparedString.equals(otherParameterTypeComparedString) || thisArrayDimension != otherArrayDimension) {
+                        if (!thisParameterTypeComparedString.equals(
+                                otherParameterTypeComparedString) || thisArrayDimension != otherArrayDimension) {
                             match = false;
                             break;
                         }
@@ -264,7 +275,8 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
     }
 
     private boolean equalTypeParameters(UMLClass umlClass) {
-        return this.typeParameters.equals(umlClass.typeParameters) || this.getTypeParameterNames().equals(umlClass.getTypeParameterNames());
+        return this.typeParameters.equals(umlClass.typeParameters) || this.getTypeParameterNames().equals(
+                umlClass.getTypeParameterNames());
     }
 
     public boolean equals(Object o) {
@@ -274,7 +286,8 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
 
         if (o instanceof UMLClass) {
             UMLClass umlClass = (UMLClass) o;
-            return this.packageName.equals(umlClass.packageName) && this.name.equals(umlClass.name) && this.sourceFile.equals(umlClass.sourceFile);
+            return this.packageName.equals(umlClass.packageName) && this.name.equals(
+                    umlClass.name) && this.sourceFile.equals(umlClass.sourceFile);
         }
         return false;
     }

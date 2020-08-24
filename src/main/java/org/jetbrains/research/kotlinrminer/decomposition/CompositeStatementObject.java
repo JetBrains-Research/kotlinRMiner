@@ -12,9 +12,13 @@ public class CompositeStatementObject extends AbstractStatement {
     private List<AbstractStatement> statementList;
     private List<AbstractExpression> expressionList;
     private List<VariableDeclaration> variableDeclarations;
-    private LocationInfo locationInfo;
+    private final LocationInfo locationInfo;
 
-    public CompositeStatementObject(KtFile cu, String filePath, KtElement statement, int depth, LocationInfo.CodeElementType codeElementType) {
+    public CompositeStatementObject(KtFile cu,
+                                    String filePath,
+                                    KtElement statement,
+                                    int depth,
+                                    LocationInfo.CodeElementType codeElementType) {
         super();
         this.setDepth(depth);
         this.locationInfo = new LocationInfo(cu, filePath, statement, codeElementType);
@@ -191,15 +195,6 @@ public class CompositeStatementObject extends AbstractStatement {
         return null;
     }
 
-    @Override
-    public List<LambdaExpressionObject> getLambdas() {
-        List<LambdaExpressionObject> lambdas = new ArrayList<>();
-        for (AbstractExpression expression : expressionList) {
-            lambdas.addAll(expression.getLambdas());
-        }
-        return lambdas;
-    }
-
     public Map<String, Set<String>> aliasedAttributes() {
         Map<String, Set<String>> map = new LinkedHashMap<>();
         for (StatementObject statement : getLeaves()) {
@@ -285,5 +280,167 @@ public class CompositeStatementObject extends AbstractStatement {
             }
         }
         return null;
+    }
+
+
+    public Map<String, List<OperationInvocation>> getAllMethodInvocations() {
+        Map<String, List<OperationInvocation>> map = new LinkedHashMap<>(getMethodInvocationMap());
+        for (AbstractStatement statement : statementList) {
+            if (statement instanceof CompositeStatementObject) {
+                CompositeStatementObject composite = (CompositeStatementObject) statement;
+                Map<String, List<OperationInvocation>> compositeMap = composite.getAllMethodInvocations();
+                for (String key : compositeMap.keySet()) {
+                    if (map.containsKey(key)) {
+                        map.get(key).addAll(compositeMap.get(key));
+                    } else {
+                        List<OperationInvocation> list = new ArrayList<>(compositeMap.get(key));
+                        map.put(key, list);
+                    }
+                }
+            } else if (statement instanceof StatementObject) {
+                StatementObject statementObject = (StatementObject) statement;
+                Map<String, List<OperationInvocation>> statementMap = statementObject.getMethodInvocationMap();
+                for (String key : statementMap.keySet()) {
+                    if (map.containsKey(key)) {
+                        map.get(key).addAll(statementMap.get(key));
+                    } else {
+                        List<OperationInvocation> list = new ArrayList<>(statementMap.get(key));
+                        map.put(key, list);
+                    }
+                }
+                for (LambdaExpressionObject lambda : statementObject.getLambdas()) {
+                    if (lambda.getBody() != null) {
+                        Map<String, List<OperationInvocation>> lambdaMap =
+                                lambda.getBody().getCompositeStatement().getAllMethodInvocations();
+                        for (String key : lambdaMap.keySet()) {
+                            if (map.containsKey(key)) {
+                                map.get(key).addAll(lambdaMap.get(key));
+                            } else {
+                                List<OperationInvocation> list = new ArrayList<>(lambdaMap.get(key));
+                                map.put(key, list);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public List<String> stringRepresentation() {
+        List<String> stringRepresentation = new ArrayList<>();
+        stringRepresentation.add(this.toString());
+        for (AbstractStatement statement : statementList) {
+            stringRepresentation.addAll(statement.stringRepresentation());
+        }
+        return stringRepresentation;
+    }
+
+    @Override
+    public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
+        //TODO: implement it
+        return null;
+    }
+
+    @Override
+    public List<AnonymousClassDeclarationObject> getAnonymousClassDeclarations() {
+        //TODO: implement it
+        return null;
+    }
+
+    @Override
+    public List<String> getStringLiterals() {
+        List<String> stringLiterals = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            stringLiterals.addAll(expression.getStringLiterals());
+        }
+        return stringLiterals;
+    }
+
+    @Override
+    public List<String> getNumberLiterals() {
+        List<String> numberLiterals = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            numberLiterals.addAll(expression.getNumberLiterals());
+        }
+        return numberLiterals;
+    }
+
+    @Override
+    public List<String> getNullLiterals() {
+        List<String> nullLiterals = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            nullLiterals.addAll(expression.getNullLiterals());
+        }
+        return nullLiterals;
+    }
+
+    @Override
+    public List<String> getBooleanLiterals() {
+        List<String> booleanLiterals = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            booleanLiterals.addAll(expression.getBooleanLiterals());
+        }
+        return booleanLiterals;
+    }
+
+    @Override
+    public List<String> getTypeLiterals() {
+        List<String> typeLiterals = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            typeLiterals.addAll(expression.getTypeLiterals());
+        }
+        return typeLiterals;
+    }
+
+    @Override
+    public Map<String, List<ObjectCreation>> getCreationMap() {
+        return null;
+    }
+
+    @Override
+    public List<String> getArrayAccesses() {
+        List<String> arrayAccesses = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            arrayAccesses.addAll(expression.getArrayAccesses());
+        }
+        return arrayAccesses;
+    }
+
+    @Override
+    public List<String> getPrefixExpressions() {
+        List<String> prefixExpressions = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            prefixExpressions.addAll(expression.getPrefixExpressions());
+        }
+        return prefixExpressions;
+    }
+
+    @Override
+    public List<String> getPostfixExpressions() {
+        List<String> postfixExpressions = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            postfixExpressions.addAll(expression.getPostfixExpressions());
+        }
+        return postfixExpressions;
+    }
+
+    @Override
+    public List<String> getArguments() {
+        List<String> arguments = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            arguments.addAll(expression.getArguments());
+        }
+        return arguments;
+    }
+
+    @Override
+    public List<LambdaExpressionObject> getLambdas() {
+        List<LambdaExpressionObject> lambdas = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            lambdas.addAll(expression.getLambdas());
+        }
+        return lambdas;
     }
 }

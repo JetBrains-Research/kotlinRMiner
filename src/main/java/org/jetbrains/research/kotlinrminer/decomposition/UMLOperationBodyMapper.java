@@ -1,5 +1,6 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringMinerTimedOutException;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.*;
@@ -24,7 +25,6 @@ import java.util.regex.Pattern;
  * Performs matching of statements from methods' bodies from parent and child commit.
  */
 public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper> {
-
     private final UMLOperation operation1;
     private final UMLOperation operation2;
     private final Set<AbstractCodeMapping> mappings;
@@ -33,12 +33,12 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
     private final List<CompositeStatementObject> nonMappedInnerNodesT1;
     private final List<CompositeStatementObject> nonMappedInnerNodesT2;
     private final Set<Refactoring> refactorings = new LinkedHashSet<>();
-    /*  TODO: Implement CandidateAttributeRefactoring, CandidateMergeVariableRefactoring, CandidateSplitVariableRefactoring
-        private Set<CandidateAttributeRefactoring> candidateAttributeRenames = new
-        LinkedHashSet<CandidateAttributeRefactoring>();
-        private Set<CandidateMergeVariableRefactoring> candidateAttributeMerges = new LinkedHashSet<CandidateMergeVariableRefactoring>();
-        private Set<CandidateSplitVariableRefactoring> candidateAttributeSplits = new LinkedHashSet<CandidateSplitVariableRefactoring>();
-      */
+    private Set<CandidateAttributeRefactoring> candidateAttributeRenames = new
+            LinkedHashSet<>();
+    private Set<CandidateMergeVariableRefactoring> candidateAttributeMerges =
+            new LinkedHashSet<>();
+    private Set<CandidateSplitVariableRefactoring> candidateAttributeSplits =
+            new LinkedHashSet<>();
     private final List<UMLOperationBodyMapper> childMappers = new ArrayList<>();
     private UMLOperationBodyMapper parentMapper;
     private static final Pattern SPLIT_CONDITIONAL_PATTERN = Pattern.compile("(\\|\\|)|(&&)|(\\?)|(:)");
@@ -727,7 +727,95 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
             return compositeChildMatchingScore((TryStatementObject) statement1, (TryStatementObject) statement2, mappings, removedOperations, addedOperations);
         }
         return compositeChildMatchingScore(statement1, statement2, mappings, removedOperations, addedOperations);*/
-        return 0.0;
+        return compositeChildMatchingScore(statement1, statement2, mappings, removedOperations, addedOperations);
+    }
+
+    private boolean matchesOperation(OperationInvocation invocation,
+                                     List<UMLOperation> operations,
+                                     Map<String, UMLType> variableTypeMap) {
+        for (UMLOperation operation : operations) {
+            if (invocation.matchesOperation(operation, variableTypeMap, modelDiff))
+                return true;
+        }
+        return false;
+    }
+
+    private double compositeChildMatchingScore(CompositeStatementObject comp1,
+                                               CompositeStatementObject comp2,
+                                               Set<AbstractCodeMapping> mappings,
+                                               List<UMLOperation> removedOperations,
+                                               List<UMLOperation> addedOperations) {
+        List<AbstractStatement> compStatements1 = comp1.getStatements();
+        List<AbstractStatement> compStatements2 = comp2.getStatements();
+        int childrenSize1 = compStatements1.size();
+        int childrenSize2 = compStatements2.size();
+
+        if (parentMapper != null && comp1.getLocationInfo().getCodeElementType().equals(
+                comp2.getLocationInfo().getCodeElementType()) &&
+                childrenSize1 == 1 && childrenSize2 == 1 && !comp1.getString().equals("{") && !comp2.getString().equals(
+                "{")) {
+            if (compStatements1.get(0).getString().equals("{") && !compStatements2.get(0).getString().equals("{")) {
+                CompositeStatementObject block = (CompositeStatementObject) compStatements1.get(0);
+                compStatements1.addAll(block.getStatements());
+            }
+            if (!compStatements1.get(0).getString().equals("{") && compStatements2.get(0).getString().equals("{")) {
+                CompositeStatementObject block = (CompositeStatementObject) compStatements2.get(0);
+                compStatements2.addAll(block.getStatements());
+            }
+        }
+        int mappedChildrenSize = 0;
+        for (AbstractCodeMapping mapping : mappings) {
+            if (compStatements1.contains(mapping.getFragment1()) && compStatements2.contains(mapping.getFragment2())) {
+                mappedChildrenSize++;
+            }
+        }
+        if (mappedChildrenSize == 0) {
+            List<StatementObject> leaves1 = comp1.getLeaves();
+            List<StatementObject> leaves2 = comp2.getLeaves();
+            int leaveSize1 = leaves1.size();
+            int leaveSize2 = leaves2.size();
+            int mappedLeavesSize = 0;
+            for (AbstractCodeMapping mapping : mappings) {
+                if (leaves1.contains(mapping.getFragment1()) && leaves2.contains(mapping.getFragment2())) {
+                    mappedLeavesSize++;
+                }
+            }
+            if (mappedLeavesSize == 0) {
+                //check for possible extract or inline
+                if (leaveSize2 <= 2) {
+                    for (StatementObject leaf2 : leaves2) {
+                        OperationInvocation invocation = leaf2.invocationCoveringEntireFragment();
+                        if (invocation != null && matchesOperation(invocation, addedOperations,
+                                                                   operation2.variableTypeMap())) {
+                            mappedLeavesSize++;
+                        }
+                    }
+                } else if (leaveSize1 <= 2) {
+                    for (StatementObject leaf1 : leaves1) {
+                        OperationInvocation invocation = leaf1.invocationCoveringEntireFragment();
+                        if (invocation != null && matchesOperation(invocation, removedOperations,
+                                                                   operation1.variableTypeMap())) {
+                            mappedLeavesSize++;
+                        }
+                    }
+                }
+                if (leaveSize1 == 1 && leaveSize2 == 1 && leaves1.get(0).getString().equals(
+                        "continue;\n") && leaves2.get(0).getString().equals("return null\n")) {
+                    mappedLeavesSize++;
+                }
+            }
+            int max = Math.max(leaveSize1, leaveSize2);
+            if (max == 0)
+                return 0;
+            else
+                return (double) mappedLeavesSize / (double) max;
+        }
+
+        int max = Math.max(childrenSize1, childrenSize2);
+        if (max == 0)
+            return 0;
+        else
+            return (double) mappedChildrenSize / (double) max;
     }
 
     private void temporaryVariableAssignment(StatementObject statement, List<StatementObject> nonMappedLeavesT2) {
@@ -1011,11 +1099,12 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         for (Replacement r : replacementInfo.getReplacements()) {
             map.put(r.getBefore(), r.getAfter());
             if (methodInvocationMap1.containsKey(r.getBefore())) {
-/*              TODO: Implement VariableReplacementAnalysis
                 Replacement replacement = new VariableReplacementWithMethodInvocation(r.getBefore(), r.getAfter(),
-                (OperationInvocation) methodInvocationMap1.get(r.getBefore()).get(0), Direction.INVOCATION_TO_VARIABLE);
+                                                                                      (OperationInvocation) methodInvocationMap1.get(
+                                                                                              r.getBefore()).get(0),
+                                                                                      Direction.INVOCATION_TO_VARIABLE);
                 replacementsToBeAdded.add(replacement);
-                replacementsToBeRemoved.add(r);*/
+                replacementsToBeRemoved.add(r);
             }
         }
         replacementInfo.getReplacements().removeAll(replacementsToBeRemoved);
@@ -3088,7 +3177,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
     }
 
     @Override
-    public int compareTo(UMLOperationBodyMapper operationBodyMapper) {
+    public int compareTo(@NotNull UMLOperationBodyMapper operationBodyMapper) {
         int thisCallChainIntersectionSum = 0;
         for (AbstractCodeMapping mapping : this.mappings) {
             if (mapping instanceof LeafMapping) {
@@ -3373,7 +3462,6 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
 
 
     public Set<Refactoring> getRefactorings() {
-/*      TODO: Implement VariableReplacementAnalysis
         VariableReplacementAnalysis analysis = new VariableReplacementAnalysis(this, refactorings, classDiff);
         refactorings.addAll(analysis.getVariableRenames());
         refactorings.addAll(analysis.getVariableMerges());
@@ -3382,8 +3470,118 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         candidateAttributeMerges.addAll(analysis.getCandidateAttributeMerges());
         candidateAttributeSplits.addAll(analysis.getCandidateAttributeSplits());
         TypeReplacementAnalysis typeAnalysis = new TypeReplacementAnalysis(this.getMappings());
-        refactorings.addAll(typeAnalysis.getChangedTypes());*/
+        refactorings.addAll(typeAnalysis.getChangedTypes());
         return refactorings;
+    }
+
+    public Set<Refactoring> getRefactoringsAfterPostProcessing() {
+        return refactorings;
+    }
+
+    public int nonMappedElementsT2CallingAddedOperation(List<UMLOperation> addedOperations) {
+        int nonMappedInnerNodeCount = 0;
+        for (CompositeStatementObject composite : getNonMappedInnerNodesT2()) {
+            if (composite.countableStatement()) {
+                Map<String, List<OperationInvocation>> methodInvocationMap = composite.getMethodInvocationMap();
+                for (String key : methodInvocationMap.keySet()) {
+                    for (OperationInvocation invocation : methodInvocationMap.get(key)) {
+                        for (UMLOperation operation : addedOperations) {
+                            if (invocation.matchesOperation(operation, operation2.variableTypeMap(), modelDiff)) {
+                                nonMappedInnerNodeCount++;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        int nonMappedLeafCount = 0;
+        for (StatementObject statement : getNonMappedLeavesT2()) {
+            if (statement.countableStatement()) {
+                Map<String, List<OperationInvocation>> methodInvocationMap = statement.getMethodInvocationMap();
+                for (String key : methodInvocationMap.keySet()) {
+                    for (OperationInvocation invocation : methodInvocationMap.get(key)) {
+                        for (UMLOperation operation : addedOperations) {
+                            if (invocation.matchesOperation(operation, operation2.variableTypeMap(), modelDiff)) {
+                                nonMappedLeafCount++;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return nonMappedLeafCount + nonMappedInnerNodeCount;
+    }
+
+
+    public int nonMappedElementsT1CallingRemovedOperation(List<UMLOperation> removedOperations) {
+        int nonMappedInnerNodeCount = 0;
+        for (CompositeStatementObject composite : getNonMappedInnerNodesT1()) {
+            if (composite.countableStatement()) {
+                Map<String, List<OperationInvocation>> methodInvocationMap = composite.getMethodInvocationMap();
+                for (String key : methodInvocationMap.keySet()) {
+                    for (OperationInvocation invocation : methodInvocationMap.get(key)) {
+                        for (UMLOperation operation : removedOperations) {
+                            if (invocation.matchesOperation(operation, operation1.variableTypeMap(), modelDiff)) {
+                                nonMappedInnerNodeCount++;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        int nonMappedLeafCount = 0;
+        for (StatementObject statement : getNonMappedLeavesT1()) {
+            if (statement.countableStatement()) {
+                Map<String, List<OperationInvocation>> methodInvocationMap = statement.getMethodInvocationMap();
+                for (String key : methodInvocationMap.keySet()) {
+                    for (OperationInvocation invocation : methodInvocationMap.get(key)) {
+                        for (UMLOperation operation : removedOperations) {
+                            if (invocation.matchesOperation(operation, operation1.variableTypeMap(), modelDiff)) {
+                                nonMappedLeafCount++;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return nonMappedLeafCount + nonMappedInnerNodeCount;
+    }
+
+    public Set<MethodInvocationReplacement> getMethodInvocationRenameReplacements() {
+        Set<MethodInvocationReplacement> replacements = new LinkedHashSet<>();
+        for (AbstractCodeMapping mapping : getMappings()) {
+            for (Replacement replacement : mapping.getReplacements()) {
+                if (replacement.getType().equals(ReplacementType.METHOD_INVOCATION_NAME) ||
+                        replacement.getType().equals(ReplacementType.METHOD_INVOCATION_NAME_AND_ARGUMENT)) {
+                    replacements.add((MethodInvocationReplacement) replacement);
+                }
+            }
+        }
+        return replacements;
+    }
+
+    public Set<CandidateAttributeRefactoring> getCandidateAttributeRenames() {
+        return candidateAttributeRenames;
+    }
+
+    public Set<CandidateMergeVariableRefactoring> getCandidateAttributeMerges() {
+        return candidateAttributeMerges;
+    }
+
+    public Set<CandidateSplitVariableRefactoring> getCandidateAttributeSplits() {
+        return candidateAttributeSplits;
+    }
+
+    public Set<Replacement> getReplacements() {
+        Set<Replacement> replacements = new LinkedHashSet<>();
+        for (AbstractCodeMapping mapping : getMappings()) {
+            replacements.addAll(mapping.getReplacements());
+        }
+        return replacements;
     }
 
 }

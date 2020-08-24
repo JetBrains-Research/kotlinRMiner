@@ -1,5 +1,7 @@
 package org.jetbrains.research.kotlinrminer.uml;
 
+import org.jetbrains.research.kotlinrminer.api.RefactoringMinerTimedOutException;
+import org.jetbrains.research.kotlinrminer.diff.UMLClassDiff;
 import org.jetbrains.research.kotlinrminer.diff.UMLModelDiff;
 
 import java.util.*;
@@ -73,11 +75,12 @@ public class UMLModel {
         return null;
     }
 
-    public UMLModelDiff diff(UMLModel umlModel) {
+    public UMLModelDiff diff(UMLModel umlModel) throws RefactoringMinerTimedOutException {
         return this.diff(umlModel, Collections.emptyMap());
     }
 
-    public UMLModelDiff diff(UMLModel umlModel, Map<String, String> renamedFileHints) {
+    public UMLModelDiff diff(UMLModel umlModel, Map<String, String> renamedFileHints) throws
+            RefactoringMinerTimedOutException {
         UMLModelDiff modelDiff = new UMLModelDiff();
         for (UMLClass umlClass : classList) {
             if (!umlModel.classList.contains(umlClass))
@@ -88,10 +91,20 @@ public class UMLModel {
                 modelDiff.reportAddedClass(umlClass);
         }
 
+        for (UMLClass umlClass : classList) {
+            if (umlModel.classList.contains(umlClass)) {
+                UMLClassDiff classDiff = new UMLClassDiff(umlClass, umlModel.getClass(umlClass), modelDiff);
+                classDiff.process();
+                if (!classDiff.isEmpty())
+                    modelDiff.addUMLClassDiff(classDiff);
+            }
+        }
+
         modelDiff.checkForMovedClasses(renamedFileHints, umlModel.repositoryDirectories, new UMLClassMatcher.Move());
         modelDiff.checkForRenamedClasses(renamedFileHints, new UMLClassMatcher.Rename());
         modelDiff.checkForRenamedClasses(renamedFileHints, new UMLClassMatcher.RelaxedRename());
 
         return modelDiff;
     }
+
 }
