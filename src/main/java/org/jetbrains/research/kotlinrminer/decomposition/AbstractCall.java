@@ -98,7 +98,7 @@ public abstract class AbstractCall implements LocationInfoProvider {
         if (getExpression() != null && call.getExpression() != null) {
             String expression1 = getExpression();
             String expression2 = call.getExpression();
-            String expression1AfterReplacements = new String(expression1);
+            String expression1AfterReplacements = expression1;
             for (Replacement replacement : replacements) {
                 if (replacement.getType().equals(Replacement.ReplacementType.TYPE)) {
                     expression1AfterReplacements = ReplacementUtil

@@ -2,7 +2,7 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.Replacement;
-import org.jetbrains.research.kotlinrminer.diff.ChangeVariableTypeRefactoring;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.ChangeVariableTypeRefactoring;
 
 import java.util.LinkedHashSet;
 import java.util.List;

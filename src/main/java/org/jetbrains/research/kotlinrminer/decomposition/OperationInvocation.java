@@ -67,7 +67,7 @@ public class OperationInvocation extends AbstractCall {
       while ((commonPrefix = PrefixSuffixUtils.longestCommonPrefix(modified, subExpression2))
           .length() > previousCommonPrefix.length()) {
         modified =
-            commonPrefix + "this." + modified.substring(commonPrefix.length(), modified.length());
+            commonPrefix + "this." + modified.substring(commonPrefix.length());
         if (modified.equals(subExpression2)) {
           return true;
         }
@@ -80,7 +80,7 @@ public class OperationInvocation extends AbstractCall {
       while ((commonPrefix = PrefixSuffixUtils.longestCommonPrefix(modified, subExpression1))
           .length() > previousCommonPrefix.length()) {
         modified =
-            commonPrefix + "this." + modified.substring(commonPrefix.length(), modified.length());
+            commonPrefix + "this." + modified.substring(commonPrefix.length());
         if (modified.equals(subExpression1)) {
           return true;
         }
@@ -115,7 +115,7 @@ public class OperationInvocation extends AbstractCall {
         String expressionAsString = invocation.getBodyExpression().toString();
         String invocationAsString = invocation.toString();
         String suffix = invocationAsString
-            .substring(expressionAsString.length() + 1, invocationAsString.length());
+            .substring(expressionAsString.length() + 1);
         subExpressions.add(0, suffix);
         processExpression(invocation.getBodyExpression(), subExpressions);
       } else {
@@ -127,7 +127,7 @@ public class OperationInvocation extends AbstractCall {
         String expressionAsString = creation.getBody().toString();
         String invocationAsString = creation.toString();
         String suffix = invocationAsString
-            .substring(expressionAsString.length() + 1, invocationAsString.length());
+            .substring(expressionAsString.length() + 1);
         subExpressions.add(0, suffix);
         processExpression(creation.getBody(), subExpressions);
       } else {
@@ -200,15 +200,15 @@ public class OperationInvocation extends AbstractCall {
         String type = arg.substring(0, arg.indexOf("("));
         inferredArgumentTypes.add(UMLType.extractTypeObject(type));
       } else if (arg.contains("[") && openingSquareBracketBeforeParenthesis) {
-        String type = arg.substring(0, arg.indexOf("["));
+        StringBuilder type = new StringBuilder(arg.substring(0, arg.indexOf("[")));
         for (int i = 0; i < arg.length(); i++) {
           if (arg.charAt(i) == '[') {
-            type = type + "[]";
+            type.append("[]");
           } else if (arg.charAt(i) == '\n' || arg.charAt(i) == '{') {
             break;
           }
         }
-        inferredArgumentTypes.add(UMLType.extractTypeObject(type));
+        inferredArgumentTypes.add(UMLType.extractTypeObject(type.toString()));
       } else if (arg.endsWith(".getClassLoader()")) {
         inferredArgumentTypes.add(UMLType.extractTypeObject("ClassLoader"));
       } else if (arg.contains("+") && !arg.contains("++") &&
@@ -492,6 +492,7 @@ public class OperationInvocation extends AbstractCall {
       for (String argument : other.arguments) {
         if (this.expression.contains(argument)) {
           argumentFoundInExpression = true;
+          break;
         }
       }
     }
@@ -499,6 +500,7 @@ public class OperationInvocation extends AbstractCall {
       for (String argument : this.arguments) {
         if (other.expression.contains(argument)) {
           argumentFoundInExpression = true;
+          break;
         }
       }
     }

@@ -8,6 +8,7 @@ import org.jetbrains.research.kotlinrminer.decomposition.UMLOperationBodyMapper;
 import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclaration;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.MergeVariableReplacement;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.Replacement;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.*;
 import org.jetbrains.research.kotlinrminer.uml.*;
 
 public class UMLModelDiff {

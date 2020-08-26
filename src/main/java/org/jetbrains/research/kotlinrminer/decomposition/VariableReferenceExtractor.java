@@ -8,7 +8,7 @@ import org.jetbrains.research.kotlinrminer.LocationInfo;
 public class VariableReferenceExtractor {
 
   public static Set<AbstractCodeMapping> findReferences(VariableDeclaration declaration1, VariableDeclaration declaration2, Set<AbstractCodeMapping> mappings) {
-    Set<AbstractCodeMapping> references = new LinkedHashSet<AbstractCodeMapping>();
+    Set<AbstractCodeMapping> references = new LinkedHashSet<>();
     VariableScope scope1 = declaration1.getScope();
     VariableScope scope2 = declaration2.getScope();
     for(AbstractCodeMapping mapping : mappings) {
@@ -29,7 +29,7 @@ public class VariableReferenceExtractor {
   }
 
   public static Set<AbstractCodeMapping> findReturnReferences(Set<AbstractCodeMapping> mappings) {
-    Set<AbstractCodeMapping> references = new LinkedHashSet<AbstractCodeMapping>();
+    Set<AbstractCodeMapping> references = new LinkedHashSet<>();
     for(AbstractCodeMapping mapping : mappings) {
       if(mapping.getFragment1().getLocationInfo().getCodeElementType().equals(
           LocationInfo.CodeElementType.RETURN_STATEMENT) &&
@@ -42,7 +42,7 @@ public class VariableReferenceExtractor {
   }
 
   public static Set<AbstractCodeMapping> findReferences(VariableDeclaration declaration1, VariableDeclaration declaration2, List<UMLOperationBodyMapper> operationBodyMapperList) {
-    Set<AbstractCodeMapping> references = new LinkedHashSet<AbstractCodeMapping>();
+    Set<AbstractCodeMapping> references = new LinkedHashSet<>();
     for(UMLOperationBodyMapper mapper : operationBodyMapperList) {
       references.addAll(findReferences(declaration1, declaration2, mapper.getMappings()));
     }

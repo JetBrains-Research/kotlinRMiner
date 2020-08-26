@@ -4,6 +4,7 @@ import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringMinerTimedOutException;
 import org.jetbrains.research.kotlinrminer.decomposition.*;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.*;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.*;
 import org.jetbrains.research.kotlinrminer.uml.*;
 import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
 
@@ -1220,7 +1221,8 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
                         }
                     }
                 }
-                return (countableStatements == parameterizedVariableDeclarationStatements || countableStatements == nonMappedLeavesExactlyMatchedInTheBodyOfAddedOperation + parameterizedVariableDeclarationStatements) && countableStatements > 0;
+                return (countableStatements == parameterizedVariableDeclarationStatements ||
+                        countableStatements == nonMappedLeavesExactlyMatchedInTheBodyOfAddedOperation + parameterizedVariableDeclarationStatements) && countableStatements > 0;
             } else if (operationBodyMapper.nonMappedElementsT1() == 0 && operationBodyMapper.nonMappedElementsT2() > 0 && operationBodyMapper.getNonMappedInnerNodesT2().size() == 0) {
                 int countableStatements = 0;
                 int parameterizedVariableDeclarationStatements = 0;

@@ -108,7 +108,7 @@ public class GitHistoryRefactoringMiner {
                     String directory = pathString.substring(0, pathString.lastIndexOf("/"));
                     repositoryDirectories.add(directory);
                     //include sub-directories
-                    String subDirectory = new String(directory);
+                    String subDirectory = directory;
                     while (subDirectory.contains("/")) {
                         subDirectory = subDirectory.substring(0, subDirectory.lastIndexOf("/"));
                         repositoryDirectories.add(subDirectory);

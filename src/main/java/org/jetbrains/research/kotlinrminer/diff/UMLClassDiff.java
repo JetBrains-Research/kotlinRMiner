@@ -2,6 +2,7 @@ package org.jetbrains.research.kotlinrminer.diff;
 
 import org.jetbrains.research.kotlinrminer.api.RefactoringMinerTimedOutException;
 import org.jetbrains.research.kotlinrminer.decomposition.UMLOperationBodyMapper;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.RenameOperationRefactoring;
 import org.jetbrains.research.kotlinrminer.uml.UMLAttribute;
 import org.jetbrains.research.kotlinrminer.uml.UMLClass;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;

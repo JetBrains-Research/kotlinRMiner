@@ -1,10 +1,11 @@
-package org.jetbrains.research.kotlinrminer.diff;
+package org.jetbrains.research.kotlinrminer.diff.refactoring;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
 import org.jetbrains.research.kotlinrminer.decomposition.UMLOperationBodyMapper;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.Replacement;
+import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.Set;
 public class RenameOperationRefactoring implements Refactoring {
     private final UMLOperation originalOperation;
     private final UMLOperation renamedOperation;
-    private Set<Replacement> replacements;
+    private final Set<Replacement> replacements;
     private UMLOperationBodyMapper bodyMapper;
 
     public RenameOperationRefactoring(UMLOperationBodyMapper bodyMapper) {

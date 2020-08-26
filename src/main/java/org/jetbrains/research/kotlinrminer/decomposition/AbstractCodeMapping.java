@@ -189,7 +189,7 @@ public abstract class AbstractCodeMapping {
                                                            argumentizedString.length() - 2);
             } else {
                 initializer =
-                        argumentizedString.substring(argumentizedString.indexOf("=") + 1, argumentizedString.length());
+                        argumentizedString.substring(argumentizedString.indexOf("=") + 1);
             }
             for (Replacement replacement : getReplacements()) {
                 /* TODO: Implement ExtractVariableRefactoring

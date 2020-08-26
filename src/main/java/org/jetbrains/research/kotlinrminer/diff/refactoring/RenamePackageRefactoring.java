@@ -1,8 +1,11 @@
-package org.jetbrains.research.kotlinrminer.diff;
+package org.jetbrains.research.kotlinrminer.diff.refactoring;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
+import org.jetbrains.research.kotlinrminer.diff.CodeRange;
+import org.jetbrains.research.kotlinrminer.diff.RenamePattern;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.MoveClassRefactoring;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -10,9 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 public class RenamePackageRefactoring implements Refactoring {
-
-    private List<MoveClassRefactoring> moveClassRefactorings;
-    private RenamePattern pattern;
+    private final List<MoveClassRefactoring> moveClassRefactorings;
+    private final RenamePattern pattern;
 
     public RenamePackageRefactoring(MoveClassRefactoring moveClassRefactoring) {
         this.moveClassRefactorings = new ArrayList<>();
@@ -43,10 +45,14 @@ public class RenamePackageRefactoring implements Refactoring {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getName()).append("\t");
-        String originalPath = pattern.getBefore().endsWith(".") ? pattern.getBefore().substring(0, pattern.getBefore().length() - 1) : pattern.getBefore();
+        String originalPath =
+                pattern.getBefore().endsWith(".") ? pattern.getBefore().substring(0, pattern.getBefore().length() - 1) :
+                        pattern.getBefore();
         sb.append(originalPath);
         sb.append(" to ");
-        String movedPath = pattern.getAfter().endsWith(".") ? pattern.getAfter().substring(0, pattern.getAfter().length() - 1) : pattern.getAfter();
+        String movedPath =
+                pattern.getAfter().endsWith(".") ? pattern.getAfter().substring(0, pattern.getAfter().length() - 1) :
+                        pattern.getAfter();
         sb.append(movedPath);
         return sb.toString();
     }
@@ -54,7 +60,8 @@ public class RenamePackageRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         for (MoveClassRefactoring ref : moveClassRefactorings) {
-            pairs.add(new ImmutablePair<>(ref.getOriginalClass().getLocationInfo().getFilePath(), ref.getOriginalClassName()));
+            pairs.add(new ImmutablePair<>(ref.getOriginalClass().getLocationInfo().getFilePath(),
+                                          ref.getOriginalClassName()));
         }
         return pairs;
     }
@@ -62,7 +69,8 @@ public class RenamePackageRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         for (MoveClassRefactoring ref : moveClassRefactorings) {
-            pairs.add(new ImmutablePair<>(ref.getMovedClass().getLocationInfo().getFilePath(), ref.getMovedClassName()));
+            pairs.add(
+                    new ImmutablePair<>(ref.getMovedClass().getLocationInfo().getFilePath(), ref.getMovedClassName()));
         }
         return pairs;
     }
@@ -72,8 +80,8 @@ public class RenamePackageRefactoring implements Refactoring {
         List<CodeRange> ranges = new ArrayList<>();
         for (MoveClassRefactoring ref : moveClassRefactorings) {
             ranges.add(ref.getOriginalClass().codeRange()
-                    .setDescription("original type declaration")
-                    .setCodeElement(ref.getOriginalClass().getName()));
+                               .setDescription("original type declaration")
+                               .setCodeElement(ref.getOriginalClass().getName()));
         }
         return ranges;
     }
@@ -83,8 +91,8 @@ public class RenamePackageRefactoring implements Refactoring {
         List<CodeRange> ranges = new ArrayList<>();
         for (MoveClassRefactoring ref : moveClassRefactorings) {
             ranges.add(ref.getMovedClass().codeRange()
-                    .setDescription("moved type declaration")
-                    .setCodeElement(ref.getMovedClass().getName()));
+                               .setDescription("moved type declaration")
+                               .setCodeElement(ref.getMovedClass().getName()));
         }
         return ranges;
     }

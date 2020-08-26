@@ -1,5 +1,6 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 
@@ -14,7 +15,7 @@ public class CompositeStatementObjectMapping extends AbstractCodeMapping impleme
     }
 
     @Override
-    public int compareTo(CompositeStatementObjectMapping o) {
+    public int compareTo(@NotNull CompositeStatementObjectMapping o) {
         double distance1;
         double distance2;
         if (this.getFragment1().getString().equals(this.getFragment2().getString())) {

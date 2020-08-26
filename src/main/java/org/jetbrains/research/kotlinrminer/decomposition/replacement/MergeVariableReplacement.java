@@ -23,7 +23,7 @@ public class MergeVariableReplacement extends Replacement {
   }
 
   public boolean commonAfter(MergeVariableReplacement other) {
-    Set<String> interestion = new LinkedHashSet<String>(this.mergedVariables);
+    Set<String> interestion = new LinkedHashSet<>(this.mergedVariables);
     interestion.retainAll(other.mergedVariables);
     return this.getAfter().equals(other.getAfter()) && interestion.size() == 0;
   }
