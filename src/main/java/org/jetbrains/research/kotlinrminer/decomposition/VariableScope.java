@@ -8,12 +8,12 @@ import org.jetbrains.research.kotlinrminer.LocationInfo;
 import static org.jetbrains.research.kotlinrminer.util.PsiUtils.countColumn;
 
 public class VariableScope {
-    private String filePath;
-    private int startOffset;
-    private int endOffset;
-    private int startLine;
+    private final String filePath;
+    private final int startOffset;
+    private final int endOffset;
+    private final int startLine;
     private int startColumn;
-    private int endLine;
+    private final int endLine;
     private int endColumn;
 
     public VariableScope(KtFile ktFile, String filePath, int startOffset, int endOffset) {

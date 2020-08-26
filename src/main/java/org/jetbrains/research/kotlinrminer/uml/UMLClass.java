@@ -1,15 +1,22 @@
 package org.jetbrains.research.kotlinrminer.uml;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 
-import java.io.Serializable;
-import java.util.*;
-
 public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, Serializable, LocationInfoProvider {
-    private String qualifiedName;
-    private String sourceFile;
+    private final String qualifiedName;
+    private final String sourceFile;
+    private final List<UMLType> implementedInterfaces;
+    private final List<String> importedTypes;
+    private final List<UMLTypeParameter> typeParameters;
+    private final List<UMLAnnotation> annotations;
     private String sourceFolder;
     private String visibility;
     private boolean isSealed;
@@ -20,11 +27,7 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
     private boolean isEnum;
     private boolean topLevel;
     private UMLType superclass;
-    private List<UMLType> implementedInterfaces;
-    private List<String> importedTypes;
-    private List<UMLTypeParameter> typeParameters;
     private UMLJavadoc javadoc;
-    private List<UMLAnnotation> annotations;
 
     public UMLClass(String packageName,
                     String name,
@@ -35,10 +38,11 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
         this.locationInfo = locationInfo;
         this.packageName = packageName;
         this.name = name;
-        if (packageName.equals(""))
+        if (packageName.equals("")) {
             this.qualifiedName = name;
-        else
+        } else {
             this.qualifiedName = packageName + "." + name;
+        }
 
         this.sourceFile = getSourceFile();
         this.sourceFolder = "";
@@ -202,20 +206,23 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
                 int thisArrayDimension = attribute.getType().getArrayDimension();
                 int otherArrayDimension = otherAttribute.getType().getArrayDimension();
                 String thisAttributeTypeComparedString = null;
-                if (thisAttributeType.contains("."))
+                if (thisAttributeType.contains(".")) {
                     thisAttributeTypeComparedString =
-                            thisAttributeType.substring(thisAttributeType.lastIndexOf(".") + 1);
-                else
+                        thisAttributeType.substring(thisAttributeType.lastIndexOf(".") + 1);
+                } else {
                     thisAttributeTypeComparedString = thisAttributeType;
+                }
                 String otherAttributeTypeComparedString = null;
-                if (otherAttributeType.contains("."))
+                if (otherAttributeType.contains(".")) {
                     otherAttributeTypeComparedString =
-                            otherAttributeType.substring(otherAttributeType.lastIndexOf(".") + 1);
-                else
+                        otherAttributeType.substring(otherAttributeType.lastIndexOf(".") + 1);
+                } else {
                     otherAttributeTypeComparedString = otherAttributeType;
+                }
                 if (thisAttributeTypeComparedString.equals(
-                        otherAttributeTypeComparedString) && thisArrayDimension == otherArrayDimension)
+                    otherAttributeTypeComparedString) && thisArrayDimension == otherArrayDimension) {
                     return attribute;
+                }
             }
         }
         return null;
@@ -234,26 +241,29 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
                         int thisArrayDimension = parameter.getType().getArrayDimension();
                         int otherArrayDimension = otherParameter.getType().getArrayDimension();
                         String thisParameterTypeComparedString = null;
-                        if (thisParameterType.contains("."))
+                        if (thisParameterType.contains(".")) {
                             thisParameterTypeComparedString =
-                                    thisParameterType.substring(thisParameterType.lastIndexOf(".") + 1);
-                        else
+                                thisParameterType.substring(thisParameterType.lastIndexOf(".") + 1);
+                        } else {
                             thisParameterTypeComparedString = thisParameterType;
+                        }
                         String otherParameterTypeComparedString = null;
-                        if (otherParameterType.contains("."))
+                        if (otherParameterType.contains(".")) {
                             otherParameterTypeComparedString =
-                                    otherParameterType.substring(otherParameterType.lastIndexOf(".") + 1);
-                        else
+                                otherParameterType.substring(otherParameterType.lastIndexOf(".") + 1);
+                        } else {
                             otherParameterTypeComparedString = otherParameterType;
+                        }
                         if (!thisParameterTypeComparedString.equals(
-                                otherParameterTypeComparedString) || thisArrayDimension != otherArrayDimension) {
+                            otherParameterTypeComparedString) || thisArrayDimension != otherArrayDimension) {
                             match = false;
                             break;
                         }
                         i++;
                     }
-                    if (match)
+                    if (match) {
                         return operation;
+                    }
                 }
             }
         }
@@ -261,22 +271,25 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
     }
 
     public boolean hasSameNameAndKind(UMLClass umlClass) {
-        if (!this.name.equals(umlClass.name))
+        if (!this.name.equals(umlClass.name)) {
             return false;
+        }
         return hasSameKind(umlClass);
     }
 
     public boolean hasSameKind(UMLClass umlClass) {
-        if (this.isAbstract != umlClass.isAbstract)
+        if (this.isAbstract != umlClass.isAbstract) {
             return false;
-        if (this.isInterface != umlClass.isInterface)
+        }
+        if (this.isInterface != umlClass.isInterface) {
             return false;
+        }
         return equalTypeParameters(umlClass);
     }
 
     private boolean equalTypeParameters(UMLClass umlClass) {
         return this.typeParameters.equals(umlClass.typeParameters) || this.getTypeParameterNames().equals(
-                umlClass.getTypeParameterNames());
+            umlClass.getTypeParameterNames());
     }
 
     public boolean equals(Object o) {
@@ -287,7 +300,7 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
         if (o instanceof UMLClass) {
             UMLClass umlClass = (UMLClass) o;
             return this.packageName.equals(umlClass.packageName) && this.name.equals(
-                    umlClass.name) && this.sourceFile.equals(umlClass.sourceFile);
+                umlClass.name) && this.sourceFile.equals(umlClass.sourceFile);
         }
         return false;
     }
@@ -302,8 +315,9 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
 
     public boolean implementsInterface(Set<UMLType> interfaces) {
         for (UMLType type : interfaces) {
-            if (implementedInterfaces.contains(type))
+            if (implementedInterfaces.contains(type)) {
                 return true;
+            }
         }
         return false;
     }
@@ -323,8 +337,9 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
     }
 
     public boolean importsType(String targetClass) {
-        if (targetClass.startsWith(getPackageName()))
+        if (targetClass.startsWith(getPackageName())) {
             return true;
+        }
         for (String importedType : getImportedTypes()) {
             //importedType.startsWith(targetClass) -> special handling for import static
             //importedType.equals(targetClassPackage) -> special handling for import with asterisk (*) wildcard

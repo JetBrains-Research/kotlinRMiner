@@ -1,17 +1,19 @@
-package org.jetbrains.research.kotlinrminer.diff;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.jetbrains.research.kotlinrminer.api.Refactoring;
-import org.jetbrains.research.kotlinrminer.api.RefactoringType;
+package org.jetbrains.research.kotlinrminer.diff.refactoring;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.jetbrains.research.kotlinrminer.api.Refactoring;
+import org.jetbrains.research.kotlinrminer.api.RefactoringType;
+import org.jetbrains.research.kotlinrminer.diff.CodeRange;
+import org.jetbrains.research.kotlinrminer.diff.MovedClassToAnotherSourceFolder;
+import org.jetbrains.research.kotlinrminer.diff.RenamePattern;
 
 public class MoveSourceFolderRefactoring implements Refactoring {
-    private List<MovedClassToAnotherSourceFolder> movedClassesToAnotherSourceFolder;
-    private RenamePattern pattern;
+    private final List<MovedClassToAnotherSourceFolder> movedClassesToAnotherSourceFolder;
+    private final RenamePattern pattern;
 
     public MoveSourceFolderRefactoring(MovedClassToAnotherSourceFolder movedClassToAnotherSourceFolder) {
         this.movedClassesToAnotherSourceFolder = new ArrayList<>();
@@ -34,10 +36,14 @@ public class MoveSourceFolderRefactoring implements Refactoring {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getName()).append("\t");
-        String originalPath = pattern.getBefore().endsWith("/") ? pattern.getBefore().substring(0, pattern.getBefore().length() - 1) : pattern.getBefore();
+        String originalPath =
+            pattern.getBefore().endsWith("/") ? pattern.getBefore().substring(0, pattern.getBefore().length() - 1) :
+                pattern.getBefore();
         sb.append(originalPath);
         sb.append(" to ");
-        String movedPath = pattern.getAfter().endsWith("/") ? pattern.getAfter().substring(0, pattern.getAfter().length() - 1) : pattern.getAfter();
+        String movedPath =
+            pattern.getAfter().endsWith("/") ? pattern.getAfter().substring(0, pattern.getAfter().length() - 1) :
+                pattern.getAfter();
         sb.append(movedPath);
         return sb.toString();
     }
@@ -53,7 +59,8 @@ public class MoveSourceFolderRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         for (MovedClassToAnotherSourceFolder ref : movedClassesToAnotherSourceFolder) {
-            pairs.add(new ImmutablePair<>(ref.getOriginalClass().getLocationInfo().getFilePath(), ref.getOriginalClassName()));
+            pairs.add(new ImmutablePair<>(ref.getOriginalClass().getLocationInfo().getFilePath(),
+                ref.getOriginalClassName()));
         }
         return pairs;
     }
@@ -61,7 +68,8 @@ public class MoveSourceFolderRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         for (MovedClassToAnotherSourceFolder ref : movedClassesToAnotherSourceFolder) {
-            pairs.add(new ImmutablePair<>(ref.getMovedClass().getLocationInfo().getFilePath(), ref.getMovedClassName()));
+            pairs.add(
+                new ImmutablePair<>(ref.getMovedClass().getLocationInfo().getFilePath(), ref.getMovedClassName()));
         }
         return pairs;
     }
@@ -71,8 +79,8 @@ public class MoveSourceFolderRefactoring implements Refactoring {
         List<CodeRange> ranges = new ArrayList<>();
         for (MovedClassToAnotherSourceFolder ref : movedClassesToAnotherSourceFolder) {
             ranges.add(ref.getOriginalClass().codeRange()
-                    .setDescription("original type declaration")
-                    .setCodeElement(ref.getOriginalClass().getName()));
+                .setDescription("original type declaration")
+                .setCodeElement(ref.getOriginalClass().getName()));
         }
         return ranges;
     }
@@ -82,8 +90,8 @@ public class MoveSourceFolderRefactoring implements Refactoring {
         List<CodeRange> ranges = new ArrayList<>();
         for (MovedClassToAnotherSourceFolder ref : movedClassesToAnotherSourceFolder) {
             ranges.add(ref.getMovedClass().codeRange()
-                    .setDescription("moved type declaration")
-                    .setCodeElement(ref.getMovedClass().getName()));
+                .setDescription("moved type declaration")
+                .setCodeElement(ref.getMovedClass().getName()));
         }
         return ranges;
     }

@@ -4,7 +4,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class SplitVariableReplacement extends Replacement {
-    private Set<String> splitVariables;
+
+    private final Set<String> splitVariables;
+
 
     public SplitVariableReplacement(String oldVariable, Set<String> newVariables) {
         super(oldVariable, newVariables.toString(), ReplacementType.SPLIT_VARIABLE);

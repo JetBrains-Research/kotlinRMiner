@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class OperationBody {
+
     private final CompositeStatementObject compositeStatement;
 
     public OperationBody(KtFile cu, String filePath, KtBlockExpression methodBody) {
@@ -72,17 +73,29 @@ public class OperationBody {
             }
         } else if (statement instanceof KtForExpression) {
             KtForExpression forStatement = (KtForExpression) statement;
-            CompositeStatementObject child =
-                    new CompositeStatementObject(ktFile, filePath, forStatement, parent.getDepth() + 1,
-                                                 CodeElementType.FOR_STATEMENT);
+            CompositeStatementObject child = new CompositeStatementObject(ktFile, filePath,
+                forStatement, parent.getDepth() + 1, CodeElementType.ENHANCED_FOR_STATEMENT);
+
             parent.addStatement(child);
-            KtExpression ktDeclaration = forStatement.getDestructuringDeclaration();
+            VariableDeclaration variableDeclaration = new VariableDeclaration(ktFile, filePath, forStatement.getLoopParameter());
+            child.addVariableDeclaration(variableDeclaration);
+            AbstractExpression abstractEx = new AbstractExpression(ktFile, filePath, forStatement.getLoopParameter(),
+                CodeElementType.ENHANCED_FOR_STATEMENT_PARAMETER_NAME);
+            child.addExpression(abstractEx);
+            KtDestructuringDeclaration ktDeclaration = forStatement.getDestructuringDeclaration();
             if (ktDeclaration != null) {
-                KtExpression initializer = forStatement.getDestructuringDeclaration().getInitializer();
+                KtExpression initializer = ktDeclaration.getInitializer();
                 AbstractExpression abstractExpression = new AbstractExpression(ktFile, filePath, initializer,
-                                                                               CodeElementType.FOR_STATEMENT_INITIALIZER);
+                    CodeElementType.FOR_STATEMENT_INITIALIZER);
                 child.addExpression(abstractExpression);
             }
+            KtExpression rangeExpr = forStatement.getLoopRange();
+            AbstractExpression range = new AbstractExpression(ktFile, filePath, rangeExpr,
+                CodeElementType.ENHANCED_FOR_STATEMENT_RANGE);
+            child.addExpression(range);
+            AbstractExpression abstractExpr = new AbstractExpression(ktFile, filePath, ktDeclaration,
+                CodeElementType.ENHANCED_FOR_STATEMENT_EXPRESSION);
+            child.addExpression(abstractExpr);
             processStatement(ktFile, filePath, child, forStatement.getBody());
         } else if (statement instanceof KtWhileExpression) {
             KtWhileExpression whileStatement = (KtWhileExpression) statement;
@@ -125,47 +138,33 @@ public class OperationBody {
             parent.addStatement(child);
         } else if (statement instanceof KtTryExpression) {
             KtTryExpression tryStatement = (KtTryExpression) statement;
-            //   TryStatementObject child = new TryStatementObject(cu, filePath, tryStatement, parent.getDepth() + 1);
-            // parent.addStatement(child);
-/*          TODO: process resources
-            List<Expression> resources = tryStatement.resources();
-            for (Expression resource : resources) {
-                AbstractExpression expression = new AbstractExpression(cu, filePath, resource, CodeElementType.TRY_STATEMENT_RESOURCE);
-                child.addExpression(expression);
-            }*/
-/*            List<KtExpression> tryStatements = tryStatement.getTryBlock().getStatements();
-            for (KtExpression blockStatement : tryStatements) {
-                processStatement(cu, filePath, child, blockStatement);
-            }*/
+            TryStatementObject child = new TryStatementObject(ktFile, filePath, tryStatement, parent.getDepth() + 1);
+            parent.addStatement(child);
             List<KtCatchClause> catchClauses = tryStatement.getCatchClauses();
             for (KtCatchClause catchClause : catchClauses) {
                 KtExpression catchClauseBody = catchClause.getCatchBody();
-                CompositeStatementObject catchClauseStatementObject =
-                        new CompositeStatementObject(ktFile, filePath, catchClauseBody, parent.getDepth() + 1,
-                                                     CodeElementType.CATCH_CLAUSE);
-                //TODO:  child.addCatchClause(catchClauseStatementObject);
+                CompositeStatementObject catchClauseStatementObject = new CompositeStatementObject(ktFile, filePath, catchClauseBody, parent.getDepth() + 1, CodeElementType.CATCH_CLAUSE);
+                child.addCatchClause(catchClauseStatementObject);
                 parent.addStatement(catchClauseStatementObject);
-/*              TODO: process catch clauses
-                SingleVariableDeclaration variableDeclaration = catchClause.getException();
-                VariableDeclaration vd = new VariableDeclaration(cu, filePath, variableDeclaration);
+
+                KtParameter variableDeclaration = catchClause.getCatchParameter();
+                VariableDeclaration vd = new VariableDeclaration(ktFile, filePath, variableDeclaration);
                 catchClauseStatementObject.addVariableDeclaration(vd);
-                AbstractExpression variableDeclarationName = new AbstractExpression(cu, filePath, variableDeclaration.getName(), CodeElementType.CATCH_CLAUSE_EXCEPTION_NAME);
+                AbstractExpression variableDeclarationName = new AbstractExpression(ktFile, filePath, variableDeclaration, CodeElementType.CATCH_CLAUSE_EXCEPTION_NAME);
                 catchClauseStatementObject.addExpression(variableDeclarationName);
-                if (variableDeclaration.getInitializer() != null) {
-                    AbstractExpression variableDeclarationInitializer = new AbstractExpression(cu, filePath, variableDeclaration.getInitializer(), CodeElementType.VARIABLE_DECLARATION_INITIALIZER);
-                    catchClauseStatementObject.addExpression(variableDeclarationInitializer);
-                }*/
-/*                List<Statement> blockStatements = catchClauseBody.statements();
-                for (Statement blockStatement : blockStatements) {
-                    processStatement(cu, filePath, catchClauseStatementObject, blockStatement);
-                }*/
+
+                if(catchClauseBody instanceof KtBlockExpression) {
+                    KtBlockExpression block = (KtBlockExpression) catchClauseBody;
+                    List<KtExpression> blockStatements = block.getStatements();
+                    for (KtExpression expression: blockStatements) {
+                        processStatement(ktFile, filePath, catchClauseStatementObject, expression);
+                    }
+                }
             }
             KtFinallySection finallyBlock = tryStatement.getFinallyBlock();
             if (finallyBlock != null) {
-                CompositeStatementObject finallyClauseStatementObject =
-                        new CompositeStatementObject(ktFile, filePath, finallyBlock, parent.getDepth() + 1,
-                                                     CodeElementType.FINALLY_BLOCK);
-                //TODO: child.setFinallyClause(finallyClauseStatementObject);
+                CompositeStatementObject finallyClauseStatementObject = new CompositeStatementObject(ktFile, filePath, finallyBlock, parent.getDepth() + 1, CodeElementType.FINALLY_BLOCK);
+                child.setFinallyClause(finallyClauseStatementObject);
                 parent.addStatement(finallyClauseStatementObject);
                 List<KtExpression> blockStatements = finallyBlock.getFinalExpression().getStatements();
                 for (KtExpression blockStatement : blockStatements) {

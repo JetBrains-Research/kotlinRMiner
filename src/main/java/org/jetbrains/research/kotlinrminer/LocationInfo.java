@@ -13,10 +13,10 @@ public class LocationInfo {
     private final int endOffset;
     private final int length;
     private final int startLine;
-    private int startColumn;
     private final int endLine;
-    private int endColumn;
     private final CodeElementType codeElementType;
+    private int startColumn;
+    private int endColumn;
 
     public LocationInfo(KtFile ktFile, String filePath, KtElement node, CodeElementType codeElementType) {
         this.filePath = filePath;
@@ -46,14 +46,16 @@ public class LocationInfo {
 
     private int countColumn(int lineNumber, Document doc) {
         int count = 0;
-        final String line = doc.getText(new TextRange(doc.getLineStartOffset(lineNumber), doc.getLineEndOffset(lineNumber)));
+        final String line =
+            doc.getText(new TextRange(doc.getLineStartOffset(lineNumber), doc.getLineEndOffset(lineNumber)));
         for (char c : line.toCharArray()) {
-            if (c == ' ')
+            if (c == ' ') {
                 count++;
-            else if (c == '\t')
+            } else if (c == '\t') {
                 count += 4;
-            else
+            } else {
                 return count;
+            }
         }
         return count;
     }
@@ -96,14 +98,14 @@ public class LocationInfo {
 
     public CodeRange codeRange() {
         return new CodeRange(getFilePath(),
-                getStartLine(), getEndLine(),
-                getStartColumn(), getEndColumn(), getCodeElementType());
+            getStartLine(), getEndLine(),
+            getStartColumn(), getEndColumn(), getCodeElementType());
     }
 
     public boolean subsumes(LocationInfo other) {
         return this.filePath.equals(other.filePath) &&
-                this.startOffset <= other.startOffset &&
-                this.endOffset >= other.endOffset;
+            this.startOffset <= other.startOffset &&
+            this.endOffset >= other.endOffset;
     }
 
     @Override
@@ -123,30 +125,41 @@ public class LocationInfo {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         LocationInfo other = (LocationInfo) obj;
-        if (endColumn != other.endColumn)
+        if (endColumn != other.endColumn) {
             return false;
-        if (endLine != other.endLine)
+        }
+        if (endLine != other.endLine) {
             return false;
-        if (endOffset != other.endOffset)
+        }
+        if (endOffset != other.endOffset) {
             return false;
+        }
         if (filePath == null) {
-            if (other.filePath != null)
+            if (other.filePath != null) {
                 return false;
-        } else if (!filePath.equals(other.filePath))
+            }
+        } else if (!filePath.equals(other.filePath)) {
             return false;
-        if (length != other.length)
+        }
+        if (length != other.length) {
             return false;
-        if (startColumn != other.startColumn)
+        }
+        if (startColumn != other.startColumn) {
             return false;
-        if (startLine != other.startLine)
+        }
+        if (startLine != other.startLine) {
             return false;
+        }
         return startOffset == other.startOffset;
     }
 
@@ -176,6 +189,7 @@ public class LocationInfo {
         ENHANCED_FOR_STATEMENT("for"),
         ENHANCED_FOR_STATEMENT_PARAMETER_NAME,
         ENHANCED_FOR_STATEMENT_EXPRESSION,
+        ENHANCED_FOR_STATEMENT_RANGE,
         WHILE_STATEMENT("while"),
         WHILE_STATEMENT_CONDITION,
         IF_STATEMENT("if"),

@@ -1,12 +1,11 @@
 package org.jetbrains.research.kotlinrminer;
 
+import java.util.List;
 import org.eclipse.jgit.lib.Repository;
 import org.jetbrains.research.kotlinrminer.api.GitHistoryRefactoringMiner;
 import org.jetbrains.research.kotlinrminer.api.GitService;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringHandler;
-
-import java.util.List;
 
 public class KotlinRMiner {
     public static void main(String[] args) throws Exception {
@@ -42,12 +41,12 @@ public class KotlinRMiner {
                                    List<Refactoring> refactoringsAtRevision) {
         sb.append("{").append("\n");
         sb.append("\t").append("\"").append("repository").append("\"").append(": ").append("\"").append(
-                cloneURL).append("\"").append(",").append("\n");
+            cloneURL).append("\"").append(",").append("\n");
         sb.append("\t").append("\"").append("sha1").append("\"").append(": ").append("\"").append(
-                currentCommitId).append("\"").append(",").append("\n");
+            currentCommitId).append("\"").append(",").append("\n");
         String url = GitHistoryRefactoringMiner.extractCommitURL(cloneURL, currentCommitId);
         sb.append("\t").append("\"").append("url").append("\"").append(": ").append("\"").append(url).append(
-                "\"").append(",").append("\n");
+            "\"").append(",").append("\n");
         sb.append("\t").append("\"").append("refactorings").append("\"").append(": ");
         sb.append("[");
         int counter = 0;

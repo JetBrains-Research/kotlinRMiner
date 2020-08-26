@@ -10,11 +10,13 @@ import org.jetbrains.research.kotlinrminer.diff.UMLClassBaseDiff;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 
 public abstract class AbstractCodeMapping {
-    private AbstractCodeFragment fragment1;
-    private AbstractCodeFragment fragment2;
-    private UMLOperation operation1;
-    private UMLOperation operation2;
-    private Set<Replacement> replacements;
+
+    private final AbstractCodeFragment fragment1;
+    private final AbstractCodeFragment fragment2;
+    private final UMLOperation operation1;
+    private final UMLOperation operation2;
+    private final Set<Replacement> replacements;
+
     private boolean identicalWithExtractedVariable;
     private boolean identicalWithInlinedVariable;
 
@@ -189,7 +191,8 @@ public abstract class AbstractCodeMapping {
                                                            argumentizedString.length() - 2);
             } else {
                 initializer =
-                        argumentizedString.substring(argumentizedString.indexOf("=") + 1, argumentizedString.length());
+                        argumentizedString.substring(argumentizedString.indexOf("=") + 1);
+
             }
             for (Replacement replacement : getReplacements()) {
                 /* TODO: Implement ExtractVariableRefactoring

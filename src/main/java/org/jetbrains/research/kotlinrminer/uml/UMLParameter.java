@@ -1,10 +1,9 @@
 package org.jetbrains.research.kotlinrminer.uml;
 
-import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclaration;
-import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclarationProvider;
-
 import java.io.Serializable;
 import java.util.List;
+import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclaration;
+import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclarationProvider;
 
 public class UMLParameter implements Serializable, VariableDeclarationProvider {
     private final String name;
@@ -53,14 +52,14 @@ public class UMLParameter implements Serializable, VariableDeclarationProvider {
 
     public boolean equalsExcludingType(UMLParameter parameter) {
         return this.name.equals(parameter.name) &&
-                this.kind.equals(parameter.kind);
+            this.kind.equals(parameter.kind);
     }
 
     public boolean equalsIncludingName(UMLParameter parameter) {
         return this.name.equals(parameter.name) &&
-                this.type.equals(parameter.type) &&
-                this.kind.equals(parameter.kind) &&
-                this.varargs == parameter.varargs;
+            this.type.equals(parameter.type) &&
+            this.kind.equals(parameter.kind) &&
+            this.varargs == parameter.varargs;
     }
 
     public boolean equals(Object o) {
@@ -71,16 +70,16 @@ public class UMLParameter implements Serializable, VariableDeclarationProvider {
         if (o instanceof UMLParameter) {
             UMLParameter parameter = (UMLParameter) o;
             return this.type.equals(parameter.type) &&
-                    this.kind.equals(parameter.kind) &&
-                    this.varargs == parameter.varargs;
+                this.kind.equals(parameter.kind) &&
+                this.varargs == parameter.varargs;
         }
         return false;
     }
 
     public boolean equalsQualified(UMLParameter parameter) {
         return this.type.equalsQualified(parameter.type) &&
-                this.kind.equals(parameter.kind) &&
-                this.varargs == parameter.varargs;
+            this.kind.equals(parameter.kind) &&
+            this.varargs == parameter.varargs;
     }
 
     public int hashCode() {
@@ -93,9 +92,9 @@ public class UMLParameter implements Serializable, VariableDeclarationProvider {
     }
 
     public String toString() {
-        if (kind.equals("return"))
+        if (kind.equals("return")) {
             return type.toString();
-        else {
+        } else {
             if (varargs) {
                 return name + " " + type.toString().substring(0, type.toString().lastIndexOf("[]")) + "...";
             } else {
@@ -105,11 +104,12 @@ public class UMLParameter implements Serializable, VariableDeclarationProvider {
     }
 
     public String toQualifiedString() {
-        if (kind.equals("return"))
+        if (kind.equals("return")) {
             return type.toQualifiedString();
-        else {
+        } else {
             if (varargs) {
-                return name + " " + type.toQualifiedString().substring(0, type.toQualifiedString().lastIndexOf("[]")) + "...";
+                return name + " " + type.toQualifiedString().substring(0, type.toQualifiedString().lastIndexOf(
+                    "[]")) + "...";
             } else {
                 return name + " " + type.toQualifiedString();
             }

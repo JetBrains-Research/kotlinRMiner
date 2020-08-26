@@ -8,7 +8,8 @@ public class LeafType extends UMLType {
     private final String classType;
     private final String nonQualifiedClassType;
     private volatile int hashCode = 0;
-    private static final Pattern CAMEL_CASE_SPLIT_PATTERN = Pattern.compile("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])");
+    private static final Pattern CAMEL_CASE_SPLIT_PATTERN =
+            Pattern.compile("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])");
 
     public LeafType(String type) {
         this.classType = type;

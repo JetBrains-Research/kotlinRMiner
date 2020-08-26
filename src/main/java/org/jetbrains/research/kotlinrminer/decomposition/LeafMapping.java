@@ -1,5 +1,6 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
@@ -15,7 +16,8 @@ public class LeafMapping extends AbstractCodeMapping implements Comparable<LeafM
     }
 
     @Override
-    public int compareTo(LeafMapping o) {
+    public int compareTo(@NotNull LeafMapping o) {
+
         double distance1;
         double distance2;
         if (this.getFragment1().getString().equals(this.getFragment2().getString())) {

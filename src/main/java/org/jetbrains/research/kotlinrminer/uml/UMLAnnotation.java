@@ -1,23 +1,22 @@
 package org.jetbrains.research.kotlinrminer.uml;
 
-import org.jetbrains.kotlin.psi.KtAnnotation;
-import org.jetbrains.kotlin.psi.KtAnnotationEntry;
-import org.jetbrains.kotlin.psi.KtFile;
-import org.jetbrains.research.kotlinrminer.diff.CodeRange;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
-import org.jetbrains.research.kotlinrminer.decomposition.AbstractExpression;
-import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
-
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.kotlin.psi.KtAnnotation;
+import org.jetbrains.kotlin.psi.KtAnnotationEntry;
+import org.jetbrains.kotlin.psi.KtFile;
+import org.jetbrains.research.kotlinrminer.LocationInfo;
+import org.jetbrains.research.kotlinrminer.decomposition.AbstractExpression;
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
+import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
 public class UMLAnnotation implements Serializable, LocationInfoProvider {
-    private LocationInfo locationInfo;
-    private String typeName;
+    private final LocationInfo locationInfo;
+    private final String typeName;
+    private final Map<String, AbstractExpression> memberValuePairs = new LinkedHashMap<>();
     private AbstractExpression value;
-    private Map<String, AbstractExpression> memberValuePairs = new LinkedHashMap<>();
 
     public UMLAnnotation(KtFile cu, String filePath, KtAnnotation annotation) {
         this.typeName = annotation.getName();
@@ -63,8 +62,9 @@ public class UMLAnnotation implements Serializable, LocationInfoProvider {
             int i = 0;
             for (String key : memberValuePairs.keySet()) {
                 sb.append(key).append(" = ").append(memberValuePairs.get(key).getExpression());
-                if (i < memberValuePairs.size() - 1)
+                if (i < memberValuePairs.size() - 1) {
                     sb.append(", ");
+                }
                 i++;
             }
             sb.append(")");
@@ -86,7 +86,7 @@ public class UMLAnnotation implements Serializable, LocationInfoProvider {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((memberValuePairs == null) ? 0 : memberValuePairsHashCode());
+        result = prime * result + memberValuePairsHashCode();
         result = prime * result + ((typeName == null) ? 0 : typeName.hashCode());
         result = prime * result + ((value == null) ? 0 : value.getExpression().hashCode());
         return result;
@@ -94,26 +94,31 @@ public class UMLAnnotation implements Serializable, LocationInfoProvider {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         UMLAnnotation other = (UMLAnnotation) obj;
-        if (memberValuePairs == null) {
-            if (other.memberValuePairs != null)
-                return false;
-        } else if (!this.memberValuePairsEquals(other))
+        if (!this.memberValuePairsEquals(other)) {
             return false;
+        }
         if (typeName == null) {
-            if (other.typeName != null)
+            if (other.typeName != null) {
                 return false;
-        } else if (!typeName.equals(other.typeName))
+            }
+        } else if (!typeName.equals(other.typeName)) {
             return false;
+        }
         if (value == null) {
             return other.value == null;
-        } else return value.getExpression().equals(other.value.getExpression());
+        } else {
+            return value.getExpression().equals(other.value.getExpression());
+        }
     }
 
     private boolean memberValuePairsEquals(UMLAnnotation other) {
@@ -127,11 +132,13 @@ public class UMLAnnotation implements Serializable, LocationInfoProvider {
             String thisKey = entry.getKey();
             AbstractExpression thisValue = entry.getValue();
             if (thisValue == null) {
-                if (!(m.get(thisKey) == null && m.containsKey(thisKey)))
+                if (!(m.get(thisKey) == null && m.containsKey(thisKey))) {
                     return false;
+                }
             } else {
-                if (!thisValue.getExpression().equals(m.get(thisKey).getExpression()))
+                if (!thisValue.getExpression().equals(m.get(thisKey).getExpression())) {
                     return false;
+                }
             }
         }
         return true;
@@ -139,8 +146,10 @@ public class UMLAnnotation implements Serializable, LocationInfoProvider {
 
     private int memberValuePairsHashCode() {
         int h = 0;
-        for (Map.Entry<String, AbstractExpression> entry : memberValuePairs.entrySet())
-            h += (entry.getKey() == null ? 0 : entry.getKey().hashCode()) ^ (entry.getValue() == null ? 0 : entry.getValue().getExpression().hashCode());
+        for (Map.Entry<String, AbstractExpression> entry : memberValuePairs.entrySet()) {
+            h += (entry.getKey() == null ? 0 : entry.getKey().hashCode()) ^ (entry.getValue() == null ? 0 :
+                entry.getValue().getExpression().hashCode());
+        }
         return h;
     }
 }

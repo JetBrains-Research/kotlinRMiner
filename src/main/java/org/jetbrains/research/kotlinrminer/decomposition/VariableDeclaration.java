@@ -28,10 +28,12 @@ public class VariableDeclaration implements LocationInfoProvider, VariableDeclar
             KtModifierList extendedModifiers = parameter.getModifierList();
             if (extendedModifiers != null) {
                 List<KtAnnotation> annotations = extendedModifiers.getAnnotations();
-                annotations.forEach(ktAnnotation -> this.annotations.add(new UMLAnnotation(ktFile, filePath, ktAnnotation)));
+                annotations.forEach(
+                        ktAnnotation -> this.annotations.add(new UMLAnnotation(ktFile, filePath, ktAnnotation)));
             }
             //TODO check for the code element type
-            this.locationInfo = new LocationInfo(ktFile, filePath, fragment, CodeElementType.SINGLE_VARIABLE_DECLARATION);
+            this.locationInfo =
+                    new LocationInfo(ktFile, filePath, fragment, CodeElementType.SINGLE_VARIABLE_DECLARATION);
             this.variableName = String.valueOf(fragment.getName());
 
             this.type = UMLType.extractTypeObject(ktFile, filePath, parameter.getTypeReference(), 0);
@@ -43,7 +45,8 @@ public class VariableDeclaration implements LocationInfoProvider, VariableDeclar
             KtModifierList extendedModifiers = property.getModifierList();
             if (extendedModifiers != null) {
                 List<KtAnnotation> annotations = extendedModifiers.getAnnotations();
-                annotations.forEach(ktAnnotation -> this.annotations.add(new UMLAnnotation(ktFile, filePath, ktAnnotation)));
+                annotations.forEach(
+                        ktAnnotation -> this.annotations.add(new UMLAnnotation(ktFile, filePath, ktAnnotation)));
             }
             //TODO check for the code element type
             this.locationInfo = new LocationInfo(ktFile, filePath, fragment, CodeElementType.FIELD_DECLARATION);
@@ -56,9 +59,11 @@ public class VariableDeclaration implements LocationInfoProvider, VariableDeclar
         } else if (fragment instanceof KtVariableDeclaration) {
             KtVariableDeclaration variableDeclaration = (KtVariableDeclaration) fragment;
             variableDeclaration.getAnnotations().forEach(ktAnnotation
-                    -> this.annotations.add(new UMLAnnotation(ktFile, filePath, ktAnnotation)));
+                                                                 -> this.annotations.add(
+                    new UMLAnnotation(ktFile, filePath, ktAnnotation)));
             //TODO check for the code element type
-            this.locationInfo = new LocationInfo(ktFile, filePath, fragment, CodeElementType.VARIABLE_DECLARATION_EXPRESSION);
+            this.locationInfo =
+                    new LocationInfo(ktFile, filePath, fragment, CodeElementType.VARIABLE_DECLARATION_EXPRESSION);
             this.variableName = fragment.getName();
             this.type = UMLType.extractTypeObject(ktFile, filePath, variableDeclaration.getTypeReference(), 0);
             int startOffset = fragment.getStartOffsetInParent();

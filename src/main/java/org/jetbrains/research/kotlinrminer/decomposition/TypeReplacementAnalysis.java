@@ -2,15 +2,17 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.Replacement;
-import org.jetbrains.research.kotlinrminer.diff.ChangeVariableTypeRefactoring;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.ChangeVariableTypeRefactoring;
 
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 public class TypeReplacementAnalysis {
-    private Set<AbstractCodeMapping> mappings;
-    private Set<ChangeVariableTypeRefactoring> changedTypes = new LinkedHashSet<>();
+
+    private final Set<AbstractCodeMapping> mappings;
+    private final Set<ChangeVariableTypeRefactoring> changedTypes = new LinkedHashSet<>();
+
 
     public TypeReplacementAnalysis(Set<AbstractCodeMapping> mappings) {
         this.mappings = mappings;

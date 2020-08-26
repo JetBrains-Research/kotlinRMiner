@@ -13,22 +13,22 @@ import java.util.Map;
 public class StatementObject extends AbstractStatement {
     private final String statement;
     private final LocationInfo locationInfo;
-    private List<String> variables;
-    private List<String> types;
-    private List<VariableDeclaration> variableDeclarations;
+    private final List<String> variables;
+    private final List<String> types;
+    private final List<VariableDeclaration> variableDeclarations;
     //TODO private Map<String, List<OperationInvocation>> methodInvocationMap;
     //TODO private List<AnonymousClassDeclarationObject> anonymousClassDeclarations;
-    private List<String> stringLiterals;
-    private List<String> numberLiterals;
-    private List<String> nullLiterals;
-    private List<String> booleanLiterals;
-    private List<String> typeLiterals;
+    private final List<String> stringLiterals;
+    private final List<String> numberLiterals;
+    private final List<String> nullLiterals;
+    private final List<String> booleanLiterals;
+    private final List<String> typeLiterals;
     //TODO private Map<String, List<ObjectCreation>> creationMap;
-    private List<String> arrayAccesses;
-    private List<String> prefixExpressions;
-    private List<String> postfixExpressions;
-    private List<String> arguments;
-    private List<LambdaExpressionObject> lambdas;
+    private final List<String> arrayAccesses;
+    private final List<String> prefixExpressions;
+    private final List<String> postfixExpressions;
+    private final List<String> arguments;
+    private final List<LambdaExpressionObject> lambdas;
 
     public StatementObject(KtFile cu,
                            String filePath,

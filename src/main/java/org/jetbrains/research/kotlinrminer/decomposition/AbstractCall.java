@@ -25,10 +25,7 @@ public abstract class AbstractCall implements LocationInfoProvider {
             return true;
         }
         String parenthesizedS2 = "(" + s2 + ")";
-        if (parenthesizedS2.equals(s1)) {
-            return true;
-        }
-        return false;
+        return parenthesizedS2.equals(s1);
     }
 
     public String getExpression() {
@@ -76,10 +73,7 @@ public abstract class AbstractCall implements LocationInfoProvider {
     public boolean expressionIsNullOrThis() {
         if (expression == null) {
             return true;
-        } else if (expression.equals("this")) {
-            return true;
-        }
-        return false;
+        } else return expression.equals("this");
     }
 
     public boolean identicalExpression(AbstractCall call, Set<Replacement> replacements) {
@@ -98,7 +92,8 @@ public abstract class AbstractCall implements LocationInfoProvider {
         if (getExpression() != null && call.getExpression() != null) {
             String expression1 = getExpression();
             String expression2 = call.getExpression();
-            String expression1AfterReplacements = new String(expression1);
+            String expression1AfterReplacements = expression1;
+
             for (Replacement replacement : replacements) {
                 if (replacement.getType().equals(Replacement.ReplacementType.TYPE)) {
                     expression1AfterReplacements = ReplacementUtil
@@ -106,9 +101,8 @@ public abstract class AbstractCall implements LocationInfoProvider {
                                                 replacement.getBefore(), replacement.getAfter());
                 }
             }
-            if (expression1AfterReplacements.equals(expression2)) {
-                return true;
-            }
+            return expression1AfterReplacements.equals(expression2);
+
         }
         return false;
     }
@@ -320,10 +314,8 @@ public abstract class AbstractCall implements LocationInfoProvider {
                                                            Map<String, String> parameterToArgumentMap) {
         if (onlyArgumentsChanged(call, replacements)) {
             int argumentIntersectionSize = argumentIntersectionSize(call, parameterToArgumentMap);
-            if (argumentIntersectionSize > 0 || getArguments().size() == 0 ||
-                    call.getArguments().size() == 0) {
-                return true;
-            }
+            return argumentIntersectionSize > 0 || getArguments().size() == 0 ||
+                    call.getArguments().size() == 0;
         }
         return false;
     }
