@@ -1,10 +1,8 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,8 +14,14 @@ import org.jetbrains.research.kotlinrminer.api.RefactoringHandler;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
-
+/**
+ * Testing Kotlin Miner
+ * Tests are defined in resources/data.json
+ */
 public class TestAllRefactorings {
+
+    GitHistoryRefactoringMiner miner = new GitHistoryRefactoringMiner();
+    GitService gitService = new GitService();
 
     @TestFactory
     public Stream<DynamicTest> testAllRefactorings() throws IOException {
@@ -38,8 +42,6 @@ public class TestAllRefactorings {
     }
 
     private void testCommit(CommitData data) throws Exception {
-        GitHistoryRefactoringMiner miner = new GitHistoryRefactoringMiner();
-        GitService gitService = new GitService();
         String folder = "tmp" + "/"
             + data.repository
             .substring(data.repository.lastIndexOf('/') + 1, data.repository.lastIndexOf('.'));
@@ -57,10 +59,10 @@ public class TestAllRefactorings {
                     .map(refactoring -> refactoring.type)
                     .collect(Collectors.toSet());
                 assertEquals(expected, results);
+                repo.close();
             }
         });
     }
-
 
     public static class CommitData {
 
