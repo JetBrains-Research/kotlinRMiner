@@ -15,8 +15,8 @@ import java.util.List;
 public class UMLObject implements Comparable<UMLObject>, Serializable, LocationInfoProvider {
     private LocationInfo locationInfo;
     private String name;
-    private List<UMLOperation> methods;
-    private List<UMLAttribute> properties;
+    private final List<UMLOperation> methods;
+    private final List<UMLAttribute> properties;
 
     public UMLObject() {
         this.methods = new ArrayList<>();

@@ -36,11 +36,11 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
     private final List<CompositeStatementObject> nonMappedInnerNodesT1;
     private final List<CompositeStatementObject> nonMappedInnerNodesT2;
     private final Set<Refactoring> refactorings = new LinkedHashSet<>();
-    private Set<CandidateAttributeRefactoring> candidateAttributeRenames = new
+    private final Set<CandidateAttributeRefactoring> candidateAttributeRenames = new
             LinkedHashSet<>();
-    private Set<CandidateMergeVariableRefactoring> candidateAttributeMerges =
+    private final Set<CandidateMergeVariableRefactoring> candidateAttributeMerges =
             new LinkedHashSet<>();
-    private Set<CandidateSplitVariableRefactoring> candidateAttributeSplits =
+    private final Set<CandidateSplitVariableRefactoring> candidateAttributeSplits =
             new LinkedHashSet<>();
     private final List<UMLOperationBodyMapper> childMappers = new ArrayList<>();
     private UMLOperationBodyMapper parentMapper;
@@ -2240,12 +2240,9 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
             if (variableDeclarations1.size() > 0 && variableDeclarations2.size() == 0 && statement2.getString().startsWith(
                     "return ")) {
                 return true;
-            } else if (variableDeclarations1.size() == 0 && variableDeclarations2.size() > 0
-                    && statement1.getString().startsWith("return ")) {
-                return true;
-            }
+            } else return variableDeclarations1.size() == 0 && variableDeclarations2.size() > 0
+                    && statement1.getString().startsWith("return ");
         }
-        return false;
     }
 
     private boolean equalAfterNewArgumentAdditions(String s1, String s2, ReplacementInfo replacementInfo) {

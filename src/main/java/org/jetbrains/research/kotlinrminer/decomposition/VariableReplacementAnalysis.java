@@ -1,6 +1,5 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
-
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -37,29 +36,29 @@ import org.jetbrains.research.kotlinrminer.uml.UMLParameter;
 import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
 
 public class VariableReplacementAnalysis {
-    private Set<AbstractCodeMapping> mappings;
-    private List<StatementObject> nonMappedLeavesT1;
-    private List<StatementObject> nonMappedLeavesT2;
-    private List<CompositeStatementObject> nonMappedInnerNodesT1;
-    private List<CompositeStatementObject> nonMappedInnerNodesT2;
+    private final Set<AbstractCodeMapping> mappings;
+    private final List<StatementObject> nonMappedLeavesT1;
+    private final List<StatementObject> nonMappedLeavesT2;
+    private final List<CompositeStatementObject> nonMappedInnerNodesT1;
+    private final List<CompositeStatementObject> nonMappedInnerNodesT2;
     private final UMLOperation operation1;
     private final UMLOperation operation2;
-    private List<UMLOperationBodyMapper> childMappers;
-    private Set<Refactoring> refactorings;
+    private final List<UMLOperationBodyMapper> childMappers;
+    private final Set<Refactoring> refactorings;
     private final UMLOperation callSiteOperation;
     private final UMLOperationDiff operationDiff;
     private final UMLClassBaseDiff classDiff;
-    private Set<RenameVariableRefactoring> variableRenames =
+    private final Set<RenameVariableRefactoring> variableRenames =
             new LinkedHashSet<>();
-    private Set<MergeVariableRefactoring> variableMerges =
+    private final Set<MergeVariableRefactoring> variableMerges =
             new LinkedHashSet<>();
-    private Set<SplitVariableRefactoring> variableSplits =
+    private final Set<SplitVariableRefactoring> variableSplits =
             new LinkedHashSet<>();
-    private Set<CandidateAttributeRefactoring> candidateAttributeRenames =
+    private final Set<CandidateAttributeRefactoring> candidateAttributeRenames =
             new LinkedHashSet<>();
-    private Set<CandidateMergeVariableRefactoring> candidateAttributeMerges =
+    private final Set<CandidateMergeVariableRefactoring> candidateAttributeMerges =
             new LinkedHashSet<>();
-    private Set<CandidateSplitVariableRefactoring> candidateAttributeSplits =
+    private final Set<CandidateSplitVariableRefactoring> candidateAttributeSplits =
             new LinkedHashSet<>();
 
     public VariableReplacementAnalysis(UMLOperationBodyMapper mapper, Set<Refactoring> refactorings,

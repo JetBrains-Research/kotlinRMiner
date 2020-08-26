@@ -9,9 +9,9 @@ import org.jetbrains.research.kotlinrminer.LocationInfo.*;
 import java.util.*;
 
 public class CompositeStatementObject extends AbstractStatement {
-    private List<AbstractStatement> statementList;
-    private List<AbstractExpression> expressionList;
-    private List<VariableDeclaration> variableDeclarations;
+    private final List<AbstractStatement> statementList;
+    private final List<AbstractExpression> expressionList;
+    private final List<VariableDeclaration> variableDeclarations;
     private final LocationInfo locationInfo;
 
     public CompositeStatementObject(KtFile cu,

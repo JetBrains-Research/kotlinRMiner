@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class UMLClassDiff extends UMLClassBaseDiff {
-    private String className;
+    private final String className;
 
     public UMLClassDiff(UMLClass originalClass, UMLClass nextClass, UMLModelDiff modelDiff) {
         super(originalClass, nextClass, modelDiff);

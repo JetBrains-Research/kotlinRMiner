@@ -18,7 +18,7 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
     protected List<UMLOperation> removedOperations;
     protected List<UMLAttribute> addedAttributes;
     protected List<UMLAttribute> removedAttributes;
-    private List<UMLOperationBodyMapper> operationBodyMapperList;
+    private final List<UMLOperationBodyMapper> operationBodyMapperList;
     private boolean visibilityChanged;
     private String oldVisibility;
     private String newVisibility;
@@ -28,28 +28,28 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
     private boolean superclassChanged;
     private UMLType oldSuperclass;
     private UMLType newSuperclass;
-    private List<UMLType> addedImplementedInterfaces;
-    private List<UMLType> removedImplementedInterfaces;
+    private final List<UMLType> addedImplementedInterfaces;
+    private final List<UMLType> removedImplementedInterfaces;
     /*    private List<UMLAnonymousClass> addedAnonymousClasses;
         private List<UMLAnonymousClass> removedAnonymousClasses;*/
-    private List<UMLOperationDiff> operationDiffList;
+    private final List<UMLOperationDiff> operationDiffList;
     private UMLAnnotationListDiff annotationListDiff;
     //protected List<UMLAttributeDiff> attributeDiffList;
     protected List<Refactoring> refactorings;
     private Set<MethodInvocationReplacement> consistentMethodInvocationRenames;
-    private Set<CandidateAttributeRefactoring> candidateAttributeRenames =
+    private final Set<CandidateAttributeRefactoring> candidateAttributeRenames =
             new LinkedHashSet<>();
-    private Set<CandidateMergeVariableRefactoring> candidateAttributeMerges =
+    private final Set<CandidateMergeVariableRefactoring> candidateAttributeMerges =
             new LinkedHashSet<>();
-    private Set<CandidateSplitVariableRefactoring> candidateAttributeSplits =
+    private final Set<CandidateSplitVariableRefactoring> candidateAttributeSplits =
             new LinkedHashSet<>();
-    private Map<Replacement, Set<CandidateAttributeRefactoring>> renameMap =
+    private final Map<Replacement, Set<CandidateAttributeRefactoring>> renameMap =
             new LinkedHashMap<>();
-    private Map<MergeVariableReplacement, Set<CandidateMergeVariableRefactoring>> mergeMap =
+    private final Map<MergeVariableReplacement, Set<CandidateMergeVariableRefactoring>> mergeMap =
             new LinkedHashMap<>();
-    private Map<SplitVariableReplacement, Set<CandidateSplitVariableRefactoring>> splitMap =
+    private final Map<SplitVariableReplacement, Set<CandidateSplitVariableRefactoring>> splitMap =
             new LinkedHashMap<>();
-    private UMLModelDiff modelDiff;
+    private final UMLModelDiff modelDiff;
 
     public UMLClassBaseDiff(UMLClass originalClass, UMLClass nextClass, UMLModelDiff modelDiff) {
         this.originalClass = originalClass;
@@ -278,10 +278,8 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
 
     //return true if "classMoveDiff" represents the move of a class that is inner to this.originalClass
     public boolean isInnerClassMove(UMLClassBaseDiff classDiff) {
-        if (this.originalClass.isInnerClass(classDiff.originalClass) && this.nextClass.isInnerClass(
-                classDiff.nextClass))
-            return true;
-        return false;
+        return this.originalClass.isInnerClass(classDiff.originalClass) && this.nextClass.isInnerClass(
+                classDiff.nextClass);
     }
 
     public boolean nextClassImportsType(String targetClass) {
@@ -985,9 +983,7 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
             }
         }
         double percentage = (double) counter / (double) allCases;
-        if (percentage > 0.5)
-            return true;
-        return false;
+        return percentage > 0.5;
     }
 
     private static boolean cyclicRename(Map<Replacement, Set<CandidateAttributeRefactoring>> renames,
@@ -1566,10 +1562,7 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
         if (mappings == operationBodyMapper.exactMatches() + tryMappings) {
             return true;
         }
-        if (mappings == operationBodyMapper.exactMatches() + tryMappings + mappingsWithTypeReplacement && mappings > mappingsWithTypeReplacement) {
-            return true;
-        }
-        return false;
+        return mappings == operationBodyMapper.exactMatches() + tryMappings + mappingsWithTypeReplacement && mappings > mappingsWithTypeReplacement;
     }
 
     private boolean compatibleSignatures(UMLOperation removedOperation,

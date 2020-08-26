@@ -12,14 +12,14 @@ import org.jetbrains.research.kotlinrminer.diff.refactoring.*;
 import org.jetbrains.research.kotlinrminer.uml.*;
 
 public class UMLModelDiff {
-    private List<UMLClassMoveDiff> classMoveDiffList;
-    private List<UMLClass> addedClasses;
-    private List<UMLClass> removedClasses;
-    private Set<String> deletedFolderPaths;
-    private List<UMLClassMoveDiff> innerClassMoveDiffList;
-    private List<UMLClassRenameDiff> classRenameDiffList;
-    private List<UMLClassDiff> commonClassDiffList;
-    private List<Refactoring> refactorings;
+    private final List<UMLClassMoveDiff> classMoveDiffList;
+    private final List<UMLClass> addedClasses;
+    private final List<UMLClass> removedClasses;
+    private final Set<String> deletedFolderPaths;
+    private final List<UMLClassMoveDiff> innerClassMoveDiffList;
+    private final List<UMLClassRenameDiff> classRenameDiffList;
+    private final List<UMLClassDiff> commonClassDiffList;
+    private final List<Refactoring> refactorings;
 
     public UMLModelDiff() {
         this.addedClasses = new ArrayList<>();

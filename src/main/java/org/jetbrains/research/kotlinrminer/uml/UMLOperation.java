@@ -9,20 +9,20 @@ import java.io.Serializable;
 import java.util.*;
 
 public class UMLOperation implements Comparable<UMLOperation>, Serializable, LocationInfoProvider {
-    private LocationInfo locationInfo;
-    private String name;
+    private final LocationInfo locationInfo;
+    private final String name;
     private String visibility;
     private boolean isAbstract;
-    private List<UMLParameter> parameters;
+    private final List<UMLParameter> parameters;
     private String className;
     private boolean isConstructor;
     private boolean isFinal;
     private boolean isStatic;
     private boolean emptyBody;
     private OperationBody operationBody;
-    private List<UMLTypeParameter> typeParameters;
+    private final List<UMLTypeParameter> typeParameters;
     private UMLJavadoc javadoc;
-    private List<UMLAnnotation> annotations;
+    private final List<UMLAnnotation> annotations;
 
     public UMLOperation(String name, LocationInfo locationInfo) {
         this.locationInfo = locationInfo;

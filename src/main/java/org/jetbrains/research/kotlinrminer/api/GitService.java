@@ -30,7 +30,11 @@ public class GitService {
         return repository;
     }
 
-    public void fileTreeDiff(Repository repository, RevCommit currentCommit, List<String> filesBefore, List<String> filesCurrent, Map<String, String> renamedFilesHint) throws Exception {
+    public void fileTreeDiff(Repository repository,
+                             RevCommit currentCommit,
+                             List<String> filesBefore,
+                             List<String> filesCurrent,
+                             Map<String, String> renamedFilesHint) throws Exception {
         if (currentCommit.getParentCount() > 0) {
             ObjectId oldTree = currentCommit.getParent(0).getTree();
             ObjectId newTree = currentCommit.getTree();

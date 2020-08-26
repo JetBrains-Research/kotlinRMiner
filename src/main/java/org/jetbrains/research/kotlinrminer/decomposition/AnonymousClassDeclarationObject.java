@@ -13,23 +13,23 @@ import java.util.Map;
 
 public class AnonymousClassDeclarationObject implements LocationInfoProvider {
     private final String anonName;
-    private LocationInfo locationInfo;
+    private final LocationInfo locationInfo;
     private KtElement elementNode;
-    private List<String> variables = new ArrayList<>();
-    private List<String> types = new ArrayList<>();
-    private Map<String, List<OperationInvocation>> methodInvocationMap = new LinkedHashMap<>();
-    private List<VariableDeclaration> variableDeclarations = new ArrayList<>();
-    private List<AnonymousClassDeclarationObject> anonymousClassDeclarations = new ArrayList<>();
-    private List<String> stringLiterals = new ArrayList<>();
-    private List<String> numberLiterals = new ArrayList<>();
-    private List<String> nullLiterals = new ArrayList<>();
-    private List<String> booleanLiterals = new ArrayList<>();
-    private List<String> typeLiterals = new ArrayList<>();
-    private List<String> prefixExpressions = new ArrayList<>();
-    private List<String> postfixExpressions = new ArrayList<>();
-    private List<KtLambdaExpression> lambdas = new ArrayList<>();
-    private List<String> arrayAccesses = new ArrayList<>();
-    private List<String> arguments = new ArrayList<>();
+    private final List<String> variables = new ArrayList<>();
+    private final List<String> types = new ArrayList<>();
+    private final Map<String, List<OperationInvocation>> methodInvocationMap = new LinkedHashMap<>();
+    private final List<VariableDeclaration> variableDeclarations = new ArrayList<>();
+    private final List<AnonymousClassDeclarationObject> anonymousClassDeclarations = new ArrayList<>();
+    private final List<String> stringLiterals = new ArrayList<>();
+    private final List<String> numberLiterals = new ArrayList<>();
+    private final List<String> nullLiterals = new ArrayList<>();
+    private final List<String> booleanLiterals = new ArrayList<>();
+    private final List<String> typeLiterals = new ArrayList<>();
+    private final List<String> prefixExpressions = new ArrayList<>();
+    private final List<String> postfixExpressions = new ArrayList<>();
+    private final List<KtLambdaExpression> lambdas = new ArrayList<>();
+    private final List<String> arrayAccesses = new ArrayList<>();
+    private final List<String> arguments = new ArrayList<>();
 
     public AnonymousClassDeclarationObject(KtFile ktFile, String filePath, KtElement anonymous) {
         this.locationInfo =

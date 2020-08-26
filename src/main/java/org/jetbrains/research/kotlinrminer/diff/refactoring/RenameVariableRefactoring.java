@@ -113,11 +113,8 @@ public class RenameVariableRefactoring implements Refactoring {
         } else if (!originalVariable.equals(other.originalVariable))
             return false;
         if (renamedVariable == null) {
-            if (other.renamedVariable != null)
-                return false;
-        } else if (!renamedVariable.equals(other.renamedVariable))
-            return false;
-        return true;
+            return other.renamedVariable == null;
+        } else return renamedVariable.equals(other.renamedVariable);
     }
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {

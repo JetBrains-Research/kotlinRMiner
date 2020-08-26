@@ -12,25 +12,25 @@ import static org.jetbrains.kotlin.psi.stubs.elements.KtStubElementTypes.*;
 
 public class Visitor extends KtVisitor {
     private final String filePath;
-    private KtFile ktFile;
-    private List<String> variables = new ArrayList<>();
-    private List<String> types = new ArrayList<>();
-    private Map<String, List<KtCallExpression>> methodInvocationMap = new LinkedHashMap<>();
-    private List<VariableDeclaration> variableDeclarations = new ArrayList<>();
-    private List<String> stringLiterals = new ArrayList<>();
-    private List<String> numberLiterals = new ArrayList<>();
-    private List<String> nullLiterals = new ArrayList<>();
-    private List<String> booleanLiterals = new ArrayList<>();
-    private List<String> typeLiterals = new ArrayList<>();
-    private List<String> arrayAccesses = new ArrayList<>();
-    private List<String> prefixExpressions = new ArrayList<>();
-    private List<String> postfixExpressions = new ArrayList<>();
-    private List<String> arguments = new ArrayList<>();
-    private List<LambdaExpressionObject> lambdas = new ArrayList<>();
-    private DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-    private DefaultMutableTreeNode current = root;
+    private final KtFile ktFile;
+    private final List<String> variables = new ArrayList<>();
+    private final List<String> types = new ArrayList<>();
+    private final Map<String, List<KtCallExpression>> methodInvocationMap = new LinkedHashMap<>();
+    private final List<VariableDeclaration> variableDeclarations = new ArrayList<>();
+    private final List<String> stringLiterals = new ArrayList<>();
+    private final List<String> numberLiterals = new ArrayList<>();
+    private final List<String> nullLiterals = new ArrayList<>();
+    private final List<String> booleanLiterals = new ArrayList<>();
+    private final List<String> typeLiterals = new ArrayList<>();
+    private final List<String> arrayAccesses = new ArrayList<>();
+    private final List<String> prefixExpressions = new ArrayList<>();
+    private final List<String> postfixExpressions = new ArrayList<>();
+    private final List<String> arguments = new ArrayList<>();
+    private final List<LambdaExpressionObject> lambdas = new ArrayList<>();
+    private final DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+    private final DefaultMutableTreeNode current = root;
     //TODO: implement adding of created objects to the map
-    private Map<String, List<ObjectCreation>> creationMap = new LinkedHashMap<>();
+    private final Map<String, List<ObjectCreation>> creationMap = new LinkedHashMap<>();
 
     public Visitor(KtFile file, String filePath) {
         this.ktFile = file;

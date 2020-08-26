@@ -16,9 +16,9 @@ import org.jetbrains.research.kotlinrminer.uml.UMLParameter;
 public class UMLOperationDiff {
     private final UMLOperation removedOperation;
     private final UMLOperation addedOperation;
-    private List<UMLParameter> addedParameters;
-    private List<UMLParameter> removedParameters;
-    private List<UMLParameterDiff> parameterDiffList;
+    private final List<UMLParameter> addedParameters;
+    private final List<UMLParameter> removedParameters;
+    private final List<UMLParameterDiff> parameterDiffList;
     private boolean visibilityChanged;
     private boolean abstractionChanged;
     private boolean returnTypeChanged;
@@ -37,9 +37,7 @@ public class UMLOperationDiff {
         this.visibilityChanged = false;
         this.abstractionChanged = false;
         this.returnTypeChanged = false;
-        this.operationRenamed = false;
-        if (!removedOperation.getName().equals(addedOperation.getName()))
-            operationRenamed = true;
+        operationRenamed = !removedOperation.getName().equals(addedOperation.getName());
         if (!removedOperation.getVisibility().equals(addedOperation.getVisibility()))
             visibilityChanged = true;
         if (removedOperation.isAbstract() != addedOperation.isAbstract())
@@ -64,8 +62,7 @@ public class UMLOperationDiff {
         List<String> parameterNames2 = addedOperation.getParameterNameList();
         if (removedParameters.isEmpty() && addedParameters.isEmpty() &&
                 matchedParameterCount == parameterNames1.size() && matchedParameterCount == parameterNames2.size() &&
-                parameterNames1.size() == parameterNames2.size() && parameterNames1.size() > 1 && !parameterNames1.equals(
-                parameterNames2)) {
+                parameterNames1.size() > 1 && !parameterNames1.equals(parameterNames2)) {
             parametersReordered = true;
         }
         //first round match parameters with the same name

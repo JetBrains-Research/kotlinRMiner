@@ -6,7 +6,7 @@ import org.jetbrains.research.kotlinrminer.uml.UMLType;
 public class ObjectCreation extends AbstractCall {
     private UMLType type;
     private String anonymousClassDeclaration;
-    private boolean isArray = false;
+    private final boolean isArray = false;
 
     public UMLType getType() {
         return type;

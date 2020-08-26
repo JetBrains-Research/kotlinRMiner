@@ -10,8 +10,8 @@ import java.io.Serializable;
 import java.util.List;
 
 public class UMLAttribute implements Comparable<UMLAttribute>, Serializable, LocationInfoProvider, VariableDeclarationProvider {
-    private LocationInfo locationInfo;
-    private String name;
+    private final LocationInfo locationInfo;
+    private final String name;
     private UMLType type;
     private String visibility;
     private String className;

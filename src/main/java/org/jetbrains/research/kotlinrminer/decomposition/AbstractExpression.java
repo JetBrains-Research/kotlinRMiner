@@ -12,20 +12,20 @@ public class AbstractExpression extends AbstractCodeFragment {
     private final String expression;
     private final LocationInfo locationInfo;
     private CompositeStatementObject owner;
-    private List<String> variables;
-    private List<String> types;
-    private List<String> stringLiterals;
-    private List<String> numberLiterals;
-    private List<String> nullLiterals;
-    private List<String> booleanLiterals;
-    private List<String> typeLiterals;
-    private List<VariableDeclaration> variableDeclarations;
-    private List<String> arrayAccesses;
-    private List<String> arguments;
-    private List<String> prefixExpressions;
-    private List<String> postfixExpressions;
-    private List<LambdaExpressionObject> lambdas;
-    private Map<String, List<ObjectCreation>> creationMap;
+    private final List<String> variables;
+    private final List<String> types;
+    private final List<String> stringLiterals;
+    private final List<String> numberLiterals;
+    private final List<String> nullLiterals;
+    private final List<String> booleanLiterals;
+    private final List<String> typeLiterals;
+    private final List<VariableDeclaration> variableDeclarations;
+    private final List<String> arrayAccesses;
+    private final List<String> arguments;
+    private final List<String> prefixExpressions;
+    private final List<String> postfixExpressions;
+    private final List<LambdaExpressionObject> lambdas;
+    private final Map<String, List<ObjectCreation>> creationMap;
 
     public AbstractExpression(KtFile cu,
                               String filePath,

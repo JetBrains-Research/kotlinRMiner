@@ -7,11 +7,11 @@ import org.jetbrains.research.kotlinrminer.diff.UMLModelDiff;
 import java.util.*;
 
 public class UMLModel {
-    private Set<String> repositoryDirectories;
-    private List<UMLClass> classList;
-    private List<UMLObject> objectList;
-    private List<UMLGeneralization> generalizationList;
-    private List<UMLRealization> realizationList;
+    private final Set<String> repositoryDirectories;
+    private final List<UMLClass> classList;
+    private final List<UMLObject> objectList;
+    private final List<UMLGeneralization> generalizationList;
+    private final List<UMLRealization> realizationList;
 
     public UMLModel(Set<String> repositoryDirectories) {
         this.repositoryDirectories = repositoryDirectories;

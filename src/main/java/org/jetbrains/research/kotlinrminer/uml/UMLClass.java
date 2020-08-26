@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.util.*;
 
 public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, Serializable, LocationInfoProvider {
-    private String qualifiedName;
-    private String sourceFile;
+    private final String qualifiedName;
+    private final String sourceFile;
     private String sourceFolder;
     private String visibility;
     private boolean isSealed;
@@ -20,11 +20,11 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
     private boolean isEnum;
     private boolean topLevel;
     private UMLType superclass;
-    private List<UMLType> implementedInterfaces;
-    private List<String> importedTypes;
-    private List<UMLTypeParameter> typeParameters;
+    private final List<UMLType> implementedInterfaces;
+    private final List<String> importedTypes;
+    private final List<UMLTypeParameter> typeParameters;
     private UMLJavadoc javadoc;
-    private List<UMLAnnotation> annotations;
+    private final List<UMLAnnotation> annotations;
 
     public UMLClass(String packageName,
                     String name,

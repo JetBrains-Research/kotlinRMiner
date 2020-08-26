@@ -12,7 +12,7 @@ public class CandidateAttributeRefactoring {
     private final String renamedVariableName;
     private final UMLOperation operationBefore;
     private final UMLOperation operationAfter;
-    private Set<AbstractCodeMapping> attributeReferences;
+    private final Set<AbstractCodeMapping> attributeReferences;
     private VariableDeclaration originalVariableDeclaration;
     private VariableDeclaration renamedVariableDeclaration;
     private UMLAttribute originalAttribute;
