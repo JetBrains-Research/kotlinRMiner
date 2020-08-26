@@ -16,7 +16,7 @@ public class UMLCompanionObject implements Comparable<UMLCompanionObject>, Seria
     private String name;
     private String className;
     private UMLJavadoc javadoc;
-    private List<UMLOperation> methods;
+    private final List<UMLOperation> methods;
 
     public UMLCompanionObject() {
         this.methods = new ArrayList<>();

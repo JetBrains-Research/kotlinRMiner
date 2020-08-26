@@ -40,7 +40,11 @@ public class GitHistoryRefactoringMiner {
         }
     }
 
-    protected List<Refactoring> detectRefactorings(GitService gitService, Repository repository, File projectFolder, RevCommit currentCommit, RefactoringHandler handler) throws Exception {
+    protected List<Refactoring> detectRefactorings(GitService gitService,
+                                                   Repository repository,
+                                                   File projectFolder,
+                                                   RevCommit currentCommit,
+                                                   RefactoringHandler handler) throws Exception {
         List<Refactoring> refactoringsAtRevision;
         String commitId = currentCommit.getId().getName();
         List<String> filePathsBefore = new ArrayList<>();
@@ -57,10 +61,12 @@ public class GitHistoryRefactoringMiner {
             // only ADD's or only REMOVE's there is no refactoring
             if (!filePathsBefore.isEmpty() && !filePathsCurrent.isEmpty() && currentCommit.getParentCount() > 0) {
                 RevCommit parentCommit = currentCommit.getParent(0);
-                populateFileContents(repository, parentCommit, filePathsBefore, fileContentsBefore, repositoryDirectoriesBefore);
+                populateFileContents(repository, parentCommit, filePathsBefore, fileContentsBefore,
+                                     repositoryDirectoriesBefore);
                 UMLModel parentUMLModel = createModelInKotlin(fileContentsBefore, repositoryDirectoriesBefore);
 
-                populateFileContents(repository, currentCommit, filePathsCurrent, fileContentsCurrent, repositoryDirectoriesCurrent);
+                populateFileContents(repository, currentCommit, filePathsCurrent, fileContentsCurrent,
+                                     repositoryDirectoriesCurrent);
                 UMLModel currentUMLModel = createModelInKotlin(fileContentsCurrent, repositoryDirectoriesCurrent);
 
                 refactoringsAtRevision = parentUMLModel.diff(currentUMLModel, renamedFilesHint).getRefactorings();
@@ -85,12 +91,16 @@ public class GitHistoryRefactoringMiner {
         return new ArrayList<>(refactoringsAtRevision);
     }
 
-    protected UMLModel createModelInKotlin(Map<String, String> fileContents, Set<String> repositoryDirectories) throws Exception {
+    protected UMLModel createModelInKotlin(Map<String, String> fileContents, Set<String> repositoryDirectories) throws
+            Exception {
         return new UMLModelPsiReader(fileContents, repositoryDirectories).getUmlModel();
     }
 
-    private void populateFileContents(Repository repository, RevCommit commit,
-                                      List<String> filePaths, Map<String, String> fileContents, Set<String> repositoryDirectories) throws Exception {
+    private void populateFileContents(Repository repository,
+                                      RevCommit commit,
+                                      List<String> filePaths,
+                                      Map<String, String> fileContents,
+                                      Set<String> repositoryDirectories) throws Exception {
         RevTree parentTree = commit.getTree();
         try (TreeWalk treeWalk = new TreeWalk(repository)) {
             treeWalk.addTree(parentTree);
@@ -108,7 +118,7 @@ public class GitHistoryRefactoringMiner {
                     String directory = pathString.substring(0, pathString.lastIndexOf("/"));
                     repositoryDirectories.add(directory);
                     //include sub-directories
-                    String subDirectory = new String(directory);
+                    String subDirectory = directory;
                     while (subDirectory.contains("/")) {
                         subDirectory = subDirectory.substring(0, subDirectory.lastIndexOf("/"));
                         repositoryDirectories.add(subDirectory);

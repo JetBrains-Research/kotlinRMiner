@@ -4,10 +4,10 @@ import org.jetbrains.research.kotlinrminer.uml.UMLClass;
 import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
 
 public class MovedClassToAnotherSourceFolder {
-    private UMLClass originalClass;
-    private UMLClass movedClass;
-    private String originalPath;
-    private String movedPath;
+    private final UMLClass originalClass;
+    private final UMLClass movedClass;
+    private final String originalPath;
+    private final String movedPath;
 
     public MovedClassToAnotherSourceFolder(UMLClass originalClass, UMLClass movedClass,
                                            String originalPath, String movedPath) {

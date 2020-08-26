@@ -2,12 +2,12 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtTryExpression;
 import org.jetbrains.research.kotlinrminer.LocationInfo.CodeElementType;
 
-public class TryStatementObject extends CompositeStatementObject{
-
+public class TryStatementObject extends CompositeStatementObject {
     private List<CompositeStatementObject> catchClauses;
     private CompositeStatementObject finallyClause;
 
@@ -34,9 +34,9 @@ public class TryStatementObject extends CompositeStatementObject{
 
     @Override
     public List<VariableDeclaration> getVariableDeclarations() {
-        List<VariableDeclaration> variableDeclarations = new ArrayList<VariableDeclaration>();
+        List<VariableDeclaration> variableDeclarations = new ArrayList<>();
         variableDeclarations.addAll(super.getVariableDeclarations());
-        for(CompositeStatementObject catchClause : catchClauses) {
+        for (CompositeStatementObject catchClause : catchClauses) {
             variableDeclarations.addAll(catchClause.getVariableDeclarations());
         }
         return variableDeclarations;

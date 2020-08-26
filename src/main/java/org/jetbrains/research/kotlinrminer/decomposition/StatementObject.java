@@ -6,29 +6,35 @@ import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StatementObject extends AbstractStatement {
-    private String statement;
-    private LocationInfo locationInfo;
-    private List<String> variables;
-    private List<String> types;
-    private List<VariableDeclaration> variableDeclarations;
+    private final String statement;
+    private final LocationInfo locationInfo;
+    private final List<String> variables;
+    private final List<String> types;
+    private final List<VariableDeclaration> variableDeclarations;
     //TODO private Map<String, List<OperationInvocation>> methodInvocationMap;
     //TODO private List<AnonymousClassDeclarationObject> anonymousClassDeclarations;
-    private List<String> stringLiterals;
-    private List<String> numberLiterals;
-    private List<String> nullLiterals;
-    private List<String> booleanLiterals;
-    private List<String> typeLiterals;
+    private final List<String> stringLiterals;
+    private final List<String> numberLiterals;
+    private final List<String> nullLiterals;
+    private final List<String> booleanLiterals;
+    private final List<String> typeLiterals;
     //TODO private Map<String, List<ObjectCreation>> creationMap;
-    private List<String> arrayAccesses;
-    private List<String> prefixExpressions;
-    private List<String> postfixExpressions;
-    private List<String> arguments;
-    private List<LambdaExpressionObject> lambdas;
+    private final List<String> arrayAccesses;
+    private final List<String> prefixExpressions;
+    private final List<String> postfixExpressions;
+    private final List<String> arguments;
+    private final List<LambdaExpressionObject> lambdas;
 
-    public StatementObject(KtFile cu, String filePath, KtExpression statement, int depth, LocationInfo.CodeElementType codeElementType) {
+    public StatementObject(KtFile cu,
+                           String filePath,
+                           KtExpression statement,
+                           int depth,
+                           LocationInfo.CodeElementType codeElementType) {
         super();
         this.locationInfo = new LocationInfo(cu, filePath, statement, codeElementType);
         Visitor visitor = new Visitor(cu, filePath);
@@ -80,6 +86,68 @@ public class StatementObject extends AbstractStatement {
     @Override
     public List<VariableDeclaration> getVariableDeclarations() {
         return variableDeclarations;
+    }
+
+    @Override
+    public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
+        //TODO: fix it
+        return new HashMap<>();
+    }
+
+    @Override
+    public List<AnonymousClassDeclarationObject> getAnonymousClassDeclarations() {
+        // TODO: implement it
+        return null;
+    }
+
+    @Override
+    public List<String> getStringLiterals() {
+        return stringLiterals;
+    }
+
+    @Override
+    public List<String> getNumberLiterals() {
+        return numberLiterals;
+    }
+
+    @Override
+    public List<String> getNullLiterals() {
+        return nullLiterals;
+    }
+
+    @Override
+    public List<String> getBooleanLiterals() {
+        return booleanLiterals;
+    }
+
+    @Override
+    public List<String> getTypeLiterals() {
+        return typeLiterals;
+    }
+
+    @Override
+    public Map<String, List<ObjectCreation>> getCreationMap() {
+        return null;
+    }
+
+    @Override
+    public List<String> getArrayAccesses() {
+        return arrayAccesses;
+    }
+
+    @Override
+    public List<String> getPrefixExpressions() {
+        return prefixExpressions;
+    }
+
+    @Override
+    public List<String> getPostfixExpressions() {
+        return postfixExpressions;
+    }
+
+    @Override
+    public List<String> getArguments() {
+        return arguments;
     }
 
     @Override

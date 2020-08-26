@@ -10,8 +10,8 @@ import java.io.Serializable;
 import java.util.List;
 
 public class UMLAttribute implements Comparable<UMLAttribute>, Serializable, LocationInfoProvider, VariableDeclarationProvider {
-    private LocationInfo locationInfo;
-    private String name;
+    private final LocationInfo locationInfo;
+    private final String name;
     private UMLType type;
     private String visibility;
     private String className;
@@ -63,7 +63,7 @@ public class UMLAttribute implements Comparable<UMLAttribute>, Serializable, Loc
     }
 
     public String getNonQualifiedClassName() {
-        return className.contains(".") ? className.substring(className.lastIndexOf(".") + 1, className.length()) : className;
+        return className.contains(".") ? className.substring(className.lastIndexOf(".") + 1) : className;
     }
 
     public String getClassName() {
@@ -103,7 +103,8 @@ public class UMLAttribute implements Comparable<UMLAttribute>, Serializable, Loc
             return false;
         if (this.isFinal != attribute.isFinal)
             return false;
-        if (this.name.equals(attribute.name) && this.type.equals(attribute.type) && this.type.equalsQualified(attribute.type))
+        if (this.name.equals(attribute.name) && this.type.equals(attribute.type) && this.type.equalsQualified(
+                attribute.type))
             return true;
         if (!this.type.equals(attribute.type))
             return this.name.equals(attribute.name);

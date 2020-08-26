@@ -11,7 +11,7 @@ import java.io.IOException;
  * Wrapper for VirtualFile that retains path on machine
  */
 public class KotlinLightVirtualFile extends LightVirtualFile {
-    private String path;
+    private final String path;
 
     public KotlinLightVirtualFile(File file, String text) throws IOException {
         super(file.getName(), KotlinLanguage.INSTANCE, text);

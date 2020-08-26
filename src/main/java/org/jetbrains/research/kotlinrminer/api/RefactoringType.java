@@ -6,12 +6,14 @@ public enum RefactoringType {
     EXTRACT_OPERATION("Extract Method", "Extract Method (.+) extracted from (.+) in class (.+)", 2),
     RENAME_CLASS("Rename Class", "Rename Class (.+) renamed to (.+)"),
     MOVE_ATTRIBUTE("Move Attribute", "Move Attribute (.+) from class (.+) to (.+) from class (.+)"),
-    MOVE_RENAME_ATTRIBUTE("Move And Rename Attribute", "Move And Rename Attribute (.+) renamed to (.+) and moved from class (.+) to class (.+)"),
+    MOVE_RENAME_ATTRIBUTE("Move And Rename Attribute",
+                          "Move And Rename Attribute (.+) renamed to (.+) and moved from class (.+) to class (.+)"),
     REPLACE_ATTRIBUTE("Replace Attribute", "Replace Attribute (.+) from class (.+) with (.+) from class (.+)"),
     RENAME_METHOD("Rename Method", "Rename Method (.+) renamed to (.+) in class (.+)"),
     INLINE_OPERATION("Inline Method", "Inline Method (.+) inlined to (.+) in class (.+)", 2),
     MOVE_OPERATION("Move Method", "Move Method (.+) from class (.+) to (.+) from class (.+)"),
-    MOVE_AND_RENAME_OPERATION("Move And Rename Method", "Move And Rename Method (.+) from class (.+) to (.+) from class (.+)"),
+    MOVE_AND_RENAME_OPERATION("Move And Rename Method",
+                              "Move And Rename Method (.+) from class (.+) to (.+) from class (.+)"),
     PULL_UP_OPERATION("Pull Up Method", "Pull Up Method (.+) from class (.+) to (.+) from class (.+)", 1, 2),
     MOVE_CLASS("Move Class", "Move Class (.+) moved to (.+)"),
     MOVE_RENAME_CLASS("Move And Rename Class", ".+"),
@@ -24,8 +26,10 @@ public enum RefactoringType {
     EXTRACT_SUBCLASS("Extract Subclass", "Extract Subclass (.+) from class (.+)"),
     EXTRACT_CLASS("Extract Class", "Extract Class (.+) from class (.+)"),
     MERGE_OPERATION("Merge Method", ".+"),
-    EXTRACT_AND_MOVE_OPERATION("Extract And Move Method", "Extract And Move Method (.+) extracted from (.+) in class (.+) & moved to class (.+)"),
-    MOVE_AND_INLINE_OPERATION("Move And Inline Method", "Move And Inline Method (.+) moved from class (.+) to class (.+) & inlined to (.+)"),
+    EXTRACT_AND_MOVE_OPERATION("Extract And Move Method",
+                               "Extract And Move Method (.+) extracted from (.+) in class (.+) & moved to class (.+)"),
+    MOVE_AND_INLINE_OPERATION("Move And Inline Method",
+                              "Move And Inline Method (.+) moved from class (.+) to class (.+) & inlined to (.+)"),
     CONVERT_ANONYMOUS_CLASS_TO_TYPE("Convert Anonymous Class to Type", ".+"),
     INTRODUCE_POLYMORPHISM("Introduce Polymorphism", ".+"),
     RENAME_PACKAGE("Change Package", "Change Package (.+) to (.+)"),
@@ -41,24 +45,33 @@ public enum RefactoringType {
     SPLIT_VARIABLE("Split Variable", "Split Variable (.+) to \\[(.+)\\] in method (.+) from class (.+)"),
     SPLIT_PARAMETER("Split Parameter", "Split Parameter (.+) to \\[(.+)\\] in method (.+) from class (.+)"),
     SPLIT_ATTRIBUTE("Split Attribute", "Split Attribute (.+) to \\[(.+)\\] in class (.+)"),
-    REPLACE_VARIABLE_WITH_ATTRIBUTE("Replace Variable With Attribute", "Replace Variable With Attribute (.+) to (.+) in method (.+) from class (.+)"),
+    REPLACE_VARIABLE_WITH_ATTRIBUTE("Replace Variable With Attribute",
+                                    "Replace Variable With Attribute (.+) to (.+) in method (.+) from class (.+)"),
     PARAMETERIZE_VARIABLE("Parameterize Variable", "Parameterize Variable (.+) to (.+) in method (.+) from class (.+)"),
     CHANGE_RETURN_TYPE("Change Return Type", "Change Return Type (.+) to (.+) in method (.+) from class (.+)"),
     CHANGE_VARIABLE_TYPE("Change Variable Type", "Change Variable Type (.+) to (.+) in method (.+) from class (.+)"),
     CHANGE_PARAMETER_TYPE("Change Parameter Type", "Change Parameter Type (.+) to (.+) in method (.+) from class (.+)"),
     CHANGE_ATTRIBUTE_TYPE("Change Attribute Type", "Change Attribute Type (.+) to (.+) in class (.+)"),
     ADD_METHOD_ANNOTATION("Add Method Annotation", "Add Method Annotation (.+) in method (.+) from class (.+)"),
-    REMOVE_METHOD_ANNOTATION("Remove Method Annotation", "Remove Method Annotation (.+) in method (.+) from class (.+)"),
-    MODIFY_METHOD_ANNOTATION("Modify Method Annotation", "Modify Method Annotation (.+) to (.+) in method (.+) from class (.+)"),
-    ADD_ATTRIBUTE_ANNOTATION("Add Attribute Annotation", "Add Attribute Annotation (.+) in attribute (.+) from class (.+)"),
-    REMOVE_ATTRIBUTE_ANNOTATION("Remove Attribute Annotation", "Remove Attribute Annotation (.+) in attribute (.+) from class (.+)"),
-    MODIFY_ATTRIBUTE_ANNOTATION("Modify Attribute Annotation", "Modify Attribute Annotation (.+) to (.+) in attribute (.+) from class (.+)"),
+    REMOVE_METHOD_ANNOTATION("Remove Method Annotation",
+                             "Remove Method Annotation (.+) in method (.+) from class (.+)"),
+    MODIFY_METHOD_ANNOTATION("Modify Method Annotation",
+                             "Modify Method Annotation (.+) to (.+) in method (.+) from class (.+)"),
+    ADD_ATTRIBUTE_ANNOTATION("Add Attribute Annotation",
+                             "Add Attribute Annotation (.+) in attribute (.+) from class (.+)"),
+    REMOVE_ATTRIBUTE_ANNOTATION("Remove Attribute Annotation",
+                                "Remove Attribute Annotation (.+) in attribute (.+) from class (.+)"),
+    MODIFY_ATTRIBUTE_ANNOTATION("Modify Attribute Annotation",
+                                "Modify Attribute Annotation (.+) to (.+) in attribute (.+) from class (.+)"),
     ADD_CLASS_ANNOTATION("Add Class Annotation", "Add Class Annotation (.+) in class (.+)"),
     REMOVE_CLASS_ANNOTATION("Remove Class Annotation", "Remove Class Annotation (.+) in class (.+)"),
     MODIFY_CLASS_ANNOTATION("Modify Class Annotation", "Modify Class Annotation (.+) to (.+) in class (.+)"),
-    ADD_PARAMETER_ANNOTATION("Add Parameter Annotation", "Add Parameter Annotation (.+) in parameter (.+) in method (.+) from class (.+)"),
-    REMOVE_PARAMETER_ANNOTATION("Remove Parameter Annotation", "Remove Parameter Annotation (.+) in parameter (.+) in method (.+) from class (.+)"),
-    MODIFY_PARAMETER_ANNOTATION("Modify Parameter Annotation", "Modify Parameter Annotation (.+) to (.+) in parameter (.+) in method (.+) from class (.+)"),
+    ADD_PARAMETER_ANNOTATION("Add Parameter Annotation",
+                             "Add Parameter Annotation (.+) in parameter (.+) in method (.+) from class (.+)"),
+    REMOVE_PARAMETER_ANNOTATION("Remove Parameter Annotation",
+                                "Remove Parameter Annotation (.+) in parameter (.+) in method (.+) from class (.+)"),
+    MODIFY_PARAMETER_ANNOTATION("Modify Parameter Annotation",
+                                "Modify Parameter Annotation (.+) to (.+) in parameter (.+) in method (.+) from class (.+)"),
     ADD_PARAMETER("Add Parameter", "Add Parameter (.+) in method (.+) from class (.+)"),
     REMOVE_PARAMETER("Remove Parameter", "Remove Parameter (.+) in method (.+) from class (.+)"),
     REORDER_PARAMETER("Reorder Parameter", "Reorder Parameter \\[(.+)\\] to \\[(.+)\\] in method (.+) from class (.+)");
@@ -122,9 +135,9 @@ public enum RefactoringType {
             MODIFY_PARAMETER_ANNOTATION
     };
 
-    private String displayName;
-    private Pattern regex;
-    private int[] aggregateGroups;
+    private final String displayName;
+    private final Pattern regex;
+    private final int[] aggregateGroups;
 
     RefactoringType(String displayName, String regex, int... aggregateGroups) {
         this.displayName = displayName;

@@ -1,7 +1,6 @@
 package org.jetbrains.research.kotlinrminer.util;
 
 public class PrefixSuffixUtils {
-
     public static int separatorPosOfCommonSuffix(char separator, String s1, String s2) {
         int l1 = s1.length();
         int l2 = s2.length();
@@ -35,6 +34,16 @@ public class PrefixSuffixUtils {
             i++;
         }
         return s1.substring(s1.length() - i);
+    }
+
+    public static String normalize(String input) {
+        String output;
+        if (input.startsWith("this.")) {
+            output = input.substring(5);
+        } else {
+            output = input;
+        }
+        return output;
     }
 
 }

@@ -1,11 +1,10 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
-
 import org.jetbrains.research.kotlinrminer.uml.UMLType;
 
 public class CompositeType extends UMLType {
-    private UMLType leftType;
-    private LeafType rightType;
+    private final UMLType leftType;
+    private final LeafType rightType;
 
     public CompositeType(UMLType leftType, LeafType rightType) {
         this.leftType = leftType;

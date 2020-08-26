@@ -1,8 +1,9 @@
-package org.jetbrains.research.kotlinrminer.diff;
+package org.jetbrains.research.kotlinrminer.diff.refactoring;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
+import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.uml.UMLClass;
 
 import java.util.ArrayList;
@@ -10,22 +11,20 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class RenameClassRefactoring implements Refactoring {
-    private UMLClass originalClass;
-    private UMLClass renamedClass;
+public class MoveAndRenameClassRefactoring implements Refactoring {
+    private final UMLClass originalClass;
+    private final UMLClass renamedClass;
 
-    public RenameClassRefactoring(UMLClass originalClass, UMLClass renamedClass) {
+    public MoveAndRenameClassRefactoring(UMLClass originalClass, UMLClass renamedClass) {
         this.originalClass = originalClass;
         this.renamedClass = renamedClass;
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getName()).append("\t");
-        sb.append(originalClass.getName());
-        sb.append(" renamed to ");
-        sb.append(renamedClass.getName());
-        return sb.toString();
+        return getName() + "\t" +
+                originalClass.getName() +
+                " moved and renamed to " +
+                renamedClass.getName();
     }
 
     public String getName() {
@@ -33,7 +32,7 @@ public class RenameClassRefactoring implements Refactoring {
     }
 
     public RefactoringType getRefactoringType() {
-        return RefactoringType.RENAME_CLASS;
+        return RefactoringType.MOVE_RENAME_CLASS;
     }
 
     public String getOriginalClassName() {
@@ -54,7 +53,8 @@ public class RenameClassRefactoring implements Refactoring {
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
-        pairs.add(new ImmutablePair<>(getOriginalClass().getLocationInfo().getFilePath(), getOriginalClass().getName()));
+        pairs.add(
+                new ImmutablePair<>(getOriginalClass().getLocationInfo().getFilePath(), getOriginalClass().getName()));
         return pairs;
     }
 
@@ -68,8 +68,8 @@ public class RenameClassRefactoring implements Refactoring {
     public List<CodeRange> leftSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(originalClass.codeRange()
-                .setDescription("original type declaration")
-                .setCodeElement(originalClass.getName()));
+                           .setDescription("original type declaration")
+                           .setCodeElement(originalClass.getName()));
         return ranges;
     }
 
@@ -77,8 +77,8 @@ public class RenameClassRefactoring implements Refactoring {
     public List<CodeRange> rightSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(renamedClass.codeRange()
-                .setDescription("renamed type declaration")
-                .setCodeElement(renamedClass.getName()));
+                           .setDescription("moved and renamed type declaration")
+                           .setCodeElement(renamedClass.getName()));
         return ranges;
     }
 }
