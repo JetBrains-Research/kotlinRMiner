@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.Set;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.decomposition.AbstractCodeMapping;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.AddMethodAnnotationRefactoring;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.AddParameterRefactoring;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.ModifyMethodAnnotationRefactoring;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.RemoveMethodAnnotationRefactoring;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.RemoveParameterRefactoring;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.ReorderParameterRefactoring;
 import org.jetbrains.research.kotlinrminer.uml.UMLAnnotation;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 import org.jetbrains.research.kotlinrminer.uml.UMLParameter;
@@ -267,6 +273,43 @@ public class UMLOperationDiff {
 
     public Set<Refactoring> getRefactorings() {
         Set<Refactoring> refactorings = new LinkedHashSet<>();
+        for (UMLParameterDiff parameterDiff : getParameterDiffList()) {
+            refactorings.addAll(parameterDiff.getRefactorings());
+        }
+        if (removedParameters.isEmpty()) {
+            for (UMLParameter umlParameter : addedParameters) {
+                AddParameterRefactoring
+                    refactoring = new AddParameterRefactoring(umlParameter, removedOperation, addedOperation);
+                refactorings.add(refactoring);
+            }
+        }
+        if (addedParameters.isEmpty()) {
+            for (UMLParameter umlParameter : removedParameters) {
+                RemoveParameterRefactoring
+                    refactoring = new RemoveParameterRefactoring(umlParameter, removedOperation, addedOperation);
+                refactorings.add(refactoring);
+            }
+        }
+        if (parametersReordered) {
+            ReorderParameterRefactoring refactoring = new ReorderParameterRefactoring(removedOperation, addedOperation);
+            refactorings.add(refactoring);
+        }
+        for (UMLAnnotation annotation : annotationListDiff.getAddedAnnotations()) {
+            AddMethodAnnotationRefactoring
+                refactoring = new AddMethodAnnotationRefactoring(annotation, removedOperation, addedOperation);
+            refactorings.add(refactoring);
+        }
+        for (UMLAnnotation annotation : annotationListDiff.getRemovedAnnotations()) {
+            RemoveMethodAnnotationRefactoring
+                refactoring = new RemoveMethodAnnotationRefactoring(annotation, removedOperation, addedOperation);
+            refactorings.add(refactoring);
+        }
+        for (UMLAnnotationDiff annotationDiff : annotationListDiff.getAnnotationDiffList()) {
+            ModifyMethodAnnotationRefactoring refactoring =
+                new ModifyMethodAnnotationRefactoring(annotationDiff.getRemovedAnnotation(),
+                    annotationDiff.getAddedAnnotation(), removedOperation, addedOperation);
+            refactorings.add(refactoring);
+        }
         return refactorings;
     }
 }

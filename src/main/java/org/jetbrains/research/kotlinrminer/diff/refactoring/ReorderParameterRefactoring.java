@@ -104,15 +104,13 @@ public class ReorderParameterRefactoring implements Refactoring {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getName()).append("\t");
-        sb.append(parametersBefore);
-        sb.append(" to ");
-        sb.append(parametersAfter);
-        sb.append(" in method ");
-        sb.append(operationAfter);
-        sb.append(" in class ").append(operationAfter.getClassName());
-        return sb.toString();
+        return getName() + "\t" +
+            parametersBefore +
+            " to " +
+            parametersAfter +
+            " in method " +
+            operationAfter +
+            " in class " + operationAfter.getClassName();
     }
 
     @Override
@@ -160,12 +158,9 @@ public class ReorderParameterRefactoring implements Refactoring {
             return false;
         }
         if (parametersBefore == null) {
-            if (other.parametersBefore != null) {
-                return false;
-            }
-        } else if (!parametersBefore.equals(other.parametersBefore)) {
-            return false;
+            return other.parametersBefore == null;
+        } else {
+            return parametersBefore.equals(other.parametersBefore);
         }
-        return true;
     }
 }

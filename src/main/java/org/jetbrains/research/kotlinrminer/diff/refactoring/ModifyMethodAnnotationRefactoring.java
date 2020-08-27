@@ -96,16 +96,14 @@ public class ModifyMethodAnnotationRefactoring implements Refactoring {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getName()).append("\t");
-        sb.append(annotationBefore);
-        sb.append(" to ");
-        sb.append(annotationAfter);
-        sb.append(" in method ");
-        sb.append(operationAfter);
-        sb.append(" from class ");
-        sb.append(operationAfter.getClassName());
-        return sb.toString();
+        return getName() + "\t" +
+            annotationBefore +
+            " to " +
+            annotationAfter +
+            " in method " +
+            operationAfter +
+            " from class " +
+            operationAfter.getClassName();
     }
 
     @Override
@@ -153,12 +151,9 @@ public class ModifyMethodAnnotationRefactoring implements Refactoring {
             return false;
         }
         if (operationBefore == null) {
-            if (other.operationBefore != null) {
-                return false;
-            }
-        } else if (!operationBefore.equals(other.operationBefore)) {
-            return false;
+            return other.operationBefore == null;
+        } else {
+            return operationBefore.equals(other.operationBefore);
         }
-        return true;
     }
 }

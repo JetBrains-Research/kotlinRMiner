@@ -83,14 +83,12 @@ public class AddParameterRefactoring implements Refactoring {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getName()).append("\t");
-        sb.append(parameter.getVariableDeclaration());
-        sb.append(" in method ");
-        sb.append(operationAfter);
-        sb.append(" from class ");
-        sb.append(operationAfter.getClassName());
-        return sb.toString();
+        return getName() + "\t" +
+            parameter.getVariableDeclaration() +
+            " in method " +
+            operationAfter +
+            " from class " +
+            operationAfter.getClassName();
     }
 
     @Override
@@ -131,12 +129,7 @@ public class AddParameterRefactoring implements Refactoring {
             return false;
         }
         if (operationBefore == null) {
-            if (other.operationBefore != null) {
-                return false;
-            }
-        } else if (!operationBefore.equals(other.operationBefore)) {
-            return false;
-        }
-        return true;
+            return other.operationBefore == null;
+        } else return operationBefore.equals(other.operationBefore);
     }
 }

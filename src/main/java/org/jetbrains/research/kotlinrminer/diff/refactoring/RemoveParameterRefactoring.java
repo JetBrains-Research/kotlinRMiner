@@ -84,14 +84,12 @@ public class RemoveParameterRefactoring implements Refactoring {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getName()).append("\t");
-        sb.append(parameter.getVariableDeclaration());
-        sb.append(" in method ");
-        sb.append(operationBefore);
-        sb.append(" from class ");
-        sb.append(operationBefore.getClassName());
-        return sb.toString();
+        return getName() + "\t" +
+            parameter.getVariableDeclaration() +
+            " in method " +
+            operationBefore +
+            " from class " +
+            operationBefore.getClassName();
     }
 
     @Override
@@ -133,12 +131,9 @@ public class RemoveParameterRefactoring implements Refactoring {
             return false;
         }
         if (operationBefore == null) {
-            if (other.operationBefore != null) {
-                return false;
-            }
-        } else if (!operationBefore.equals(other.operationBefore)) {
-            return false;
+            return other.operationBefore == null;
+        } else {
+            return operationBefore.equals(other.operationBefore);
         }
-        return true;
     }
 }
