@@ -6,12 +6,6 @@
   }]
 }, {
   "repository" : "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
-  "sha1" : "38448785791cffce8c453b04bcc3e217bb41f1e8",
-  "refactorings" : [{
-    "type" : "This test should fail!"
-  }]
-}, {
-  "repository" : "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
   "sha1" : "e839b0b7df4c4069515e695b9ab088c675522aac",
   "refactorings" : [{
     "type" : "Move Class"
