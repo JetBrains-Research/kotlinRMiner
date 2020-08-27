@@ -78,8 +78,6 @@ public class GitService {
                 .findGitDir()
                 .build();
 
-            //logger.info("Project {} is already cloned, current branch is {}", cloneUrl, repository.getBranch());
-
         } else {
             Git git = Git.cloneRepository()
                 .setDirectory(folder)
@@ -87,36 +85,7 @@ public class GitService {
                 .setCloneAllBranches(true)
                 .call();
             repository = git.getRepository();
-            //logger.info("Done cloning {}, current branch is {}", cloneUrl, repository.getBranch());
         }
-
-//		if (branch != null && !repository.getBranch().equals(branch)) {
-//			Git git = new Git(repository);
-//
-//			String localBranch = "refs/heads/" + branch;
-//			List<Ref> refs = git.branchList().call();
-//			boolean branchExists = false;
-//			for (Ref ref : refs) {
-//				if (ref.getName().equals(localBranch)) {
-//					branchExists = true;
-//				}
-//			}
-//
-//			if (branchExists) {
-//				git.checkout()
-//					.setName(branch)
-//					.call();
-//			} else {
-//				git.checkout()
-//					.setCreateBranch(true)
-//					.setName(branch)
-//					.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK)
-//					.setStartPoint("origin/" + branch)
-//					.call();
-//			}
-//
-//			logger.info("Project {} switched to {}", cloneUrl, repository.getBranch());
-//		}
         return repository;
     }
 
