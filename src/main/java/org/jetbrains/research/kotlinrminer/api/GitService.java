@@ -1,5 +1,6 @@
 package org.jetbrains.research.kotlinrminer.api;
 
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.lib.ObjectId;
@@ -68,6 +69,28 @@ public class GitService {
                 }
             }
         }
+    }
+
+    public Repository cloneIfNotExists(String projectPath, String cloneUrl/*, String branch*/) throws Exception {
+        File folder = new File(projectPath);
+        Repository repository;
+        if (folder.exists()) {
+            RepositoryBuilder builder = new RepositoryBuilder();
+            repository = builder
+                .setGitDir(new File(folder, ".git"))
+                .readEnvironment()
+                .findGitDir()
+                .build();
+
+        } else {
+            Git git = Git.cloneRepository()
+                .setDirectory(folder)
+                .setURI(cloneUrl)
+                .setCloneAllBranches(true)
+                .call();
+            repository = git.getRepository();
+        }
+        return repository;
     }
 
     private boolean isKotlinFile(String path) {
