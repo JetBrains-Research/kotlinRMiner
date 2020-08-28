@@ -1,7 +1,6 @@
 package org.jetbrains.research.kotlinrminer.diff.refactoring;
 
 import java.util.Set;
-
 import org.jetbrains.research.kotlinrminer.decomposition.AbstractCodeMapping;
 import org.jetbrains.research.kotlinrminer.uml.UMLAttribute;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
@@ -65,12 +64,12 @@ public class CandidateSplitVariableRefactoring {
 
     public String toString() {
         return "Split Attribute" + "\t" +
-                oldVariable +
-                " to " +
-                splitVariables +
-                " in method " +
-                operationAfter +
-                " in class " + operationAfter.getClassName();
+            oldVariable +
+            " to " +
+            splitVariables +
+            " in method " +
+            operationAfter +
+            " in class " + operationAfter.getClassName();
     }
 
     @Override
@@ -86,31 +85,42 @@ public class CandidateSplitVariableRefactoring {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         CandidateSplitVariableRefactoring other = (CandidateSplitVariableRefactoring) obj;
         if (oldVariable == null) {
-            if (other.oldVariable != null)
+            if (other.oldVariable != null) {
                 return false;
-        } else if (!oldVariable.equals(other.oldVariable))
+            }
+        } else if (!oldVariable.equals(other.oldVariable)) {
             return false;
+        }
         if (operationAfter == null) {
-            if (other.operationAfter != null)
+            if (other.operationAfter != null) {
                 return false;
-        } else if (!operationAfter.equals(other.operationAfter))
+            }
+        } else if (!operationAfter.equals(other.operationAfter)) {
             return false;
+        }
         if (operationBefore == null) {
-            if (other.operationBefore != null)
+            if (other.operationBefore != null) {
                 return false;
-        } else if (!operationBefore.equals(other.operationBefore))
+            }
+        } else if (!operationBefore.equals(other.operationBefore)) {
             return false;
+        }
         if (splitVariables == null) {
             return other.splitVariables == null;
-        } else return splitVariables.equals(other.splitVariables);
+        } else {
+            return splitVariables.equals(other.splitVariables);
+        }
     }
 
 }

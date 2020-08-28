@@ -75,6 +75,7 @@ public class OperationBody {
             KtForExpression forStatement = (KtForExpression) statement;
             CompositeStatementObject child = new CompositeStatementObject(ktFile, filePath,
                 forStatement, parent.getDepth() + 1, CodeElementType.ENHANCED_FOR_STATEMENT);
+
             parent.addStatement(child);
             VariableDeclaration variableDeclaration = new VariableDeclaration(ktFile, filePath, forStatement.getLoopParameter());
             child.addVariableDeclaration(variableDeclaration);

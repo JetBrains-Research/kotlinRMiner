@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
@@ -61,8 +60,9 @@ public class MergeVariableRefactoring implements Refactoring {
     }
 
     public RefactoringType getRefactoringType() {
-        if (allVariablesAreParameters())
+        if (allVariablesAreParameters()) {
             return RefactoringType.MERGE_PARAMETER;
+        }
         return RefactoringType.MERGE_VARIABLE;
     }
 
@@ -73,26 +73,26 @@ public class MergeVariableRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(
-                new ImmutablePair<>(getOperationBefore().getLocationInfo().getFilePath(),
-                                    getOperationBefore().getClassName()));
+            new ImmutablePair<>(getOperationBefore().getLocationInfo().getFilePath(),
+                getOperationBefore().getClassName()));
         return pairs;
     }
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(new ImmutablePair<>(getOperationAfter().getLocationInfo().getFilePath(),
-                                      getOperationAfter().getClassName()));
+            getOperationAfter().getClassName()));
         return pairs;
     }
 
     public String toString() {
         return getName() + "\t" +
-                mergedVariables +
-                " to " +
-                newVariable +
-                " in method " +
-                operationAfter +
-                " in class " + operationAfter.getClassName();
+            mergedVariables +
+            " to " +
+            newVariable +
+            " in method " +
+            operationAfter +
+            " in class " + operationAfter.getClassName();
     }
 
     @Override
@@ -108,31 +108,42 @@ public class MergeVariableRefactoring implements Refactoring {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         MergeVariableRefactoring other = (MergeVariableRefactoring) obj;
         if (mergedVariables == null) {
-            if (other.mergedVariables != null)
+            if (other.mergedVariables != null) {
                 return false;
-        } else if (!mergedVariables.equals(other.mergedVariables))
+            }
+        } else if (!mergedVariables.equals(other.mergedVariables)) {
             return false;
+        }
         if (newVariable == null) {
-            if (other.newVariable != null)
+            if (other.newVariable != null) {
                 return false;
-        } else if (!newVariable.equals(other.newVariable))
+            }
+        } else if (!newVariable.equals(other.newVariable)) {
             return false;
+        }
         if (operationAfter == null) {
-            if (other.operationAfter != null)
+            if (other.operationAfter != null) {
                 return false;
-        } else if (!operationAfter.equals(other.operationAfter))
+            }
+        } else if (!operationAfter.equals(other.operationAfter)) {
             return false;
+        }
         if (operationBefore == null) {
             return other.operationBefore == null;
-        } else return operationBefore.equals(other.operationBefore);
+        } else {
+            return operationBefore.equals(other.operationBefore);
+        }
     }
 
     @Override
@@ -140,8 +151,8 @@ public class MergeVariableRefactoring implements Refactoring {
         List<CodeRange> ranges = new ArrayList<>();
         for (VariableDeclaration mergedVariable : mergedVariables) {
             ranges.add(mergedVariable.codeRange()
-                               .setDescription("merged variable declaration")
-                               .setCodeElement(mergedVariable.toString()));
+                .setDescription("merged variable declaration")
+                .setCodeElement(mergedVariable.toString()));
         }
         return ranges;
     }
@@ -150,8 +161,8 @@ public class MergeVariableRefactoring implements Refactoring {
     public List<CodeRange> rightSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(newVariable.codeRange()
-                           .setDescription("new variable declaration")
-                           .setCodeElement(newVariable.toString()));
+            .setDescription("new variable declaration")
+            .setCodeElement(newVariable.toString()));
         return ranges;
     }
 }

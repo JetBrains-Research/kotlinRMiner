@@ -36,6 +36,7 @@ import org.jetbrains.research.kotlinrminer.uml.UMLParameter;
 import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
 
 public class VariableReplacementAnalysis {
+
     private final Set<AbstractCodeMapping> mappings;
     private final List<StatementObject> nonMappedLeavesT1;
     private final List<StatementObject> nonMappedLeavesT2;

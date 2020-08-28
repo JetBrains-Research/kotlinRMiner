@@ -3,7 +3,6 @@ package org.jetbrains.research.kotlinrminer.diff;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.jetbrains.research.kotlinrminer.uml.UMLAnnotation;
 
 public class UMLAnnotationListDiff {
@@ -16,7 +15,7 @@ public class UMLAnnotationListDiff {
         this.addedAnnotations = new ArrayList<>();
         this.annotationDiffList = new ArrayList<>();
         List<AbstractMap.SimpleEntry<UMLAnnotation, UMLAnnotation>> matchedAnnotations
-                = new ArrayList<>();
+            = new ArrayList<>();
         for (UMLAnnotation annotation1 : annotations1) {
             boolean found = false;
             for (UMLAnnotation annotation2 : annotations2) {

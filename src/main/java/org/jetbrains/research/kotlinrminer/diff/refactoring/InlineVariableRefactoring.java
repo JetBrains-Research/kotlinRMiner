@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
@@ -58,11 +57,11 @@ public class InlineVariableRefactoring implements Refactoring {
 
     public String toString() {
         return getName() + "\t" +
-                variableDeclaration +
-                " in method " +
-                operationBefore +
-                " from class " +
-                operationBefore.getClassName();
+            variableDeclaration +
+            " in method " +
+            operationBefore +
+            " from class " +
+            operationBefore.getClassName();
     }
 
     /**
@@ -83,35 +82,42 @@ public class InlineVariableRefactoring implements Refactoring {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         InlineVariableRefactoring other = (InlineVariableRefactoring) obj;
         if (operationBefore == null) {
-            if (other.operationBefore != null)
+            if (other.operationBefore != null) {
                 return false;
-        } else if (!operationBefore.equals(other.operationBefore))
+            }
+        } else if (!operationBefore.equals(other.operationBefore)) {
             return false;
+        }
         if (variableDeclaration == null) {
             return other.variableDeclaration == null;
-        } else return variableDeclaration.equals(other.variableDeclaration);
+        } else {
+            return variableDeclaration.equals(other.variableDeclaration);
+        }
     }
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(new ImmutablePair<>(getOperationBefore().getLocationInfo().getFilePath(),
-                                      getOperationBefore().getClassName()));
+            getOperationBefore().getClassName()));
         return pairs;
     }
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(
-                new ImmutablePair<>(getOperationAfter().getLocationInfo().getFilePath(),
-                                    getOperationAfter().getClassName()));
+            new ImmutablePair<>(getOperationAfter().getLocationInfo().getFilePath(),
+                getOperationAfter().getClassName()));
         return pairs;
     }
 
@@ -119,11 +125,11 @@ public class InlineVariableRefactoring implements Refactoring {
     public List<CodeRange> leftSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(variableDeclaration.codeRange()
-                           .setDescription("inlined variable declaration")
-                           .setCodeElement(variableDeclaration.toString()));
+            .setDescription("inlined variable declaration")
+            .setCodeElement(variableDeclaration.toString()));
         for (AbstractCodeMapping mapping : references) {
             ranges.add(mapping.getFragment1().codeRange().setDescription(
-                    "statement with the name of the inlined variable"));
+                "statement with the name of the inlined variable"));
         }
         return ranges;
     }
@@ -133,7 +139,7 @@ public class InlineVariableRefactoring implements Refactoring {
         List<CodeRange> ranges = new ArrayList<>();
         for (AbstractCodeMapping mapping : references) {
             ranges.add(mapping.getFragment2().codeRange().setDescription(
-                    "statement with the initializer of the inlined variable"));
+                "statement with the initializer of the inlined variable"));
         }
         return ranges;
     }

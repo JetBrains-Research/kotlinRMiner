@@ -4,6 +4,7 @@ import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclaration;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 
 public class VariableDeclarationReplacement extends Replacement {
+
     private final VariableDeclaration v1;
     private final VariableDeclaration v2;
     private final UMLOperation operation1;

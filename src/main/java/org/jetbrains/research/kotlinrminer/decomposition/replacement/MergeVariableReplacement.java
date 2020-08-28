@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class MergeVariableReplacement extends Replacement {
+
     private final Set<String> mergedVariables;
 
     public MergeVariableReplacement(Set<String> mergedVariables, String newVariable) {
@@ -32,5 +33,6 @@ public class MergeVariableReplacement extends Replacement {
                 this.mergedVariables.containsAll(other.mergedVariables) &&
                 this.mergedVariables.size() > other.mergedVariables.size();
     }
+
 }
 

@@ -1,5 +1,9 @@
 package org.jetbrains.research.kotlinrminer.diff.refactoring;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
@@ -7,11 +11,6 @@ import org.jetbrains.research.kotlinrminer.decomposition.UMLOperationBodyMapper;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.Replacement;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
-
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 public class RenameOperationRefactoring implements Refactoring {
     private final UMLOperation originalOperation;
@@ -32,12 +31,21 @@ public class RenameOperationRefactoring implements Refactoring {
         this.replacements = new LinkedHashSet<>();
     }
 
+    private static boolean isNumeric(String str) {
+        for (char c : str.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public String toString() {
         return getName() + "\t" +
-                originalOperation +
-                " renamed to " +
-                renamedOperation +
-                " in class " + getClassName();
+            originalOperation +
+            " renamed to " +
+            renamedOperation +
+            " in class " + getClassName();
     }
 
     private String getClassName() {
@@ -46,18 +54,11 @@ public class RenameOperationRefactoring implements Refactoring {
         boolean targetIsAnonymousInsideSource = false;
         if (targetClassName.startsWith(sourceClassName + ".")) {
             String targetClassNameSuffix =
-                    targetClassName.substring(sourceClassName.length() + 1);
+                targetClassName.substring(sourceClassName.length() + 1);
             targetIsAnonymousInsideSource = isNumeric(targetClassNameSuffix);
         }
         return sourceClassName.equals(targetClassName) || targetIsAnonymousInsideSource ? sourceClassName :
-                targetClassName;
-    }
-
-    private static boolean isNumeric(String str) {
-        for (char c : str.toCharArray()) {
-            if (!Character.isDigit(c)) return false;
-        }
-        return true;
+            targetClassName;
     }
 
     public String getName() {
@@ -101,14 +102,14 @@ public class RenameOperationRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(new ImmutablePair<>(getOriginalOperation().getLocationInfo().getFilePath(),
-                                      getOriginalOperation().getClassName()));
+            getOriginalOperation().getClassName()));
         return pairs;
     }
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(new ImmutablePair<>(getRenamedOperation().getLocationInfo().getFilePath(),
-                                      getRenamedOperation().getClassName()));
+            getRenamedOperation().getClassName()));
         return pairs;
     }
 
@@ -116,8 +117,8 @@ public class RenameOperationRefactoring implements Refactoring {
     public List<CodeRange> leftSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(originalOperation.codeRange()
-                           .setDescription("original method declaration")
-                           .setCodeElement(originalOperation.toString()));
+            .setDescription("original method declaration")
+            .setCodeElement(originalOperation.toString()));
         return ranges;
     }
 
@@ -125,8 +126,8 @@ public class RenameOperationRefactoring implements Refactoring {
     public List<CodeRange> rightSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(renamedOperation.codeRange()
-                           .setDescription("renamed method declaration")
-                           .setCodeElement(renamedOperation.toString()));
+            .setDescription("renamed method declaration")
+            .setCodeElement(renamedOperation.toString()));
         return ranges;
     }
 
@@ -143,16 +144,20 @@ public class RenameOperationRefactoring implements Refactoring {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         RenameOperationRefactoring other = (RenameOperationRefactoring) obj;
         if (renamedOperation == null) {
-            if (other.renamedOperation != null)
+            if (other.renamedOperation != null) {
                 return false;
+            }
         } else if (!renamedOperation.equals(other.renamedOperation)) {
             return false;
         } else if (!renamedOperation.getLocationInfo().equals(other.renamedOperation.getLocationInfo())) {
@@ -162,7 +167,9 @@ public class RenameOperationRefactoring implements Refactoring {
             return other.originalOperation == null;
         } else if (!originalOperation.equals(other.originalOperation)) {
             return false;
-        } else return originalOperation.getLocationInfo().equals(other.originalOperation.getLocationInfo());
+        } else {
+            return originalOperation.getLocationInfo().equals(other.originalOperation.getLocationInfo());
+        }
     }
 }
 

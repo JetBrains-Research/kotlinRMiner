@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
@@ -21,11 +20,11 @@ public class RenameVariableRefactoring implements Refactoring {
     private final Set<AbstractCodeMapping> variableReferences;
 
     public RenameVariableRefactoring(
-            VariableDeclaration originalVariable,
-            VariableDeclaration renamedVariable,
-            UMLOperation operationBefore,
-            UMLOperation operationAfter,
-            Set<AbstractCodeMapping> variableReferences) {
+        VariableDeclaration originalVariable,
+        VariableDeclaration renamedVariable,
+        UMLOperation operationBefore,
+        UMLOperation operationAfter,
+        Set<AbstractCodeMapping> variableReferences) {
         this.originalVariable = originalVariable;
         this.renamedVariable = renamedVariable;
         this.operationBefore = operationBefore;
@@ -34,12 +33,15 @@ public class RenameVariableRefactoring implements Refactoring {
     }
 
     public RefactoringType getRefactoringType() {
-        if (originalVariable.isParameter() && renamedVariable.isParameter())
+        if (originalVariable.isParameter() && renamedVariable.isParameter()) {
             return RefactoringType.RENAME_PARAMETER;
-        if (!originalVariable.isParameter() && renamedVariable.isParameter())
+        }
+        if (!originalVariable.isParameter() && renamedVariable.isParameter()) {
             return RefactoringType.PARAMETERIZE_VARIABLE;
-        if (!originalVariable.isAttribute() && renamedVariable.isAttribute())
+        }
+        if (!originalVariable.isAttribute() && renamedVariable.isAttribute()) {
             return RefactoringType.REPLACE_VARIABLE_WITH_ATTRIBUTE;
+        }
         return RefactoringType.RENAME_VARIABLE;
     }
 
@@ -69,12 +71,12 @@ public class RenameVariableRefactoring implements Refactoring {
 
     public String toString() {
         return getName() + "\t" +
-                originalVariable +
-                " to " +
-                renamedVariable +
-                " in method " +
-                operationAfter +
-                " in class " + operationAfter.getClassName();
+            originalVariable +
+            " to " +
+            renamedVariable +
+            " in method " +
+            operationAfter +
+            " in class " + operationAfter.getClassName();
     }
 
     @Override
@@ -90,45 +92,56 @@ public class RenameVariableRefactoring implements Refactoring {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         RenameVariableRefactoring other = (RenameVariableRefactoring) obj;
         if (operationAfter == null) {
-            if (other.operationAfter != null)
+            if (other.operationAfter != null) {
                 return false;
-        } else if (!operationAfter.equals(other.operationAfter))
+            }
+        } else if (!operationAfter.equals(other.operationAfter)) {
             return false;
+        }
         if (operationBefore == null) {
-            if (other.operationBefore != null)
+            if (other.operationBefore != null) {
                 return false;
-        } else if (!operationBefore.equals(other.operationBefore))
+            }
+        } else if (!operationBefore.equals(other.operationBefore)) {
             return false;
+        }
         if (originalVariable == null) {
-            if (other.originalVariable != null)
+            if (other.originalVariable != null) {
                 return false;
-        } else if (!originalVariable.equals(other.originalVariable))
+            }
+        } else if (!originalVariable.equals(other.originalVariable)) {
             return false;
+        }
         if (renamedVariable == null) {
             return other.renamedVariable == null;
-        } else return renamedVariable.equals(other.renamedVariable);
+        } else {
+            return renamedVariable.equals(other.renamedVariable);
+        }
     }
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(new ImmutablePair<>(getOperationBefore().getLocationInfo().getFilePath(),
-                                      getOperationBefore().getClassName()));
+            getOperationBefore().getClassName()));
         return pairs;
     }
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(
-                new ImmutablePair<>(getOperationAfter().getLocationInfo().getFilePath(),
-                                    getOperationAfter().getClassName()));
+            new ImmutablePair<>(getOperationAfter().getLocationInfo().getFilePath(),
+                getOperationAfter().getClassName()));
         return pairs;
     }
 
@@ -136,8 +149,8 @@ public class RenameVariableRefactoring implements Refactoring {
     public List<CodeRange> leftSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(originalVariable.codeRange()
-                           .setDescription("original variable declaration")
-                           .setCodeElement(originalVariable.toString()));
+            .setDescription("original variable declaration")
+            .setCodeElement(originalVariable.toString()));
         return ranges;
     }
 
@@ -145,8 +158,8 @@ public class RenameVariableRefactoring implements Refactoring {
     public List<CodeRange> rightSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(renamedVariable.codeRange()
-                           .setDescription("renamed variable declaration")
-                           .setCodeElement(renamedVariable.toString()));
+            .setDescription("renamed variable declaration")
+            .setCodeElement(renamedVariable.toString()));
         return ranges;
     }
 }

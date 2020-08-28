@@ -1,15 +1,15 @@
 package org.jetbrains.research.kotlinrminer.uml;
 
-import org.jetbrains.research.kotlinrminer.diff.CodeRange;
+import java.io.Serializable;
+import java.util.List;
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
 import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclaration;
 import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclarationProvider;
+import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
-import java.io.Serializable;
-import java.util.List;
-
-public class UMLAttribute implements Comparable<UMLAttribute>, Serializable, LocationInfoProvider, VariableDeclarationProvider {
+public class UMLAttribute
+    implements Comparable<UMLAttribute>, Serializable, LocationInfoProvider, VariableDeclarationProvider {
     private final LocationInfo locationInfo;
     private final String name;
     private UMLType type;
@@ -99,15 +99,19 @@ public class UMLAttribute implements Comparable<UMLAttribute>, Serializable, Loc
     }
 
     public boolean equalsIgnoringChangedType(UMLAttribute attribute) {
-        if (this.isStatic != attribute.isStatic)
+        if (this.isStatic != attribute.isStatic) {
             return false;
-        if (this.isFinal != attribute.isFinal)
+        }
+        if (this.isFinal != attribute.isFinal) {
             return false;
+        }
         if (this.name.equals(attribute.name) && this.type.equals(attribute.type) && this.type.equalsQualified(
-                attribute.type))
+            attribute.type)) {
             return true;
-        if (!this.type.equals(attribute.type))
+        }
+        if (!this.type.equals(attribute.type)) {
             return this.name.equals(attribute.name);
+        }
         return false;
     }
 
@@ -128,32 +132,32 @@ public class UMLAttribute implements Comparable<UMLAttribute>, Serializable, Loc
         if (o instanceof UMLAttribute) {
             UMLAttribute umlAttribute = (UMLAttribute) o;
             return this.name.equals(umlAttribute.name) &&
-                    this.visibility.equals(umlAttribute.visibility) &&
-                    this.type.equals(umlAttribute.type);
+                this.visibility.equals(umlAttribute.visibility) &&
+                this.type.equals(umlAttribute.type);
         }
         return false;
     }
 
     public boolean equalsQualified(UMLAttribute umlAttribute) {
         return this.name.equals(umlAttribute.name) &&
-                this.visibility.equals(umlAttribute.visibility) &&
-                this.type.equalsQualified(umlAttribute.type);
+            this.visibility.equals(umlAttribute.visibility) &&
+            this.type.equalsQualified(umlAttribute.type);
     }
 
     public String toString() {
         return visibility +
-                " " +
-                name +
-                " : " +
-                type;
+            " " +
+            name +
+            " : " +
+            type;
     }
 
     public String toQualifiedString() {
         return visibility +
-                " " +
-                name +
-                " : " +
-                type.toQualifiedString();
+            " " +
+            name +
+            " : " +
+            type.toQualifiedString();
     }
 
     public int compareTo(UMLAttribute attribute) {

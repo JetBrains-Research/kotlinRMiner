@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
@@ -63,8 +62,9 @@ public class SplitVariableRefactoring implements Refactoring {
 
     @Override
     public RefactoringType getRefactoringType() {
-        if (allVariablesAreParameters())
+        if (allVariablesAreParameters()) {
             return RefactoringType.SPLIT_PARAMETER;
+        }
         return RefactoringType.SPLIT_VARIABLE;
     }
 
@@ -77,7 +77,7 @@ public class SplitVariableRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(new ImmutablePair<>(getOperationBefore().getLocationInfo().getFilePath(),
-                                      getOperationBefore().getClassName()));
+            getOperationBefore().getClassName()));
         return pairs;
     }
 
@@ -85,19 +85,19 @@ public class SplitVariableRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(
-                new ImmutablePair<>(getOperationAfter().getLocationInfo().getFilePath(),
-                                    getOperationAfter().getClassName()));
+            new ImmutablePair<>(getOperationAfter().getLocationInfo().getFilePath(),
+                getOperationAfter().getClassName()));
         return pairs;
     }
 
     public String toString() {
         return getName() + "\t" +
-                oldVariable +
-                " to " +
-                splitVariables +
-                " in method " +
-                operationAfter +
-                " in class " + operationAfter.getClassName();
+            oldVariable +
+            " to " +
+            splitVariables +
+            " in method " +
+            operationAfter +
+            " in class " + operationAfter.getClassName();
     }
 
     @Override
@@ -113,39 +113,50 @@ public class SplitVariableRefactoring implements Refactoring {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         SplitVariableRefactoring other = (SplitVariableRefactoring) obj;
         if (oldVariable == null) {
-            if (other.oldVariable != null)
+            if (other.oldVariable != null) {
                 return false;
-        } else if (!oldVariable.equals(other.oldVariable))
+            }
+        } else if (!oldVariable.equals(other.oldVariable)) {
             return false;
+        }
         if (operationAfter == null) {
-            if (other.operationAfter != null)
+            if (other.operationAfter != null) {
                 return false;
-        } else if (!operationAfter.equals(other.operationAfter))
+            }
+        } else if (!operationAfter.equals(other.operationAfter)) {
             return false;
+        }
         if (operationBefore == null) {
-            if (other.operationBefore != null)
+            if (other.operationBefore != null) {
                 return false;
-        } else if (!operationBefore.equals(other.operationBefore))
+            }
+        } else if (!operationBefore.equals(other.operationBefore)) {
             return false;
+        }
         if (splitVariables == null) {
             return other.splitVariables == null;
-        } else return splitVariables.equals(other.splitVariables);
+        } else {
+            return splitVariables.equals(other.splitVariables);
+        }
     }
 
     @Override
     public List<CodeRange> leftSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(oldVariable.codeRange()
-                           .setDescription("original variable declaration")
-                           .setCodeElement(oldVariable.toString()));
+            .setDescription("original variable declaration")
+            .setCodeElement(oldVariable.toString()));
         return ranges;
     }
 
@@ -154,8 +165,8 @@ public class SplitVariableRefactoring implements Refactoring {
         List<CodeRange> ranges = new ArrayList<>();
         for (VariableDeclaration splitVariable : splitVariables) {
             ranges.add(splitVariable.codeRange()
-                               .setDescription("split variable declaration")
-                               .setCodeElement(splitVariable.toString()));
+                .setDescription("split variable declaration")
+                .setCodeElement(splitVariable.toString()));
         }
         return ranges;
     }

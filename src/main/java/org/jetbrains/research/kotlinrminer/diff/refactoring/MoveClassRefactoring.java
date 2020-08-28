@@ -1,5 +1,9 @@
 package org.jetbrains.research.kotlinrminer.diff.refactoring;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
@@ -7,11 +11,6 @@ import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.diff.RenamePattern;
 import org.jetbrains.research.kotlinrminer.uml.UMLClass;
 import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
-
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 public class MoveClassRefactoring implements Refactoring {
     private final UMLClass originalClass;
@@ -24,14 +23,14 @@ public class MoveClassRefactoring implements Refactoring {
 
     public String toString() {
         return getName() + "\t" +
-                originalClass.getName() +
-                " moved to " +
-                movedClass.getName();
+            originalClass.getName() +
+            " moved to " +
+            movedClass.getName();
     }
 
     public RenamePattern getRenamePattern() {
         int separatorPos =
-                PrefixSuffixUtils.separatorPosOfCommonSuffix('.', originalClass.getName(), movedClass.getName());
+            PrefixSuffixUtils.separatorPosOfCommonSuffix('.', originalClass.getName(), movedClass.getName());
         if (separatorPos == -1) {
             return new RenamePattern(originalClass.getName(), movedClass.getName());
         }
@@ -67,7 +66,7 @@ public class MoveClassRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(
-                new ImmutablePair<>(getOriginalClass().getLocationInfo().getFilePath(), getOriginalClass().getName()));
+            new ImmutablePair<>(getOriginalClass().getLocationInfo().getFilePath(), getOriginalClass().getName()));
         return pairs;
     }
 
@@ -81,8 +80,8 @@ public class MoveClassRefactoring implements Refactoring {
     public List<CodeRange> leftSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(originalClass.codeRange()
-                           .setDescription("original type declaration")
-                           .setCodeElement(originalClass.getName()));
+            .setDescription("original type declaration")
+            .setCodeElement(originalClass.getName()));
         return ranges;
     }
 
@@ -90,8 +89,8 @@ public class MoveClassRefactoring implements Refactoring {
     public List<CodeRange> rightSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(movedClass.codeRange()
-                           .setDescription("moved type declaration")
-                           .setCodeElement(movedClass.getName()));
+            .setDescription("moved type declaration")
+            .setCodeElement(movedClass.getName()));
         return ranges;
     }
 }

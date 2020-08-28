@@ -5,6 +5,7 @@ import org.jetbrains.research.kotlinrminer.api.RefactoringMinerTimedOutException
 import org.jetbrains.research.kotlinrminer.decomposition.*;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.*;
 import org.jetbrains.research.kotlinrminer.diff.refactoring.*;
+
 import org.jetbrains.research.kotlinrminer.uml.*;
 import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
 
@@ -33,6 +34,7 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
     /*    private List<UMLAnonymousClass> addedAnonymousClasses;
         private List<UMLAnonymousClass> removedAnonymousClasses;*/
     private final List<UMLOperationDiff> operationDiffList;
+
     private UMLAnnotationListDiff annotationListDiff;
     //protected List<UMLAttributeDiff> attributeDiffList;
     protected List<Refactoring> refactorings;

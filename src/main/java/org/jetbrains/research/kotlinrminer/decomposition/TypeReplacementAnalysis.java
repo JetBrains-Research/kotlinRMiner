@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Set;
 
 public class TypeReplacementAnalysis {
+
     private final Set<AbstractCodeMapping> mappings;
     private final Set<ChangeVariableTypeRefactoring> changedTypes = new LinkedHashSet<>();
+
 
     public TypeReplacementAnalysis(Set<AbstractCodeMapping> mappings) {
         this.mappings = mappings;

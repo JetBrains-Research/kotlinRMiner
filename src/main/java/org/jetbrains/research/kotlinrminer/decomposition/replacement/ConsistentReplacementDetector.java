@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ConsistentReplacementDetector {
+
     private static <T extends Replacement> Set<T> inconsistentRenames(
             Set<T> currentRenames, T newRename) {
         Set<T> inconsistentRenames = new LinkedHashSet<>();

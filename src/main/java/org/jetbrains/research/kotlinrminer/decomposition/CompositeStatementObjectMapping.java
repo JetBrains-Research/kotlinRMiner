@@ -5,6 +5,7 @@ import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 
 public class CompositeStatementObjectMapping extends AbstractCodeMapping implements Comparable<CompositeStatementObjectMapping> {
+
     private final double compositeChildMatchingScore;
 
     public CompositeStatementObjectMapping(CompositeStatementObject statement1, CompositeStatementObject statement2,
@@ -15,6 +16,7 @@ public class CompositeStatementObjectMapping extends AbstractCodeMapping impleme
 
     @Override
     public int compareTo(@NotNull CompositeStatementObjectMapping o) {
+
         double distance1;
         double distance2;
         if (this.getFragment1().getString().equals(this.getFragment2().getString())) {

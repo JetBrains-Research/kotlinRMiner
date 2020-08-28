@@ -1,10 +1,13 @@
 package org.jetbrains.research.kotlinrminer.uml;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.jetbrains.research.kotlinrminer.api.RefactoringMinerTimedOutException;
 import org.jetbrains.research.kotlinrminer.diff.UMLClassDiff;
 import org.jetbrains.research.kotlinrminer.diff.UMLModelDiff;
-
-import java.util.*;
 
 public class UMLModel {
     private final Set<String> repositoryDirectories;
@@ -39,8 +42,9 @@ public class UMLModel {
 
     public UMLClass getClass(UMLClass umlClassFromOtherModel) {
         for (UMLClass umlClass : classList) {
-            if (umlClass.equals(umlClassFromOtherModel))
+            if (umlClass.equals(umlClassFromOtherModel)) {
                 return umlClass;
+            }
         }
         return null;
     }
@@ -59,17 +63,20 @@ public class UMLModel {
                 String thisParent = generalization.getParent();
                 String otherParent = otherGeneralization.getParent();
                 String thisParentComparedString = null;
-                if (thisParent.contains("."))
+                if (thisParent.contains(".")) {
                     thisParentComparedString = thisParent.substring(thisParent.lastIndexOf(".") + 1);
-                else
+                } else {
                     thisParentComparedString = thisParent;
+                }
                 String otherParentComparedString = null;
-                if (otherParent.contains("."))
+                if (otherParent.contains(".")) {
                     otherParentComparedString = otherParent.substring(otherParent.lastIndexOf(".") + 1);
-                else
+                } else {
                     otherParentComparedString = otherParent;
-                if (thisParentComparedString.equals(otherParentComparedString))
+                }
+                if (thisParentComparedString.equals(otherParentComparedString)) {
                     return generalization;
+                }
             }
         }
         return null;
@@ -80,23 +87,26 @@ public class UMLModel {
     }
 
     public UMLModelDiff diff(UMLModel umlModel, Map<String, String> renamedFileHints) throws
-            RefactoringMinerTimedOutException {
+        RefactoringMinerTimedOutException {
         UMLModelDiff modelDiff = new UMLModelDiff();
         for (UMLClass umlClass : classList) {
-            if (!umlModel.classList.contains(umlClass))
+            if (!umlModel.classList.contains(umlClass)) {
                 modelDiff.reportRemovedClass(umlClass);
+            }
         }
         for (UMLClass umlClass : umlModel.classList) {
-            if (!this.classList.contains(umlClass))
+            if (!this.classList.contains(umlClass)) {
                 modelDiff.reportAddedClass(umlClass);
+            }
         }
 
         for (UMLClass umlClass : classList) {
             if (umlModel.classList.contains(umlClass)) {
                 UMLClassDiff classDiff = new UMLClassDiff(umlClass, umlModel.getClass(umlClass), modelDiff);
                 classDiff.process();
-                if (!classDiff.isEmpty())
+                if (!classDiff.isEmpty()) {
                     modelDiff.addUMLClassDiff(classDiff);
+                }
             }
         }
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
@@ -43,8 +42,9 @@ public class ChangeVariableTypeRefactoring implements Refactoring {
     }
 
     public RefactoringType getRefactoringType() {
-        if (originalVariable.isParameter() && changedTypeVariable.isParameter())
+        if (originalVariable.isParameter() && changedTypeVariable.isParameter()) {
             return RefactoringType.CHANGE_PARAMETER_TYPE;
+        }
         return RefactoringType.CHANGE_VARIABLE_TYPE;
     }
 
@@ -75,8 +75,8 @@ public class ChangeVariableTypeRefactoring implements Refactoring {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         boolean qualified = originalVariable.getType().equals(
-                changedTypeVariable.getType()) && !originalVariable.getType().equalsQualified(
-                changedTypeVariable.getType());
+            changedTypeVariable.getType()) && !originalVariable.getType().equalsQualified(
+            changedTypeVariable.getType());
         sb.append(getName()).append("\t");
         sb.append(qualified ? originalVariable.toQualifiedString() : originalVariable.toString());
         sb.append(" to ");
@@ -100,44 +100,55 @@ public class ChangeVariableTypeRefactoring implements Refactoring {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         ChangeVariableTypeRefactoring other = (ChangeVariableTypeRefactoring) obj;
         if (changedTypeVariable == null) {
-            if (other.changedTypeVariable != null)
+            if (other.changedTypeVariable != null) {
                 return false;
-        } else if (!changedTypeVariable.equals(other.changedTypeVariable))
+            }
+        } else if (!changedTypeVariable.equals(other.changedTypeVariable)) {
             return false;
+        }
         if (operationAfter == null) {
-            if (other.operationAfter != null)
+            if (other.operationAfter != null) {
                 return false;
-        } else if (!operationAfter.equals(other.operationAfter))
+            }
+        } else if (!operationAfter.equals(other.operationAfter)) {
             return false;
+        }
         if (operationBefore == null) {
-            if (other.operationBefore != null)
+            if (other.operationBefore != null) {
                 return false;
-        } else if (!operationBefore.equals(other.operationBefore))
+            }
+        } else if (!operationBefore.equals(other.operationBefore)) {
             return false;
+        }
         if (originalVariable == null) {
             return other.originalVariable == null;
-        } else return originalVariable.equals(other.originalVariable);
+        } else {
+            return originalVariable.equals(other.originalVariable);
+        }
     }
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(new ImmutablePair<>(getOperationBefore().getLocationInfo().getFilePath(),
-                                      getOperationBefore().getClassName()));
+            getOperationBefore().getClassName()));
         return pairs;
     }
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(new ImmutablePair<>(getOperationAfter().getLocationInfo().getFilePath(),
-                                      getOperationAfter().getClassName()));
+            getOperationAfter().getClassName()));
         return pairs;
     }
 
@@ -145,8 +156,8 @@ public class ChangeVariableTypeRefactoring implements Refactoring {
     public List<CodeRange> leftSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(originalVariable.codeRange()
-                           .setDescription("original variable declaration")
-                           .setCodeElement(originalVariable.toString()));
+            .setDescription("original variable declaration")
+            .setCodeElement(originalVariable.toString()));
         return ranges;
     }
 
@@ -154,8 +165,8 @@ public class ChangeVariableTypeRefactoring implements Refactoring {
     public List<CodeRange> rightSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(changedTypeVariable.codeRange()
-                           .setDescription("changed-type variable declaration")
-                           .setCodeElement(changedTypeVariable.toString()));
+            .setDescription("changed-type variable declaration")
+            .setCodeElement(changedTypeVariable.toString()));
         return ranges;
     }
 }

@@ -1,7 +1,6 @@
 package org.jetbrains.research.kotlinrminer.diff.refactoring;
 
 import java.util.Set;
-
 import org.jetbrains.research.kotlinrminer.decomposition.AbstractCodeMapping;
 import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclaration;
 import org.jetbrains.research.kotlinrminer.uml.UMLAttribute;
@@ -19,11 +18,11 @@ public class CandidateAttributeRefactoring {
     private UMLAttribute renamedAttribute;
 
     public CandidateAttributeRefactoring(
-            String originalVariableName,
-            String renamedVariableName,
-            UMLOperation operationBefore,
-            UMLOperation operationAfter,
-            Set<AbstractCodeMapping> attributeReferences) {
+        String originalVariableName,
+        String renamedVariableName,
+        UMLOperation operationBefore,
+        UMLOperation operationAfter,
+        Set<AbstractCodeMapping> attributeReferences) {
         this.originalVariableName = originalVariableName;
         this.renamedVariableName = renamedVariableName;
         this.operationBefore = operationBefore;
@@ -89,12 +88,12 @@ public class CandidateAttributeRefactoring {
 
     public String toString() {
         return "Rename Attribute" + "\t" +
-                originalVariableName +
-                " to " +
-                renamedVariableName +
-                " in method " +
-                operationAfter +
-                " in class " + operationAfter.getClassName();
+            originalVariableName +
+            " to " +
+            renamedVariableName +
+            " in method " +
+            operationAfter +
+            " in class " + operationAfter.getClassName();
     }
 
     @Override
@@ -110,31 +109,42 @@ public class CandidateAttributeRefactoring {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         CandidateAttributeRefactoring other = (CandidateAttributeRefactoring) obj;
         if (operationAfter == null) {
-            if (other.operationAfter != null)
+            if (other.operationAfter != null) {
                 return false;
-        } else if (!operationAfter.equals(other.operationAfter))
+            }
+        } else if (!operationAfter.equals(other.operationAfter)) {
             return false;
+        }
         if (operationBefore == null) {
-            if (other.operationBefore != null)
+            if (other.operationBefore != null) {
                 return false;
-        } else if (!operationBefore.equals(other.operationBefore))
+            }
+        } else if (!operationBefore.equals(other.operationBefore)) {
             return false;
+        }
         if (originalVariableName == null) {
-            if (other.originalVariableName != null)
+            if (other.originalVariableName != null) {
                 return false;
-        } else if (!originalVariableName.equals(other.originalVariableName))
+            }
+        } else if (!originalVariableName.equals(other.originalVariableName)) {
             return false;
+        }
         if (renamedVariableName == null) {
             return other.renamedVariableName == null;
-        } else return renamedVariableName.equals(other.renamedVariableName);
+        } else {
+            return renamedVariableName.equals(other.renamedVariableName);
+        }
     }
 
 }

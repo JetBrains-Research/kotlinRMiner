@@ -97,6 +97,7 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
                         String beforeMatch = afterReplacements.substring(0, start);
                         String afterMatch =
                                 afterReplacements.substring(start + parameter.length());
+
                         if (quoteBefore(beforeMatch) && quoteAfter(afterMatch)) {
                             isInsideStringLiteral = true;
                         }
@@ -229,6 +230,7 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
                 //ignore casting
                 String initializerWithoutCasting =
                         initializer.substring(initializer.indexOf(")") + 1);
+
                 return initializerWithoutCasting.equals(expression);
             }
         }

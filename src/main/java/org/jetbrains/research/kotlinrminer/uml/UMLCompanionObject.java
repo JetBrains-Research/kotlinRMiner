@@ -1,22 +1,21 @@
 package org.jetbrains.research.kotlinrminer.uml;
 
-import org.jetbrains.research.kotlinrminer.LocationInfo;
-import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
-import org.jetbrains.research.kotlinrminer.diff.CodeRange;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.research.kotlinrminer.LocationInfo;
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
+import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
 /**
  * Represents a companion object in Kotlin
  */
 public class UMLCompanionObject implements Comparable<UMLCompanionObject>, Serializable, LocationInfoProvider {
+    private final List<UMLOperation> methods;
     private LocationInfo locationInfo;
     private String name;
     private String className;
     private UMLJavadoc javadoc;
-    private final List<UMLOperation> methods;
 
     public UMLCompanionObject() {
         this.methods = new ArrayList<>();
@@ -26,8 +25,16 @@ public class UMLCompanionObject implements Comparable<UMLCompanionObject>, Seria
         return className;
     }
 
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void addMethod(UMLOperation method) {
@@ -42,6 +49,10 @@ public class UMLCompanionObject implements Comparable<UMLCompanionObject>, Seria
     @Override
     public LocationInfo getLocationInfo() {
         return locationInfo;
+    }
+
+    public void setLocationInfo(LocationInfo locationInfo) {
+        this.locationInfo = locationInfo;
     }
 
     @Override
@@ -67,19 +78,7 @@ public class UMLCompanionObject implements Comparable<UMLCompanionObject>, Seria
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
     public void setJavadoc(UMLJavadoc javadoc) {
         this.javadoc = javadoc;
-    }
-
-    public void setLocationInfo(LocationInfo locationInfo) {
-        this.locationInfo = locationInfo;
     }
 }

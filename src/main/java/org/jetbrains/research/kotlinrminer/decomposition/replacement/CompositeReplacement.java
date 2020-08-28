@@ -5,8 +5,10 @@ import org.jetbrains.research.kotlinrminer.decomposition.AbstractCodeFragment;
 import java.util.Set;
 
 public class CompositeReplacement extends Replacement {
+
     private final Set<AbstractCodeFragment> additionallyMatchedStatements1;
     private final Set<AbstractCodeFragment> additionallyMatchedStatements2;
+
 
     public CompositeReplacement(String before,
                                 String after,

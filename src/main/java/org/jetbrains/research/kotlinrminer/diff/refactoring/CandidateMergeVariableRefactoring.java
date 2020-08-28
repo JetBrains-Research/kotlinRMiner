@@ -1,7 +1,6 @@
 package org.jetbrains.research.kotlinrminer.diff.refactoring;
 
 import java.util.Set;
-
 import org.jetbrains.research.kotlinrminer.decomposition.AbstractCodeMapping;
 import org.jetbrains.research.kotlinrminer.uml.UMLAttribute;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
@@ -65,12 +64,12 @@ public class CandidateMergeVariableRefactoring {
 
     public String toString() {
         return "Merge Attribute" + "\t" +
-                mergedVariables +
-                " to " +
-                newVariable +
-                " in method " +
-                operationAfter +
-                " in class " + operationAfter.getClassName();
+            mergedVariables +
+            " to " +
+            newVariable +
+            " in method " +
+            operationAfter +
+            " in class " + operationAfter.getClassName();
     }
 
     @Override
@@ -86,31 +85,42 @@ public class CandidateMergeVariableRefactoring {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         CandidateMergeVariableRefactoring other = (CandidateMergeVariableRefactoring) obj;
         if (mergedVariables == null) {
-            if (other.mergedVariables != null)
+            if (other.mergedVariables != null) {
                 return false;
-        } else if (!mergedVariables.equals(other.mergedVariables))
+            }
+        } else if (!mergedVariables.equals(other.mergedVariables)) {
             return false;
+        }
         if (newVariable == null) {
-            if (other.newVariable != null)
+            if (other.newVariable != null) {
                 return false;
-        } else if (!newVariable.equals(other.newVariable))
+            }
+        } else if (!newVariable.equals(other.newVariable)) {
             return false;
+        }
         if (operationAfter == null) {
-            if (other.operationAfter != null)
+            if (other.operationAfter != null) {
                 return false;
-        } else if (!operationAfter.equals(other.operationAfter))
+            }
+        } else if (!operationAfter.equals(other.operationAfter)) {
             return false;
+        }
         if (operationBefore == null) {
             return other.operationBefore == null;
-        } else return operationBefore.equals(other.operationBefore);
+        } else {
+            return operationBefore.equals(other.operationBefore);
+        }
     }
 }
 

@@ -7,7 +7,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.jetbrains.kotlin.psi.KtClassInitializer;
 import org.jetbrains.kotlin.psi.KtExpression;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -24,6 +23,7 @@ import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
 import org.jetbrains.research.kotlinrminer.util.ReplacementUtil;
 
 public class OperationInvocation extends AbstractCall {
+
     private String methodName;
     private List<String> subExpressions = new ArrayList<>();
     private volatile int hashCode = 0;
@@ -270,6 +270,7 @@ public class OperationInvocation extends AbstractCall {
         }
         return parameter.getType().isParameterized() && type.isParameterized() &&
             parameter.getType().getClassType().equals(type.getClassType());
+
 //    if (modelDiff != null &&
 //        modelDiff.isSubclassOf(type.getClassType(), parameter.getType().getClassType())) {
 //      return true;

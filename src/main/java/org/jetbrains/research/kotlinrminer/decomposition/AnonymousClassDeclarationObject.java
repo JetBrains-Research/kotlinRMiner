@@ -31,6 +31,7 @@ public class AnonymousClassDeclarationObject implements LocationInfoProvider {
     private final List<String> arrayAccesses = new ArrayList<>();
     private final List<String> arguments = new ArrayList<>();
 
+
     public AnonymousClassDeclarationObject(KtFile ktFile, String filePath, KtElement anonymous) {
         this.locationInfo =
                 new LocationInfo(ktFile, filePath, anonymous, LocationInfo.CodeElementType.ANONYMOUS_CLASS_DECLARATION);

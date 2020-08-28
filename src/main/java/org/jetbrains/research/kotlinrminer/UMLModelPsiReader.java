@@ -1,5 +1,18 @@
 package org.jetbrains.research.kotlinrminer;
 
+import static org.jetbrains.kotlin.lexer.KtTokens.INTERNAL_KEYWORD;
+import static org.jetbrains.kotlin.lexer.KtTokens.PRIVATE_KEYWORD;
+import static org.jetbrains.kotlin.lexer.KtTokens.PROTECTED_KEYWORD;
+import static org.jetbrains.kotlin.lexer.KtTokens.PUBLIC_KEYWORD;
+import static org.jetbrains.research.kotlinrminer.util.EnvironmentManager.createKotlinCoreEnvironment;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment;
 import org.jetbrains.kotlin.com.intellij.openapi.util.io.FileUtilRt;
 import org.jetbrains.kotlin.com.intellij.openapi.vfs.CharsetToolkit;
@@ -11,18 +24,41 @@ import org.jetbrains.kotlin.idea.KotlinLanguage;
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc;
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocSection;
 import org.jetbrains.kotlin.name.FqName;
-import org.jetbrains.kotlin.psi.*;
+import org.jetbrains.kotlin.psi.KtAnnotation;
+import org.jetbrains.kotlin.psi.KtBlockExpression;
+import org.jetbrains.kotlin.psi.KtClass;
+import org.jetbrains.kotlin.psi.KtClassBody;
+import org.jetbrains.kotlin.psi.KtDeclaration;
+import org.jetbrains.kotlin.psi.KtElement;
+import org.jetbrains.kotlin.psi.KtExpression;
+import org.jetbrains.kotlin.psi.KtFile;
+import org.jetbrains.kotlin.psi.KtImportDirective;
+import org.jetbrains.kotlin.psi.KtImportList;
+import org.jetbrains.kotlin.psi.KtModifierList;
+import org.jetbrains.kotlin.psi.KtNamedDeclaration;
+import org.jetbrains.kotlin.psi.KtNamedFunction;
+import org.jetbrains.kotlin.psi.KtObjectDeclaration;
+import org.jetbrains.kotlin.psi.KtParameter;
+import org.jetbrains.kotlin.psi.KtProperty;
+import org.jetbrains.kotlin.psi.KtSuperTypeListEntry;
+import org.jetbrains.kotlin.psi.KtTypeParameter;
+import org.jetbrains.kotlin.psi.KtTypeReference;
 import org.jetbrains.research.kotlinrminer.decomposition.OperationBody;
 import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclaration;
-import org.jetbrains.research.kotlinrminer.uml.*;
+import org.jetbrains.research.kotlinrminer.uml.UMLAnnotation;
+import org.jetbrains.research.kotlinrminer.uml.UMLAttribute;
+import org.jetbrains.research.kotlinrminer.uml.UMLClass;
+import org.jetbrains.research.kotlinrminer.uml.UMLCompanionObject;
+import org.jetbrains.research.kotlinrminer.uml.UMLGeneralization;
+import org.jetbrains.research.kotlinrminer.uml.UMLJavadoc;
+import org.jetbrains.research.kotlinrminer.uml.UMLModel;
+import org.jetbrains.research.kotlinrminer.uml.UMLObject;
+import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
+import org.jetbrains.research.kotlinrminer.uml.UMLParameter;
+import org.jetbrains.research.kotlinrminer.uml.UMLTagElement;
+import org.jetbrains.research.kotlinrminer.uml.UMLType;
+import org.jetbrains.research.kotlinrminer.uml.UMLTypeParameter;
 import org.jetbrains.research.kotlinrminer.util.KotlinLightVirtualFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
-import static org.jetbrains.kotlin.lexer.KtTokens.*;
-import static org.jetbrains.research.kotlinrminer.util.EnvironmentManager.createKotlinCoreEnvironment;
 
 /**
  * Parses and processes the files written in Kotlin
@@ -35,7 +71,7 @@ public class UMLModelPsiReader {
         this.umlModel = new UMLModel(repositoryDirectories);
         for (String filePath : kotlinFileContents.keySet()) {
             KtFile ktFile = (KtFile) buildPsiFile(filePath, createKotlinCoreEnvironment(new HashSet<>()),
-                                                  kotlinFileContents.get(filePath));
+                kotlinFileContents.get(filePath));
             List<String> importedTypes = processImports(ktFile);
 
             PsiElement[] elementsInFile = ktFile.getChildren();
@@ -43,15 +79,15 @@ public class UMLModelPsiReader {
                 if (psiElement instanceof KtObjectDeclaration) {
                     KtObjectDeclaration objectDeclaration = (KtObjectDeclaration) psiElement;
                     processObject(objectDeclaration,
-                                  objectDeclaration.getContainingKtFile().getPackageFqName().asString());
+                        objectDeclaration.getContainingKtFile().getPackageFqName().asString());
                 } else if (psiElement instanceof KtClass) {
                     KtClass ktClass = (KtClass) psiElement;
                     if (ktClass.isEnum()) {
                         processKtEnum(ktClass, ktFile.getPackageFqName().asString(), ktFile.getVirtualFilePath(),
-                                      importedTypes);
+                            importedTypes);
                     } else {
                         processKtClass(ktClass, ktFile.getPackageFqName().asString(), ktFile.getVirtualFilePath(),
-                                       importedTypes);
+                            importedTypes);
                     }
                 }
             }
@@ -65,8 +101,9 @@ public class UMLModelPsiReader {
             for (KtImportDirective importDeclaration : importList.getImports()) {
                 FqName fqName = importDeclaration.getImportedFqName();
                 String importName = fqName == null ? null : fqName.asString();
-                if (importName != null)
+                if (importName != null) {
                     importedTypes.add(importName);
+                }
             }
         }
         return importedTypes;
@@ -76,7 +113,7 @@ public class UMLModelPsiReader {
         UMLJavadoc javadoc = generateDocComment(ktEnum);
         String className = ktEnum.getName();
         LocationInfo locationInfo = generateLocationInfo(ktEnum.getContainingKtFile(), sourceFile, ktEnum,
-                                                         LocationInfo.CodeElementType.TYPE_DECLARATION);
+            LocationInfo.CodeElementType.TYPE_DECLARATION);
         UMLClass umlClass = new UMLClass(packageName, className, locationInfo, ktEnum.isTopLevel(), importedTypes);
         umlClass.setJavadoc(javadoc);
 
@@ -90,7 +127,7 @@ public class UMLModelPsiReader {
     public void processKtClass(KtClass ktClass, String packageName, String sourceFile, List<String> importedTypes) {
         String className = ktClass.getName();
         LocationInfo locationInfo = generateLocationInfo(ktClass.getContainingKtFile(), sourceFile, ktClass,
-                                                         LocationInfo.CodeElementType.TYPE_DECLARATION);
+            LocationInfo.CodeElementType.TYPE_DECLARATION);
         UMLClass umlClass = new UMLClass(packageName, className, locationInfo, ktClass.isTopLevel(), importedTypes);
 
         if (ktClass.isInterface()) {
@@ -123,6 +160,7 @@ public class UMLModelPsiReader {
                 for (KtAnnotation annotation : parameterModifierList.getAnnotations()) {
                     umlTypeParameter.addAnnotation(
                         new UMLAnnotation(ktClass.getContainingKtFile(), sourceFile, annotation));
+
                 }
             }
             umlClass.addTypeParameter(umlTypeParameter);
@@ -131,7 +169,7 @@ public class UMLModelPsiReader {
         List<KtSuperTypeListEntry> superTypeListEntries = ktClass.getSuperTypeListEntries();
         for (KtSuperTypeListEntry superTypeListEntry : superTypeListEntries) {
             UMLType umlType = UMLType.extractTypeObject(ktClass.getContainingKtFile(), sourceFile,
-                                                        superTypeListEntry.getTypeReference(), 0);
+                superTypeListEntry.getTypeReference(), 0);
             UMLGeneralization umlGeneralization = new UMLGeneralization(umlClass, umlType.getClassType());
             umlClass.setSuperclass(umlType);
             getUmlModel().addGeneralization(umlGeneralization);
@@ -178,6 +216,7 @@ public class UMLModelPsiReader {
         String fieldName = fieldDeclaration.getName();
         LocationInfo locationInfo =
             generateLocationInfo(ktFile, sourceFile, initializer, LocationInfo.CodeElementType.FIELD_DECLARATION);
+
         UMLAttribute umlAttribute = new UMLAttribute(fieldName, type, locationInfo);
         VariableDeclaration variableDeclaration = new VariableDeclaration(ktFile, sourceFile, fieldDeclaration);
         variableDeclaration.setAttribute(true);
@@ -209,7 +248,7 @@ public class UMLModelPsiReader {
         UMLJavadoc javadoc = generateDocComment(methodDeclaration);
         String methodName = methodDeclaration.getName();
         LocationInfo locationInfo = generateLocationInfo(ktClass.getContainingKtFile(), sourceFile, methodDeclaration,
-                                                         LocationInfo.CodeElementType.METHOD_DECLARATION);
+            LocationInfo.CodeElementType.METHOD_DECLARATION);
         UMLOperation umlOperation = new UMLOperation(methodName, locationInfo);
         umlOperation.setJavadoc(javadoc);
 
@@ -229,10 +268,11 @@ public class UMLModelPsiReader {
         }
 
         KtModifierList methodModifiers = methodDeclaration.getModifierList();
-        if (isInterfaceMethod)
+        if (isInterfaceMethod) {
             umlOperation.setVisibility("public");
-        else
+        } else {
             umlOperation.setVisibility(extractVisibilityModifier(methodDeclaration));
+        }
         if (methodModifiers != null) {
             List<KtAnnotation> ktAnnotations = methodModifiers.getAnnotations();
             for (KtAnnotation annotation : ktAnnotations) {
@@ -279,6 +319,7 @@ public class UMLModelPsiReader {
             UMLParameter umlParameter = new UMLParameter(paramName, type, "in", parameter.isVarArg());
             VariableDeclaration variableDeclaration =
                 new VariableDeclaration(parameter.getContainingKtFile(), sourceFile, parameter, parameter.isVarArg());
+
             variableDeclaration.setParameter(true);
             umlParameter.setVariableDeclaration(variableDeclaration);
             umlOperation.addParameter(umlParameter);
@@ -291,12 +332,12 @@ public class UMLModelPsiReader {
         UMLCompanionObject umlCompanionObject = new UMLCompanionObject();
         umlCompanionObject.setName(object.getName());
         LocationInfo objectLocationInfo = generateLocationInfo(object.getContainingKtFile(), sourceFile, object,
-                                                               LocationInfo.CodeElementType.COMPANION_OBJECT);
+            LocationInfo.CodeElementType.COMPANION_OBJECT);
         umlCompanionObject.setLocationInfo(objectLocationInfo);
         List<KtDeclaration> declarations = object.getDeclarations();
         for (KtDeclaration declaration : declarations) {
             LocationInfo locationInfo = generateLocationInfo(declaration.getContainingKtFile(), sourceFile, declaration,
-                                                             LocationInfo.CodeElementType.METHOD_DECLARATION);
+                LocationInfo.CodeElementType.METHOD_DECLARATION);
             UMLOperation method = new UMLOperation(declaration.getName(), locationInfo);
             umlCompanionObject.addMethod(method);
         }
@@ -308,14 +349,15 @@ public class UMLModelPsiReader {
         umlObject.setName(objectDeclaration.getName());
         LocationInfo objectLocationInfo =
             generateLocationInfo(objectDeclaration.getContainingKtFile(), sourceFile, objectDeclaration,
-                                 LocationInfo.CodeElementType.OBJECT);
+                LocationInfo.CodeElementType.OBJECT);
+
         umlObject.setLocationInfo(objectLocationInfo);
         KtClassBody body = objectDeclaration.getBody();
         if (body != null) {
             List<KtNamedFunction> functions = body.getFunctions();
             for (KtNamedFunction function : functions) {
                 LocationInfo locationInfo = generateLocationInfo(function.getContainingKtFile(), sourceFile, function,
-                                                                 LocationInfo.CodeElementType.METHOD_DECLARATION);
+                    LocationInfo.CodeElementType.METHOD_DECLARATION);
                 UMLOperation umlOperation = new UMLOperation(function.getName(), locationInfo);
                 umlObject.addMethod(umlOperation);
             }
@@ -323,6 +365,7 @@ public class UMLModelPsiReader {
             for (KtProperty property : properties) {
                 UMLAttribute umlAttribute =
                     processFieldDeclaration(property.getContainingKtFile(), property, false, sourceFile);
+
                 umlObject.addProperty(umlAttribute);
             }
         }
@@ -333,15 +376,17 @@ public class UMLModelPsiReader {
         KtModifierList modifiers = ktNamedDeclaration.getModifierList();
         String visibility = "";
         if (modifiers != null) {
-            if (modifiers.hasModifier(PUBLIC_KEYWORD))
+            if (modifiers.hasModifier(PUBLIC_KEYWORD)) {
                 visibility = "public";
-            else if (modifiers.hasModifier(PROTECTED_KEYWORD))
+            } else if (modifiers.hasModifier(PROTECTED_KEYWORD)) {
                 visibility = "protected";
-            else if (modifiers.hasModifier(PRIVATE_KEYWORD))
+            } else if (modifiers.hasModifier(PRIVATE_KEYWORD)) {
                 visibility = "private";
-            else if (modifiers.hasModifier(INTERNAL_KEYWORD))
+            } else if (modifiers.hasModifier(INTERNAL_KEYWORD)) {
                 visibility = "internal";
-            else visibility = "package";
+            } else {
+                visibility = "package";
+            }
         }
         return visibility;
     }

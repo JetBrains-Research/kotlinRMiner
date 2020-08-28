@@ -93,6 +93,7 @@ public abstract class AbstractCall implements LocationInfoProvider {
             String expression1 = getExpression();
             String expression2 = call.getExpression();
             String expression1AfterReplacements = expression1;
+
             for (Replacement replacement : replacements) {
                 if (replacement.getType().equals(Replacement.ReplacementType.TYPE)) {
                     expression1AfterReplacements = ReplacementUtil
@@ -101,6 +102,7 @@ public abstract class AbstractCall implements LocationInfoProvider {
                 }
             }
             return expression1AfterReplacements.equals(expression2);
+
         }
         return false;
     }

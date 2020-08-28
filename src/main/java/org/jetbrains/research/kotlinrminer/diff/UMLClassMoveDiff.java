@@ -14,10 +14,10 @@ public class UMLClassMoveDiff extends UMLClassBaseDiff {
 
     public String toString() {
         return "class " +
-                originalClass.getName() +
-                " was moved to " +
-                nextClass.getName() +
-                "\n";
+            originalClass.getName() +
+            " was moved to " +
+            nextClass.getName() +
+            "\n";
     }
 
     public boolean equals(Object o) {
@@ -28,7 +28,7 @@ public class UMLClassMoveDiff extends UMLClassBaseDiff {
         if (o instanceof UMLClassMoveDiff) {
             UMLClassMoveDiff classMoveDiff = (UMLClassMoveDiff) o;
             return this.originalClass.equals(classMoveDiff.originalClass) && this.nextClass.equals(
-                    classMoveDiff.nextClass);
+                classMoveDiff.nextClass);
         }
         return false;
     }
