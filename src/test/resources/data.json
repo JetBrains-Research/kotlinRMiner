@@ -34,5 +34,14 @@
                 "type": "Remove Parameter"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "b7fec8bacc7e10044ca8fbc85dc13264d1d894f9",
+        "refactorings": [
+            {
+                "type": "Rename Method"
+            }
+        ]
     }
 ]
