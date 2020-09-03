@@ -11,7 +11,7 @@ The list of supported refactorings:
 - [ ] Extract Method
 - [ ] Inline Method
 - [ ] Move Method
-- [ ] Pull Up Attribute
+- [ ] Pull Up Method
 - [ ] Push Down Method
 - [ ] Extract Superclass
 - [ ] Extract Interface
