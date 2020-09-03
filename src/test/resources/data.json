@@ -1,13 +1,29 @@
-[{
-  "repository" : "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
-  "sha1" : "38448785791cffce8c453b04bcc3e217bb41f1e8",
-  "refactorings" : [{
-    "type" : "Rename Class"
-  }]
-}, {
-  "repository" : "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
-  "sha1" : "e839b0b7df4c4069515e695b9ab088c675522aac",
-  "refactorings" : [{
-    "type" : "Move Class"
-  }]
-}]
+[
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "38448785791cffce8c453b04bcc3e217bb41f1e8",
+        "refactorings": [
+            {
+                "type": "Rename Class"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "e839b0b7df4c4069515e695b9ab088c675522aac",
+        "refactorings": [
+            {
+                "type": "Move Class"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "a62a22b34cffda8733140a9e8b654b224def656c",
+        "refactorings": [
+            {
+                "type": "Add Parameter"
+            }
+        ]
+    }
+]

@@ -1,12 +1,14 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.eclipse.jgit.lib.Repository;
 import org.jetbrains.research.kotlinrminer.api.GitHistoryRefactoringMiner;
 import org.jetbrains.research.kotlinrminer.api.GitService;
@@ -30,7 +32,8 @@ public class TestAllRefactorings {
         String jsonFile = System.getProperty("user.dir") + "/src/test/resources/data.json";
 
         List<CommitData> commits = mapper.readValue(new File(jsonFile),
-            mapper.getTypeFactory().constructCollectionType(List.class, CommitData.class));
+                                                    mapper.getTypeFactory().constructCollectionType(List.class,
+                                                                                                    CommitData.class));
 
         return commits
             .stream()
@@ -49,7 +52,7 @@ public class TestAllRefactorings {
         miner.detectAtCommit(repo, data.sha1, new RefactoringHandler() {
             @Override
             public void handle(String commitId,
-                List<org.jetbrains.research.kotlinrminer.api.Refactoring> refactorings) {
+                               List<org.jetbrains.research.kotlinrminer.api.Refactoring> refactorings) {
                 Set<String> results = refactorings
                     .stream()
                     .map(org.jetbrains.research.kotlinrminer.api.Refactoring::getName)

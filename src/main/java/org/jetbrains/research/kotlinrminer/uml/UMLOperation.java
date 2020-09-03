@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.CompositeStatementObject;
 import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
@@ -383,11 +384,12 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
 
     public List<UMLType> getParameterTypeList() {
         List<UMLType> parameterTypeList = new ArrayList<>();
-        for (UMLParameter parameter : parameters) {
+        //TODO: Figure out how to deal with generic parameter types in Kotlin
+/*        for (UMLParameter parameter : parameters) {
             if (!parameter.getKind().equals("return")) {
                 parameterTypeList.add(parameter.getType());
             }
-        }
+        }*/
         return parameterTypeList;
     }
 
