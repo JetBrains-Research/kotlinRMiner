@@ -1,11 +1,9 @@
 package org.jetbrains.research.kotlinrminer.uml;
 
 import org.jetbrains.kotlin.psi.*;
+import org.jetbrains.research.kotlinrminer.decomposition.*;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.LocationInfo;
-import org.jetbrains.research.kotlinrminer.decomposition.CompositeType;
-import org.jetbrains.research.kotlinrminer.decomposition.LeafType;
-import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 
 import java.io.Serializable;
@@ -195,13 +193,17 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
 
     public static UMLType extractTypeObject(KtFile ktFile, String filePath, KtElement type, int extraDimensions) {
         UMLType umlType = extractTypeObject(ktFile, filePath, type);
-        umlType.locationInfo = new LocationInfo(ktFile, filePath, type, LocationInfo.CodeElementType.TYPE);
-        umlType.arrayDimension += extraDimensions;
+        if (!(umlType instanceof Untyped)) {
+            umlType.locationInfo = new LocationInfo(ktFile, filePath, type, LocationInfo.CodeElementType.TYPE);
+            umlType.arrayDimension += extraDimensions;
+        }
         return umlType;
     }
 
     private static UMLType extractTypeObject(KtFile ktFile, String filePath, KtElement type) {
-        if (type instanceof KtUserType) {
+        if (type == null) {
+            return new Untyped();
+        } else if (type instanceof KtUserType) {
             KtUserType userType = (KtUserType) type;
             KtUserType qualifier = userType.getQualifier();
             if (qualifier != null) {
@@ -235,7 +237,7 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
                         umlTypeList.add(umlType);
                     }
                 }
-                return new UMLFunctionType(receiver, returnType, umlTypeList);
+                return new FunctionType(receiver, returnType, umlTypeList);
             } else {
                 UMLType umlType = extractTypeObject(element.getText());
                 if (element instanceof KtNullableType)

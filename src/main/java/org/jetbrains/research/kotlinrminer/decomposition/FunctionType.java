@@ -1,7 +1,8 @@
-package org.jetbrains.research.kotlinrminer.uml;
+package org.jetbrains.research.kotlinrminer.decomposition;
 
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
+import org.jetbrains.research.kotlinrminer.uml.UMLType;
 
 import java.util.List;
 
@@ -12,12 +13,12 @@ import java.util.List;
  * (Int, Int) -> String
  * () -> Unit
  */
-public class UMLFunctionType extends UMLType {
+public class FunctionType extends UMLType {
     private final UMLType receiver;
     private final UMLType returnType;
     private final List<UMLType> parametersList;
 
-    public UMLFunctionType(UMLType receiver, UMLType returnType, List<UMLType> parametersList) {
+    public FunctionType(UMLType receiver, UMLType returnType, List<UMLType> parametersList) {
         this.receiver = receiver;
         this.returnType = returnType;
         this.parametersList = parametersList;
@@ -37,10 +38,9 @@ public class UMLFunctionType extends UMLType {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o instanceof UMLFunctionType) {
-            UMLFunctionType other = (UMLFunctionType) o;
-            return this.receiver.equals(other.receiver)
-                    && this.returnType.equals(other.returnType);
+        if (o instanceof FunctionType) {
+            FunctionType other = (FunctionType) o;
+            return this.returnType.equals(other.returnType);
         } else return false;
     }
 

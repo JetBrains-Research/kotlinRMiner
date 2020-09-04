@@ -30,7 +30,6 @@ import org.jetbrains.kotlin.psi.KtClass;
 import org.jetbrains.kotlin.psi.KtClassBody;
 import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtElement;
-import org.jetbrains.kotlin.psi.KtExpression;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtImportDirective;
 import org.jetbrains.kotlin.psi.KtImportList;
@@ -209,14 +208,11 @@ public class UMLModelPsiReader {
                                                  boolean isInterfaceField,
                                                  String sourceFile) {
         UMLJavadoc javadoc = generateDocComment(fieldDeclaration);
-        KtExpression initializer = fieldDeclaration.getInitializer();
-
         //TODO: figure out how to get dimensions
         UMLType type = UMLType.extractTypeObject(ktFile, sourceFile, fieldDeclaration.getTypeReference(), 0);
         String fieldName = fieldDeclaration.getName();
         LocationInfo locationInfo =
-            generateLocationInfo(ktFile, sourceFile, initializer, LocationInfo.CodeElementType.FIELD_DECLARATION);
-
+            generateLocationInfo(ktFile, sourceFile, fieldDeclaration, LocationInfo.CodeElementType.FIELD_DECLARATION);
         UMLAttribute umlAttribute = new UMLAttribute(fieldName, type, locationInfo);
         VariableDeclaration variableDeclaration = new VariableDeclaration(ktFile, sourceFile, fieldDeclaration);
         variableDeclaration.setAttribute(true);
