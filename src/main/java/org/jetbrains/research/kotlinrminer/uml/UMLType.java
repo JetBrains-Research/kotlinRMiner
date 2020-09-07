@@ -243,11 +243,6 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
                 if (element instanceof KtNullableType)
                     umlType.isNullable = true;
 
-                List<KtTypeReference> types = element.getTypeArgumentsAsTypes();
-                for (KtTypeReference t : types) {
-                    umlType.typeArguments.add(extractTypeObject(ktFile, filePath, t));
-                }
-
                 final List<KtAnnotation> annotations = typeReference.getAnnotations();
                 for (KtAnnotation annotation : annotations) {
                     umlType.annotations.add(new UMLAnnotation(ktFile, filePath, annotation));

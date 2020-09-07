@@ -43,5 +43,50 @@
                 "description": "Rename Method getCoordinate() : String renamed to  getCoordinates() : String in class Point"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "0b6035254b55d010f22ef0bfde894cded906178e",
+        "refactorings": [
+            {
+                "description": "Rename Class org.jetbrains.research.ml.codetracker.ui.panes.TaskController renamed to org.jetbrains.research.ml.codetracker.ui.panes.TaskSolvingController"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "e818280cae22dcee954baad9980b35c0b61776c3",
+        "refactorings": [
+            {
+                "description": "Rename Class org.jetbrains.research.ml.codetracker.ui.panes.CountryListNotifier renamed to org.jetbrains.research.ml.codetracker.ui.panes.CountryComparatorNotifier"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "3fb9d8b408ac0d7e931333f25cdadc10bc1926b7",
+        "refactorings": [
+            {
+                "description": "Add Parameter deleteAfter : Boolean in method public sendTrackingData(file File, deleteAfter Boolean) from class Server"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "f32f35f77c567410fd23073974d8608931446d07",
+        "refactorings": [
+            {
+                "description": "Remove Parameter notifyEvent : NotifyEvent in method  getData(notifyEvent NotifyEvent) : List<UiField<out Any>> from class data.UiData"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "e818280cae22dcee954baad9980b35c0b61776c3",
+        "refactorings": [
+            {
+                "description": "Rename Class org.jetbrains.research.ml.codetracker.ui.panes.CountryListNotifier renamed to org.jetbrains.research.ml.codetracker.ui.panes.CountryComparatorNotifier"
+            }
+        ]
     }
 ]
