@@ -41,7 +41,7 @@ public class RenameOperationRefactoring implements Refactoring {
     }
 
     public String toString() {
-        return getName() + "\t" +
+        return getName() +
             originalOperation +
             " renamed to " +
             renamedOperation +

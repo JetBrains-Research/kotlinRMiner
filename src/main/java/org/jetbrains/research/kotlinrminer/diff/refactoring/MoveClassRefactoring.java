@@ -22,7 +22,7 @@ public class MoveClassRefactoring implements Refactoring {
     }
 
     public String toString() {
-        return getName() + "\t" +
+        return getName() + " " +
             originalClass.getName() +
             " moved to " +
             movedClass.getName();

@@ -21,13 +21,11 @@ import org.junit.jupiter.api.TestFactory;
  * Tests are defined in resources/data.json
  */
 public class TestAllRefactorings {
-
     GitHistoryRefactoringMiner miner = new GitHistoryRefactoringMiner();
     GitService gitService = new GitService();
 
     @TestFactory
     public Stream<DynamicTest> testAllRefactorings() throws IOException {
-
         ObjectMapper mapper = new ObjectMapper();
         String jsonFile = System.getProperty("user.dir") + "/src/test/resources/data.json";
 
@@ -55,11 +53,12 @@ public class TestAllRefactorings {
                                List<org.jetbrains.research.kotlinrminer.api.Refactoring> refactorings) {
                 Set<String> results = refactorings
                     .stream()
-                    .map(org.jetbrains.research.kotlinrminer.api.Refactoring::getName)
+                    .map(org.jetbrains.research.kotlinrminer.api.Refactoring::toString)
                     .collect(Collectors.toSet());
+
                 Set<String> expected = data.refactorings
                     .stream()
-                    .map(refactoring -> refactoring.type)
+                    .map(refactoring -> refactoring.description)
                     .collect(Collectors.toSet());
                 assertEquals(expected, results);
                 repo.close();
@@ -68,14 +67,13 @@ public class TestAllRefactorings {
     }
 
     public static class CommitData {
-
         public String repository;
         public String sha1;
         public List<Refactoring> refactorings;
     }
 
     public static class Refactoring {
-        public String type;
+        public String description;
     }
 
 }

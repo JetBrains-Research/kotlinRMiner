@@ -20,7 +20,7 @@ public class RenameClassRefactoring implements Refactoring {
     }
 
     public String toString() {
-        return getName() + "\t" +
+        return getName() + " " +
             originalClass.getName() +
             " renamed to " +
             renamedClass.getName();

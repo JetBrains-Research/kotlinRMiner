@@ -83,7 +83,7 @@ public class AddParameterRefactoring implements Refactoring {
     }
 
     public String toString() {
-        return getName() + "\t" +
+        return getName() + " " +
             parameter.getVariableDeclaration() +
             " in method " +
             operationAfter +

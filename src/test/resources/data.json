@@ -4,7 +4,7 @@
         "sha1": "38448785791cffce8c453b04bcc3e217bb41f1e8",
         "refactorings": [
             {
-                "type": "Rename Class"
+                "description": "Rename Class shapes.BaseShape renamed to shapes.Shape"
             }
         ]
     },
@@ -13,7 +13,7 @@
         "sha1": "e839b0b7df4c4069515e695b9ab088c675522aac",
         "refactorings": [
             {
-                "type": "Move Class"
+                "description": "Move Class shapes.Point moved to Point"
             }
         ]
     },
@@ -22,7 +22,7 @@
         "sha1": "a62a22b34cffda8733140a9e8b654b224def656c",
         "refactorings": [
             {
-                "type": "Add Parameter"
+                "description": "Add Parameter shape : Shape in method  containsPoint(point Point, shape Shape) from class shapes.Rectangle"
             }
         ]
     },
@@ -31,7 +31,7 @@
         "sha1": "7bdbbfa25c164d7071aec044acb4f5199a4b927c",
         "refactorings": [
             {
-                "type": "Remove Parameter"
+                "description": "Remove Parameter shape : Shape in method  containsPoint(point Point, shape Shape) from class shapes.Rectangle"
             }
         ]
     },
@@ -40,7 +40,7 @@
         "sha1": "b7fec8bacc7e10044ca8fbc85dc13264d1d894f9",
         "refactorings": [
             {
-                "type": "Rename Method"
+                "description": "Rename Method getCoordinate() : String renamed to  getCoordinates() : String in class Point"
             }
         ]
     }
