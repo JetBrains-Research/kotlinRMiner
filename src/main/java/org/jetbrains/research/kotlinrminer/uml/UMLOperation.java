@@ -461,7 +461,7 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
                 this.visibility.equals(operation.visibility) &&
                 this.isAbstract == operation.isAbstract &&
                 thisEmptyBody == otherEmptyBody &&
-                this.getParameterTypeList().equals(operation.getParameterTypeList()) &&
+                this.getParameters().equals(operation.getParameters()) &&
                 equalTypeParameters(operation);
         }
         return false;
@@ -505,9 +505,9 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         result = prime * result + (isAbstract ? 1231 : 1237);
         result = prime * result + (thisEmptyBody ? 1231 : 1237);
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((getParameterTypeList() == null) ? 0 : getParameterTypeList().hashCode());
+        result = prime * result + ((getParameters() == null) ? 0 : getParameters().hashCode());
         result = prime * result + ((visibility == null) ? 0 : visibility.hashCode());
-        result = prime * result + ((typeParameters == null) ? 0 : typeParameters.hashCode());
+        result = prime * result + typeParameters.hashCode();
         return result;
     }
 

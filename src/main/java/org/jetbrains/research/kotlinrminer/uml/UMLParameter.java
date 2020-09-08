@@ -71,6 +71,7 @@ public class UMLParameter implements Serializable, VariableDeclarationProvider {
             UMLParameter parameter = (UMLParameter) o;
             return this.type.equals(parameter.type) &&
                 this.kind.equals(parameter.kind) &&
+                this.name.equals(parameter.name) &&
                 this.varargs == parameter.varargs;
         }
         return false;
@@ -87,6 +88,7 @@ public class UMLParameter implements Serializable, VariableDeclarationProvider {
         int result = 1;
         result = prime * result + ((kind == null) ? 0 : kind.hashCode());
         result = prime * result + ((type == null) ? 0 : type.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + (varargs ? 1231 : 1237);
         return result;
     }

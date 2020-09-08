@@ -127,7 +127,7 @@ public class StatementObject extends AbstractStatement {
 
     @Override
     public Map<String, List<ObjectCreation>> getCreationMap() {
-        return null;
+        return new HashMap<>();
     }
 
     @Override

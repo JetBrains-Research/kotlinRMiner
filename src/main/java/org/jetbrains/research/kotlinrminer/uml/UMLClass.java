@@ -22,6 +22,7 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
     private boolean isSealed;
     private boolean isData;
     private boolean isInner;
+    private boolean isObject;
     private boolean isAbstract;
     private boolean isInterface;
     private boolean isEnum;
@@ -403,5 +404,9 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
 
     public void setInner(boolean inner) {
         isInner = inner;
+    }
+
+    public void setObject(boolean isObject) {
+        isInner = isObject;
     }
 }

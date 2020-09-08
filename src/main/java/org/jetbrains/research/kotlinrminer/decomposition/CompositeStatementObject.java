@@ -9,7 +9,6 @@ import org.jetbrains.research.kotlinrminer.LocationInfo.*;
 import java.util.*;
 
 public class CompositeStatementObject extends AbstractStatement {
-
     private final List<AbstractStatement> statementList;
     private final List<AbstractExpression> expressionList;
     private final List<VariableDeclaration> variableDeclarations;
@@ -342,7 +341,7 @@ public class CompositeStatementObject extends AbstractStatement {
     @Override
     public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
         //TODO: implement it
-        return null;
+        return new HashMap<>();
     }
 
     @Override
@@ -398,7 +397,7 @@ public class CompositeStatementObject extends AbstractStatement {
 
     @Override
     public Map<String, List<ObjectCreation>> getCreationMap() {
-        return null;
+        return new HashMap<>();
     }
 
     @Override

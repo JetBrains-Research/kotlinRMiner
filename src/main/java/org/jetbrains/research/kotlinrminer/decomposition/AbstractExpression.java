@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ public class AbstractExpression extends AbstractCodeFragment {
     private final List<String> postfixExpressions;
     private final List<LambdaExpressionObject> lambdas;
     private final Map<String, List<ObjectCreation>> creationMap;
+    private Map<String, List<OperationInvocation>> methodInvocationMap;
 
     public AbstractExpression(KtFile cu,
                               String filePath,
@@ -50,6 +52,7 @@ public class AbstractExpression extends AbstractCodeFragment {
         this.expression = expression.getText();
         this.owner = null;
         this.creationMap = visitor.getCreationMap();
+        this.methodInvocationMap = new HashMap<>();
     }
 
     public void setOwner(CompositeStatementObject owner) {
@@ -95,7 +98,7 @@ public class AbstractExpression extends AbstractCodeFragment {
     @Override
     public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
         //TODO: Implement collecting of methods' invocations
-        return null;
+        return this.methodInvocationMap;
     }
 
     @Override

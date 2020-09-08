@@ -274,27 +274,29 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
     public OperationInvocation invocationCoveringEntireFragment() {
         Map<String, List<OperationInvocation>> methodInvocationMap = getMethodInvocationMap();
         String statement = getString();
-        for (String methodInvocation : methodInvocationMap.keySet()) {
-            List<OperationInvocation> invocations = methodInvocationMap.get(methodInvocation);
-            for (OperationInvocation invocation : invocations) {
-                if ((methodInvocation + ";\n").equals(statement) || methodInvocation.equals(statement)) {
-                    invocation.coverage = AbstractCall.StatementCoverageType.ONLY_CALL;
-                    return invocation;
-                } else if (("return " + methodInvocation + "\n").equals(statement)) {
-                    invocation.coverage = AbstractCall.StatementCoverageType.RETURN_CALL;
-                    return invocation;
-                } else if (isCastExpressionCoveringEntireFragment(methodInvocation)) {
-                    invocation.coverage = AbstractCall.StatementCoverageType.CAST_CALL;
-                    return invocation;
-                } else if (expressionIsTheInitializerOfVariableDeclaration(methodInvocation)) {
-                    invocation.coverage = AbstractCall.StatementCoverageType.VARIABLE_DECLARATION_INITIALIZER_CALL;
-                    return invocation;
-                } else if (invocation.getLocationInfo().getCodeElementType().equals(
+        if (methodInvocationMap != null) {
+            for (String methodInvocation : methodInvocationMap.keySet()) {
+                List<OperationInvocation> invocations = methodInvocationMap.get(methodInvocation);
+                for (OperationInvocation invocation : invocations) {
+                    if ((methodInvocation + ";\n").equals(statement) || methodInvocation.equals(statement)) {
+                        invocation.coverage = AbstractCall.StatementCoverageType.ONLY_CALL;
+                        return invocation;
+                    } else if (("return " + methodInvocation + "\n").equals(statement)) {
+                        invocation.coverage = AbstractCall.StatementCoverageType.RETURN_CALL;
+                        return invocation;
+                    } else if (isCastExpressionCoveringEntireFragment(methodInvocation)) {
+                        invocation.coverage = AbstractCall.StatementCoverageType.CAST_CALL;
+                        return invocation;
+                    } else if (expressionIsTheInitializerOfVariableDeclaration(methodInvocation)) {
+                        invocation.coverage = AbstractCall.StatementCoverageType.VARIABLE_DECLARATION_INITIALIZER_CALL;
+                        return invocation;
+                    } else if (invocation.getLocationInfo().getCodeElementType().equals(
                         LocationInfo.CodeElementType.SUPER_CONSTRUCTOR_INVOCATION) ||
                         invocation.getLocationInfo().getCodeElementType().equals(
-                                LocationInfo.CodeElementType.CONSTRUCTOR_INVOCATION)) {
-                    invocation.coverage = AbstractCall.StatementCoverageType.ONLY_CALL;
-                    return invocation;
+                            LocationInfo.CodeElementType.CONSTRUCTOR_INVOCATION)) {
+                        invocation.coverage = AbstractCall.StatementCoverageType.ONLY_CALL;
+                        return invocation;
+                    }
                 }
             }
         }

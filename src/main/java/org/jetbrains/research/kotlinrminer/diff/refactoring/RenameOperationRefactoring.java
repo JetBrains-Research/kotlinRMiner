@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
@@ -41,7 +42,7 @@ public class RenameOperationRefactoring implements Refactoring {
     }
 
     public String toString() {
-        return getName() +
+        return getName() + " " +
             originalOperation +
             " renamed to " +
             renamedOperation +
@@ -102,14 +103,14 @@ public class RenameOperationRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(new ImmutablePair<>(getOriginalOperation().getLocationInfo().getFilePath(),
-            getOriginalOperation().getClassName()));
+                                      getOriginalOperation().getClassName()));
         return pairs;
     }
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(new ImmutablePair<>(getRenamedOperation().getLocationInfo().getFilePath(),
-            getRenamedOperation().getClassName()));
+                                      getRenamedOperation().getClassName()));
         return pairs;
     }
 
@@ -117,8 +118,8 @@ public class RenameOperationRefactoring implements Refactoring {
     public List<CodeRange> leftSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(originalOperation.codeRange()
-            .setDescription("original method declaration")
-            .setCodeElement(originalOperation.toString()));
+                       .setDescription("original method declaration")
+                       .setCodeElement(originalOperation.toString()));
         return ranges;
     }
 
@@ -126,8 +127,8 @@ public class RenameOperationRefactoring implements Refactoring {
     public List<CodeRange> rightSide() {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(renamedOperation.codeRange()
-            .setDescription("renamed method declaration")
-            .setCodeElement(renamedOperation.toString()));
+                       .setDescription("renamed method declaration")
+                       .setCodeElement(renamedOperation.toString()));
         return ranges;
     }
 

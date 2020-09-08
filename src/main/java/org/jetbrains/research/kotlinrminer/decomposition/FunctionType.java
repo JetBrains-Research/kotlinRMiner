@@ -55,7 +55,7 @@ public class FunctionType extends UMLType {
 
     @Override
     public String toString() {
-        return "(" + receiver.toString() + ")" + "->" + returnType.toString();
+        return "(" +  ")" + "->" + returnType.toString();
     }
 
     @Override

@@ -22,7 +22,7 @@
         "sha1": "a62a22b34cffda8733140a9e8b654b224def656c",
         "refactorings": [
             {
-                "description": "Add Parameter shape : Shape in method  containsPoint(point Point, shape Shape) from class shapes.Rectangle"
+                "description": "Add Parameter shape : Shape in method public containsPoint(point Point, shape Shape) from class shapes.Rectangle"
             }
         ]
     },
@@ -31,7 +31,7 @@
         "sha1": "7bdbbfa25c164d7071aec044acb4f5199a4b927c",
         "refactorings": [
             {
-                "description": "Remove Parameter shape : Shape in method  containsPoint(point Point, shape Shape) from class shapes.Rectangle"
+                "description": "Remove Parameter shape : Shape in method public containsPoint(point Point, shape Shape) from class shapes.Rectangle"
             }
         ]
     },
@@ -40,7 +40,7 @@
         "sha1": "b7fec8bacc7e10044ca8fbc85dc13264d1d894f9",
         "refactorings": [
             {
-                "description": "Rename Method getCoordinate() : String renamed to  getCoordinates() : String in class Point"
+                "description": "Rename Method public getCoordinate() : String renamed to public getCoordinates() : String in class Point"
             }
         ]
     },
@@ -50,6 +50,9 @@
         "refactorings": [
             {
                 "description": "Rename Class org.jetbrains.research.ml.codetracker.ui.panes.TaskController renamed to org.jetbrains.research.ml.codetracker.ui.panes.TaskSolvingController"
+            },
+            {
+                "description": "Rename Class org.jetbrains.research.ml.codetracker.ui.panes.TaskControllerManager renamed to org.jetbrains.research.ml.codetracker.ui.panes.TaskSolvingControllerManager"
             }
         ]
     },
@@ -68,6 +71,15 @@
         "refactorings": [
             {
                 "description": "Add Parameter deleteAfter : Boolean in method public sendTrackingData(file File, deleteAfter Boolean) from class Server"
+            },
+            {
+                "description": "Add Parameter deleteAfter : Boolean in method public sendTrackingData(file File, deleteAfter Boolean) from class PluginServer"
+            },
+            {
+                "description": "Rename Class DocumentLogger renamed to DocumentLogger"
+            },
+            {
+                "description": "Remove Parameter project : Project in method public startTracking(project Project) from class Plugin"
             }
         ]
     },
@@ -76,7 +88,7 @@
         "sha1": "f32f35f77c567410fd23073974d8608931446d07",
         "refactorings": [
             {
-                "description": "Remove Parameter notifyEvent : NotifyEvent in method  getData(notifyEvent NotifyEvent) : List<UiField<out Any>> from class data.UiData"
+                "description": "Remove Parameter notifyEvent : NotifyEvent in method public getData(notifyEvent NotifyEvent) : List<UiField<out Any>> from class data.UiData"
             }
         ]
     },
@@ -86,6 +98,57 @@
         "refactorings": [
             {
                 "description": "Rename Class org.jetbrains.research.ml.codetracker.ui.panes.CountryListNotifier renamed to org.jetbrains.research.ml.codetracker.ui.panes.CountryComparatorNotifier"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "bd73697521f58d0c1d91d81d9747b65617aa986f",
+        "refactorings": [
+            {
+                "description": "Add Parameter currentFileType : FileTypes in method private sendDataToServer(request Request, currentFileType FileTypes) : CompletableFuture<Void> from class PluginServer"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "0d8728b310668daf7af510e74315556b4eb23a60",
+        "refactorings": [
+            {
+                "description": "Rename Method private createFile(project Project, task Task, language Language) : VirtualFile? renamed to private getOrCreateFile(project Project, task Task, language Language) : VirtualFile? in class org.jetbrains.research.ml.codetracker.tracking.TaskFileHandler"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "703d6d2e874eaed2e5bd0808def0c6e5237ef97c",
+        "refactorings": [
+            {
+                "description": "Remove Parameter postActivity : ()->Unit in method public sendCodeTrackerData(file File, deleteAfter ()->Boolean, postActivity ()->Unit) from class org.jetbrains.research.ml.codetracker.server.TrackerQueryExecutor"
+            },
+            {
+                "description": "Remove Parameter deleteAfter : ()->Boolean in method public sendCodeTrackerData(file File, deleteAfter ()->Boolean, postActivity ()->Unit) from class org.jetbrains.research.ml.codetracker.server.TrackerQueryExecutor"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "49ad7099a7715347f4636a868ecd5c70c74df85f",
+        "refactorings": [
+            {
+                "description": "Rename Method public getAvailableLanguages() : List<PaneLanguage> renamed to private findAvailableLanguages() : List<PaneLanguage> in class org.jetbrains.research.ml.codetracker.server.PluginServer"
+            },
+            {
+                "description": "Rename Method public getPaneText() : PaneText? renamed to private findPaneText() : PaneText in class org.jetbrains.research.ml.codetracker.server.PluginServer"
+            },
+            {
+                "description": "Rename Method public getCountries() : List<Country> renamed to private findCountries() : List<Country> in class org.jetbrains.research.ml.codetracker.server.PluginServer"
+            },
+            {
+                "description": "Rename Method public getGenders() : List<Gender> renamed to private findGenders() : List<Gender> in class org.jetbrains.research.ml.codetracker.server.PluginServer"
+            },
+            {
+                "description": "Rename Method public getTasks() : List<Task> renamed to private findTasks() : List<Task> in class org.jetbrains.research.ml.codetracker.server.PluginServer"
             }
         ]
     }
