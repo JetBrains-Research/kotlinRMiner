@@ -12,21 +12,20 @@ import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 import org.jetbrains.research.kotlinrminer.uml.UMLParameter;
 
-
 public class ReorderParameterRefactoring implements Refactoring {
-    private List<VariableDeclaration> parametersBefore;
-    private List<VariableDeclaration> parametersAfter;
-    private UMLOperation operationBefore;
-    private UMLOperation operationAfter;
+    private final List<VariableDeclaration> parametersBefore;
+    private final List<VariableDeclaration> parametersAfter;
+    private final UMLOperation operationBefore;
+    private final UMLOperation operationAfter;
 
     public ReorderParameterRefactoring(UMLOperation operationBefore, UMLOperation operationAfter) {
         this.operationBefore = operationBefore;
         this.operationAfter = operationAfter;
-        this.parametersBefore = new ArrayList<VariableDeclaration>();
+        this.parametersBefore = new ArrayList<>();
         for (UMLParameter parameter : operationBefore.getParametersWithoutReturnType()) {
             parametersBefore.add(parameter.getVariableDeclaration());
         }
-        this.parametersAfter = new ArrayList<VariableDeclaration>();
+        this.parametersAfter = new ArrayList<>();
         for (UMLParameter parameter : operationAfter.getParametersWithoutReturnType()) {
             parametersAfter.add(parameter.getVariableDeclaration());
         }
@@ -50,7 +49,7 @@ public class ReorderParameterRefactoring implements Refactoring {
 
     @Override
     public List<CodeRange> leftSide() {
-        List<CodeRange> ranges = new ArrayList<CodeRange>();
+        List<CodeRange> ranges = new ArrayList<>();
         for (VariableDeclaration parameter : parametersBefore) {
             ranges.add(parameter.codeRange()
                 .setDescription("original parameter declaration")
@@ -64,7 +63,7 @@ public class ReorderParameterRefactoring implements Refactoring {
 
     @Override
     public List<CodeRange> rightSide() {
-        List<CodeRange> ranges = new ArrayList<CodeRange>();
+        List<CodeRange> ranges = new ArrayList<>();
         for (VariableDeclaration parameter : parametersAfter) {
             ranges.add(parameter.codeRange()
                 .setDescription("reordered parameter declaration")
@@ -88,23 +87,23 @@ public class ReorderParameterRefactoring implements Refactoring {
 
     @Override
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
-        Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<ImmutablePair<String, String>>();
+        Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(
-            new ImmutablePair<String, String>(getOperationBefore().getLocationInfo().getFilePath(),
-                getOperationBefore().getClassName()));
+            new ImmutablePair<>(getOperationBefore().getLocationInfo().getFilePath(),
+                                getOperationBefore().getClassName()));
         return pairs;
     }
 
     @Override
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
-        Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<ImmutablePair<String, String>>();
-        pairs.add(new ImmutablePair<String, String>(getOperationAfter().getLocationInfo().getFilePath(),
-            getOperationAfter().getClassName()));
+        Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
+        pairs.add(new ImmutablePair<>(getOperationAfter().getLocationInfo().getFilePath(),
+                                      getOperationAfter().getClassName()));
         return pairs;
     }
 
     public String toString() {
-        return getName() + "\t" +
+        return getName() + " " +
             parametersBefore +
             " to " +
             parametersAfter +

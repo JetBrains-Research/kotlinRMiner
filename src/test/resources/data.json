@@ -151,5 +151,14 @@
                 "description": "Rename Method public getTasks() : List<Task> renamed to private findTasks() : List<Task> in class org.jetbrains.research.ml.codetracker.server.PluginServer"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotlin-refactoring-samples.git",
+        "sha1": "4166aa06dbcf055f73cdb6ebae20afbaec3b952d",
+        "refactorings": [
+            {
+                "description": "Reorder Parameter [point : Point, shape : Shape] to [shape : Shape, point : Point] in method public containsPoint(shape Shape, point Point) in class shapes.Rectangle"
+            }
+        ]
     }
 ]
