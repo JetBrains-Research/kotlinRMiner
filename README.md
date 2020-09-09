@@ -7,7 +7,7 @@ The list of supported refactorings:
 - [x] Rename Method
 - [x] Add Parameter
 - [x] Remove Parameter
-- [ ] Reorder Parameter
+- [x] Reorder Parameter
 - [ ] Extract Method
 - [ ] Inline Method
 - [ ] Move Method
