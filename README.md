@@ -8,9 +8,9 @@ The list of supported refactorings:
 - [x] Add Parameter
 - [x] Remove Parameter
 - [x] Reorder Parameter
+- [x] Move Method
 - [ ] Extract Method
 - [ ] Inline Method
-- [ ] Move Method
 - [ ] Pull Up Method
 - [ ] Push Down Method
 - [ ] Extract Superclass
