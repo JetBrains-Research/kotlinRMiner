@@ -3581,4 +3581,21 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         return replacements;
     }
 
+    public double normalizedEditDistance() {
+        double editDistance = 0;
+        double maxLength = 0;
+        for(AbstractCodeMapping mapping : getMappings()) {
+            if(mapping.isIdenticalWithExtractedVariable() || mapping.isIdenticalWithInlinedVariable()) {
+                continue;
+            }
+            String s1 = preprocessInput1(mapping.getFragment1(), mapping.getFragment2());
+            String s2 = preprocessInput2(mapping.getFragment1(), mapping.getFragment2());
+            if(!s1.equals(s2)) {
+                editDistance += StringDistance.editDistance(s1, s2);
+                maxLength += Math.max(s1.length(), s2.length());
+            }
+        }
+        return editDistance/maxLength;
+    }
+
 }
