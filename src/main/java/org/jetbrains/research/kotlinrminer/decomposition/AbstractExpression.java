@@ -1,5 +1,6 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtExpression;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
@@ -29,10 +30,10 @@ public class AbstractExpression extends AbstractCodeFragment {
     private final Map<String, List<ObjectCreation>> creationMap;
     private Map<String, List<OperationInvocation>> methodInvocationMap;
 
-    public AbstractExpression(KtFile cu,
-                              String filePath,
-                              KtExpression expression,
-                              LocationInfo.CodeElementType codeElementType) {
+    public AbstractExpression(@NotNull KtFile cu,
+                              @NotNull String filePath,
+                              @NotNull KtExpression expression,
+                              @NotNull LocationInfo.CodeElementType codeElementType) {
         this.locationInfo = new LocationInfo(cu, filePath, expression, codeElementType);
         Visitor visitor = new Visitor(cu, filePath);
         expression.accept(visitor);

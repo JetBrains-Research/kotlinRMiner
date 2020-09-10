@@ -70,7 +70,7 @@ public class RenameVariableRefactoring implements Refactoring {
     }
 
     public String toString() {
-        return getName() + "\t" +
+        return getName() + " " +
             originalVariable +
             " to " +
             renamedVariable +

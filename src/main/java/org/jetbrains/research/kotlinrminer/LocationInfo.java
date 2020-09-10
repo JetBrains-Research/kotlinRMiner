@@ -1,5 +1,6 @@
 package org.jetbrains.research.kotlinrminer;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.com.intellij.openapi.editor.Document;
 import org.jetbrains.kotlin.com.intellij.openapi.util.TextRange;
 import org.jetbrains.kotlin.com.intellij.psi.FileViewProvider;
@@ -18,7 +19,8 @@ public class LocationInfo {
     private int startColumn;
     private int endColumn;
 
-    public LocationInfo(KtFile ktFile, String filePath, KtElement node, CodeElementType codeElementType) {
+    public LocationInfo(@NotNull KtFile ktFile, @NotNull String filePath, @NotNull KtElement node,
+                        @NotNull CodeElementType codeElementType) {
         this.filePath = filePath;
         this.codeElementType = codeElementType;
         TextRange range = node.getTextRange();

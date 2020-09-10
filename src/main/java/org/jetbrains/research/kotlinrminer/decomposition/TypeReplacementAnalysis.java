@@ -65,13 +65,13 @@ public class TypeReplacementAnalysis {
                                         declaration2.getType()) || !declaration1.getType().equalsQualified(
                                         declaration2.getType())) &&
                                 !containsVariableDeclarationWithSameNameAndType(declaration1, declarations2)) {
-                            ChangeVariableTypeRefactoring ref =
+/*TODO:                            ChangeVariableTypeRefactoring ref =
                                     new ChangeVariableTypeRefactoring(declaration1, declaration2,
                                                                       mapping.getOperation1(), mapping.getOperation2(),
                                                                       VariableReferenceExtractor.findReferences(
                                                                               declaration1, declaration2, mappings));
                             changedTypes.add(ref);
-                            break;
+                            break;*/
                         }
                     }
                 }

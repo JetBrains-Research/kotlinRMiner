@@ -160,5 +160,41 @@
                 "description": "Reorder Parameter [point : Point, shape : Shape] to [shape : Shape, point : Point] in method public containsPoint(shape Shape, point Point) in class shapes.Rectangle"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/lets-plot.git",
+        "sha1": "11d3dcecf923a41c716fb100b5f283bf8d96a3ee",
+        "refactorings": [
+            {
+                "description": "Move Method public defaultOutlierTooltips() from class jetbrains.datalore.plot.builder.tooltip.TooltipContentGeneratorTest to public defaultOutlierTooltips() from class jetbrains.datalore.plot.config.TooltipConfigTest"
+            },
+            {
+                "description": "Move And Rename Method public userOutlierTooltips() from class jetbrains.datalore.plot.builder.tooltip.TooltipContentGeneratorTest to public configOutlierTooltips() from class jetbrains.datalore.plot.config.TooltipConfigTest"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/lets-plot.git",
+        "sha1": "71222b81fc9401f18d1002677060851e74a75a49",
+        "refactorings": [
+            {
+                "description": "Move Method private createHiddenAesList(geomKind GeomKind) : List<Aes<*>> from class jetbrains.datalore.plot.config.PlotConfigClientSideUtil to private createHiddenAesList(geomKind GeomKind) : List<Aes<*>> from class jetbrains.datalore.plot.config.GeomInteractionUtil"
+            },
+            {
+                "description": "Add Parameter geomInteraction : GeomInteraction in method private createLayerBuilder(layerConfig LayerConfig, scaleProvidersMap TypedScaleProviderMap, geomInteraction GeomInteraction) : GeomLayerBuilder from class jetbrains.datalore.plot.config.PlotConfigClientSideUtil"
+            },
+            {
+                "description": "Move Method private createTooltipValueSourceList(tooltipLineSpecifications List<TooltipLineSpecification>) : List<ValueSource> from class jetbrains.datalore.plot.config.PlotConfigClientSideUtil to private createTooltipValueSourceList(tooltipLineSpecifications List<TooltipLineSpecification>) : List<ValueSource> from class jetbrains.datalore.plot.config.GeomInteractionUtil"
+            },
+            {
+                "description": "Move Method private initGeomInteractionBuilder(renders List<Aes<*>>, geomKind GeomKind, statKind StatKind) : GeomInteractionBuilder from class jetbrains.datalore.plot.config.PlotConfigClientSideUtil to private initGeomInteractionBuilder(renders List<Aes<*>>, geomKind GeomKind, statKind StatKind) : GeomInteractionBuilder from class jetbrains.datalore.plot.config.GeomInteractionUtil"
+            },
+            {
+                "description": "Move Method private createTooltipAesList(layerConfig LayerConfig, axisAes List<Aes<*>>) : List<Aes<*>> from class jetbrains.datalore.plot.config.PlotConfigClientSideUtil to private createTooltipAesList(layerConfig LayerConfig, axisAes List<Aes<*>>) : List<Aes<*>> from class jetbrains.datalore.plot.config.GeomInteractionUtil"
+            },
+            {
+                "description": "Move Method internal createGeomInteractionBuilder(renders List<Aes<*>>, geomKind GeomKind, statKind StatKind, multilayer Boolean) : GeomInteractionBuilder from class jetbrains.datalore.plot.config.PlotConfigClientSideUtil to private createGeomInteractionBuilder(renders List<Aes<*>>, geomKind GeomKind, statKind StatKind, multilayer Boolean) : GeomInteractionBuilder from class jetbrains.datalore.plot.config.GeomInteractionUtil"
+            }
+        ]
     }
 ]

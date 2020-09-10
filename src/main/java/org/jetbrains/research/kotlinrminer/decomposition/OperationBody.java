@@ -83,7 +83,7 @@ public class OperationBody {
                 CodeElementType.ENHANCED_FOR_STATEMENT_PARAMETER_NAME);
             child.addExpression(abstractEx);
             KtDestructuringDeclaration ktDeclaration = forStatement.getDestructuringDeclaration();
-            if (ktDeclaration != null) {
+            if (ktDeclaration != null && ktDeclaration.getInitializer() != null) {
                 KtExpression initializer = ktDeclaration.getInitializer();
                 AbstractExpression abstractExpression = new AbstractExpression(ktFile, filePath, initializer,
                     CodeElementType.FOR_STATEMENT_INITIALIZER);
@@ -93,9 +93,11 @@ public class OperationBody {
             AbstractExpression range = new AbstractExpression(ktFile, filePath, rangeExpr,
                 CodeElementType.ENHANCED_FOR_STATEMENT_RANGE);
             child.addExpression(range);
-            AbstractExpression abstractExpr = new AbstractExpression(ktFile, filePath, ktDeclaration,
-                CodeElementType.ENHANCED_FOR_STATEMENT_EXPRESSION);
-            child.addExpression(abstractExpr);
+            if (ktDeclaration != null) {
+                AbstractExpression abstractExpr = new AbstractExpression(ktFile, filePath, ktDeclaration,
+                                                                         CodeElementType.ENHANCED_FOR_STATEMENT_EXPRESSION);
+                child.addExpression(abstractExpr);
+            }
             processStatement(ktFile, filePath, child, forStatement.getBody());
         } else if (statement instanceof KtWhileExpression) {
             KtWhileExpression whileStatement = (KtWhileExpression) statement;
@@ -198,11 +200,13 @@ public class OperationBody {
                     new CompositeStatementObject(ktFile, filePath, whenExpression, parent.getDepth() + 1,
                                                  CodeElementType.WHEN_EXPRESSION);
             parent.addStatement(child);
-            AbstractExpression abstractExpression =
+            if (whenExpression.getSubjectExpression() != null) {
+                AbstractExpression abstractExpression =
                     new AbstractExpression(ktFile, filePath, whenExpression.getSubjectExpression(),
                                            CodeElementType.WHEN_EXPRESSION);
-            child.addExpression(abstractExpression);
-            processStatement(ktFile, filePath, child, whenExpression.getSubjectExpression());
+                child.addExpression(abstractExpression);
+                processStatement(ktFile, filePath, child, whenExpression.getSubjectExpression());
+            }
 
             if (whenExpression.getElseExpression() != null) {
                 processStatement(ktFile, filePath, child, whenExpression.getElseExpression());
