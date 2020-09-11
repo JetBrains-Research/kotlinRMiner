@@ -115,10 +115,10 @@
         "sha1": "703d6d2e874eaed2e5bd0808def0c6e5237ef97c",
         "refactorings": [
             {
-                "description": "Remove Parameter postActivity : ()->Unit in method public sendCodeTrackerData(file File, deleteAfter ()->Boolean, postActivity ()->Unit) from class org.jetbrains.research.ml.codetracker.server.TrackerQueryExecutor"
+                "description": "Remove Parameter postActivity : () -> Unit in method public sendCodeTrackerData(file File, deleteAfter () -> Boolean, postActivity () -> Unit) from class org.jetbrains.research.ml.codetracker.server.TrackerQueryExecutor"
             },
             {
-                "description": "Remove Parameter deleteAfter : ()->Boolean in method public sendCodeTrackerData(file File, deleteAfter ()->Boolean, postActivity ()->Unit) from class org.jetbrains.research.ml.codetracker.server.TrackerQueryExecutor"
+                "description": "Remove Parameter deleteAfter : () -> Boolean in method public sendCodeTrackerData(file File, deleteAfter () -> Boolean, postActivity () -> Unit) from class org.jetbrains.research.ml.codetracker.server.TrackerQueryExecutor"
             }
         ]
     },
@@ -144,7 +144,7 @@
         ]
     },
     {
-        "repository": "https://github.com/JetBrains/kotlin-refactoring-samples.git",
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
         "sha1": "4166aa06dbcf055f73cdb6ebae20afbaec3b952d",
         "refactorings": [
             {
@@ -185,6 +185,57 @@
             },
             {
                 "description": "Move Method internal createGeomInteractionBuilder(renders List<Aes<*>>, geomKind GeomKind, statKind StatKind, multilayer Boolean) : GeomInteractionBuilder from class jetbrains.datalore.plot.config.PlotConfigClientSideUtil to private createGeomInteractionBuilder(renders List<Aes<*>>, geomKind GeomKind, statKind StatKind, multilayer Boolean) : GeomInteractionBuilder from class jetbrains.datalore.plot.config.GeomInteractionUtil"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/lets-plot.git",
+        "sha1": "ce848440fa62a7730d1e9e779eed0f10b7adf633",
+        "refactorings": [
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.CountStat"
+            },
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.SmoothStat"
+            },
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.Density2dStat"
+            },
+            {
+                "description": "Move Method public sampleWithoutReplacement(popSize Int, sampleSize Int, rand Random, onPick (Set<Int>) -> T, onDrop (Set<Int>) -> T) : T from class jetbrains.datalore.plot.builder.sampling.method.SamplingUtil to public sampleWithoutReplacement(popSize Int, sampleSize Int, rand Random, onPick (Set<Int>) -> T, onDrop (Set<Int>) -> T) : T from class jetbrains.datalore.plot.base.util.SamplingUtil"
+            },
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.ContourfStat"
+            },
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.AbstractDensity2dStat"
+            },
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.Density2dfStat"
+            },
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.BoxplotStat"
+            },
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.ContourStat"
+            },
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.Stat"
+            },
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.DensityStat"
+            },
+            {
+                "description": "Add Parameter messageConsumer : Consumer<String> in method public buildStatData(data DataFrame, stat Stat, bindings List<VarBinding>, groupingContext GroupingContext, facetXVar String?, facetYVar String?, statCtx StatContext, messageConsumer Consumer<String>) : DataAndGroupingContext from class jetbrains.datalore.plot.builder.data.DataProcessing"
+            },
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.BinStat"
+            },
+            {
+                "description": "Add Parameter compMessageConsumer : Consumer<String> in method private applyStat(data DataFrame, stat Stat, bindings List<VarBinding>, facetXVarName String?, facetYVarName String?, statCtx StatContext, compMessageConsumer Consumer<String>) : DataFrame from class jetbrains.datalore.plot.builder.data.DataProcessing"
+            },
+            {
+                "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.Bin2dStat"
             }
         ]
     }

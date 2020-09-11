@@ -55,17 +55,26 @@ public class FunctionType extends UMLType {
 
     @Override
     public String toString() {
-        return "(" +  ")" + "->" + returnType.toString();
+        return this.toQualifiedString();
     }
 
     @Override
     public String toQualifiedString() {
-        return "(" + receiver.toString() + ")" + "->" + returnType.toString();
+        StringBuilder s = new StringBuilder("(");
+        for (int i = 0; i < parametersList.size(); i++) {
+            UMLType parameter = parametersList.get(i);
+            s.append(parameter.toQualifiedString());
+            if (i < parametersList.size() - 1) {
+                s.append(",");
+            }
+        }
+        s.append(")").append(" -> ").append(returnType.toString());
+        return s.toString();
     }
 
     @Override
     public String getClassType() {
-        return null;
+        return returnType.getClassType();
     }
 
     public UMLType getReturnType() {
