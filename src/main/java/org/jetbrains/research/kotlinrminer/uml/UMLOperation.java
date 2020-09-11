@@ -21,6 +21,7 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
     private final LocationInfo locationInfo;
     private final String name;
     private final List<UMLParameter> parameters;
+    //TODO: Figure out how to deal with generic types in Kotlin
     private final List<UMLTypeParameter> typeParameters;
     private final List<UMLAnnotation> annotations;
     private String visibility;
@@ -251,22 +252,25 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         if (!equalParameterTypes) {
             List<UMLType> thisParameterTypeList = this.getParameterTypeList();
             List<UMLType> otherParameterTypeList = operation.getParameterTypeList();
-            if (thisParameterTypeList.size() == otherParameterTypeList.size()) {
+            if (thisParameterTypeList.size() != 0 && thisParameterTypeList.size() == otherParameterTypeList.size()) {
                 int compatibleTypes = 0;
                 int equalTypes = 0;
                 for (int i = 0; i < thisParameterTypeList.size(); i++) {
                     UMLType thisParameterType = thisParameterTypeList.get(i);
                     UMLType otherParameterType = otherParameterTypeList.get(i);
-                    if ((thisParameterType.getClassType().endsWith("." + otherParameterType.getClassType()) ||
-                        otherParameterType.getClassType().endsWith("." + thisParameterType.getClassType())) &&
-                        thisParameterType.getArrayDimension() == otherParameterType.getArrayDimension()) {
-                        compatibleTypes++;
-                    } else if (thisParameterType.equals(otherParameterType)) {
-                        equalTypes++;
+                    if (thisParameterType != null && otherParameterType != null
+                        && thisParameterType.getClassType() != null && otherParameterType.getClassType() != null) {
+                        if ((thisParameterType.getClassType().endsWith("." + otherParameterType.getClassType()) ||
+                            otherParameterType.getClassType().endsWith("." + thisParameterType.getClassType())) &&
+                            thisParameterType.getArrayDimension() == otherParameterType.getArrayDimension()) {
+                            compatibleTypes++;
+                        } else if (thisParameterType.equals(otherParameterType)) {
+                            equalTypes++;
+                        }
                     }
-                }
-                if (equalTypes + compatibleTypes == thisParameterTypeList.size()) {
-                    compatibleParameterTypes = true;
+                    if (equalTypes + compatibleTypes == thisParameterTypeList.size()) {
+                        compatibleParameterTypes = true;
+                    }
                 }
             }
         }
@@ -384,12 +388,11 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
 
     public List<UMLType> getParameterTypeList() {
         List<UMLType> parameterTypeList = new ArrayList<>();
-        //TODO: Figure out how to deal with generic parameter types in Kotlin
-/*        for (UMLParameter parameter : parameters) {
+        for (UMLParameter parameter : parameters) {
             if (!parameter.getKind().equals("return")) {
                 parameterTypeList.add(parameter.getType());
             }
-        }*/
+        }
         return parameterTypeList;
     }
 
@@ -461,7 +464,6 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
                 this.visibility.equals(operation.visibility) &&
                 this.isAbstract == operation.isAbstract &&
                 thisEmptyBody == otherEmptyBody &&
-                this.getParameters().equals(operation.getParameters()) &&
                 equalTypeParameters(operation);
         }
         return false;
@@ -505,7 +507,6 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         result = prime * result + (isAbstract ? 1231 : 1237);
         result = prime * result + (thisEmptyBody ? 1231 : 1237);
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((getParameters() == null) ? 0 : getParameters().hashCode());
         result = prime * result + ((visibility == null) ? 0 : visibility.hashCode());
         result = prime * result + typeParameters.hashCode();
         return result;

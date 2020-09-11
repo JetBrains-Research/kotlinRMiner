@@ -85,15 +85,6 @@
     },
     {
         "repository": "https://github.com/JetBrains-Research/codetracker.git",
-        "sha1": "f32f35f77c567410fd23073974d8608931446d07",
-        "refactorings": [
-            {
-                "description": "Remove Parameter notifyEvent : NotifyEvent in method public getData(notifyEvent NotifyEvent) : List<UiField<out Any>> from class data.UiData"
-            }
-        ]
-    },
-    {
-        "repository": "https://github.com/JetBrains-Research/codetracker.git",
         "sha1": "e818280cae22dcee954baad9980b35c0b61776c3",
         "refactorings": [
             {
