@@ -8,10 +8,7 @@ import org.jetbrains.research.kotlinrminer.diff.*;
 import org.jetbrains.research.kotlinrminer.diff.refactoring.CandidateAttributeRefactoring;
 import org.jetbrains.research.kotlinrminer.diff.refactoring.CandidateMergeVariableRefactoring;
 import org.jetbrains.research.kotlinrminer.diff.refactoring.CandidateSplitVariableRefactoring;
-import org.jetbrains.research.kotlinrminer.uml.UMLAttribute;
-import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
-import org.jetbrains.research.kotlinrminer.uml.UMLParameter;
-import org.jetbrains.research.kotlinrminer.uml.UMLType;
+import org.jetbrains.research.kotlinrminer.uml.*;
 import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
 import org.jetbrains.research.kotlinrminer.util.ReplacementUtil;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.Replacement.*;
@@ -48,6 +45,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
     public static final String SPLIT_CONCAT_STRING_PATTERN = "(\\s)*(\\+)(\\s)*";
     private static final Pattern DOUBLE_QUOTES = Pattern.compile("\"([^\"]*)\"|(\\S+)");
     private final UMLClassBaseDiff classDiff;
+    private final UMLFileDiff fileDiff;
     private UMLModelDiff modelDiff;
     private UMLOperation callSiteOperation;
     private final Map<AbstractCodeFragment, UMLOperation> codeFragmentOperationMap1 = new LinkedHashMap<>();
@@ -56,6 +54,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
     public UMLOperationBodyMapper(UMLOperation operation1, UMLOperation operation2,
                                   UMLClassBaseDiff classDiff) throws RefactoringMinerTimedOutException {
         this.classDiff = classDiff;
+        this.fileDiff = null;
         if (classDiff != null)
             this.modelDiff = classDiff.getModelDiff();
         this.operation1 = operation1;
@@ -149,6 +148,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
                                    LambdaExpressionObject lambda2,
                                    UMLOperationBodyMapper parentMapper) throws RefactoringMinerTimedOutException {
         this.classDiff = parentMapper.classDiff;
+        this.fileDiff = null;
         if (classDiff != null)
             this.modelDiff = classDiff.getModelDiff();
         this.operation1 = parentMapper.operation1;
@@ -174,6 +174,99 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
 
             List<CompositeStatementObject> innerNodes1 = composite1.getInnerNodes();
             List<CompositeStatementObject> innerNodes2 = composite2.getInnerNodes();
+            processInnerNodes(innerNodes1, innerNodes2, new LinkedHashMap<>());
+
+            nonMappedLeavesT1.addAll(leaves1);
+            nonMappedLeavesT2.addAll(leaves2);
+            nonMappedInnerNodesT1.addAll(innerNodes1);
+            nonMappedInnerNodesT2.addAll(innerNodes2);
+
+            for (StatementObject statement : getNonMappedLeavesT2()) {
+                temporaryVariableAssignment(statement, nonMappedLeavesT2);
+            }
+            for (StatementObject statement : getNonMappedLeavesT1()) {
+                inlinedVariableAssignment(statement, nonMappedLeavesT2);
+            }
+        }
+    }
+
+    public UMLOperationBodyMapper(UMLFileDiff fileDiff, UMLOperation operation1, UMLOperation operation2) throws
+        RefactoringMinerTimedOutException {
+        this.classDiff = null;
+        this.fileDiff = fileDiff;
+        if (fileDiff != null)
+            this.modelDiff = fileDiff.getModelDiff();
+        this.operation1 = operation1;
+        this.operation2 = operation2;
+        this.mappings = new LinkedHashSet<>();
+        this.nonMappedLeavesT1 = new ArrayList<>();
+        this.nonMappedLeavesT2 = new ArrayList<>();
+        this.nonMappedInnerNodesT1 = new ArrayList<>();
+        this.nonMappedInnerNodesT2 = new ArrayList<>();
+        OperationBody body1 = operation1.getBody();
+        OperationBody body2 = operation2.getBody();
+        if (body1 != null && body2 != null) {
+            CompositeStatementObject composite1 = body1.getCompositeStatement();
+            CompositeStatementObject composite2 = body2.getCompositeStatement();
+            List<StatementObject> leaves1 = composite1.getLeaves();
+            List<StatementObject> leaves2 = composite2.getLeaves();
+
+            UMLOperationDiff operationDiff = new UMLOperationDiff(operation1, operation2);
+            Map<String, String> parameterToArgumentMap1 = new LinkedHashMap<>();
+            Map<String, String> parameterToArgumentMap2 = new LinkedHashMap<>();
+            List<UMLParameter> addedParameters = operationDiff.getAddedParameters();
+            if (addedParameters.size() == 1) {
+                UMLParameter addedParameter = addedParameters.get(0);
+                if (UMLModelDiff.looksLikeSameType(addedParameter.getType().getClassType(),
+                                                   operation1.getClassName())) {
+                    parameterToArgumentMap1.put("this.", "");
+                    //replace "parameterName." with ""
+                    parameterToArgumentMap2.put(addedParameter.getName() + ".", "");
+                }
+            }
+            List<UMLParameter> removedParameters = operationDiff.getRemovedParameters();
+            if (removedParameters.size() == 1) {
+                UMLParameter removedParameter = removedParameters.get(0);
+                if (UMLModelDiff.looksLikeSameType(removedParameter.getType().getClassType(),
+                                                   operation2.getClassName())) {
+                    parameterToArgumentMap1.put(removedParameter.getName() + ".", "");
+                    parameterToArgumentMap2.put("this.", "");
+                }
+            }
+            resetNodes(leaves1);
+            //replace parameters with arguments in leaves1
+            if (!parameterToArgumentMap1.isEmpty()) {
+                for (StatementObject leave1 : leaves1) {
+                    leave1.replaceParametersWithArguments(parameterToArgumentMap1);
+                }
+            }
+            resetNodes(leaves2);
+            //replace parameters with arguments in leaves2
+            if (!parameterToArgumentMap2.isEmpty()) {
+                for (StatementObject leave2 : leaves2) {
+                    leave2.replaceParametersWithArguments(parameterToArgumentMap2);
+                }
+            }
+            processLeaves(leaves1, leaves2, new LinkedHashMap<>());
+
+            List<CompositeStatementObject> innerNodes1 = composite1.getInnerNodes();
+            innerNodes1.remove(composite1);
+            List<CompositeStatementObject> innerNodes2 = composite2.getInnerNodes();
+            innerNodes2.remove(composite2);
+            resetNodes(innerNodes1);
+            //replace parameters with arguments in innerNodes1
+            if (!parameterToArgumentMap1.isEmpty()) {
+                for (CompositeStatementObject innerNode1 : innerNodes1) {
+                    innerNode1.replaceParametersWithArguments(parameterToArgumentMap1);
+                }
+            }
+            resetNodes(innerNodes2);
+            //replace parameters with arguments in innerNodes2
+            if (!parameterToArgumentMap2.isEmpty()) {
+                for (CompositeStatementObject innerNode2 : innerNodes2) {
+                    innerNode2.replaceParametersWithArguments(parameterToArgumentMap2);
+                }
+            }
             processInnerNodes(innerNodes1, innerNodes2, new LinkedHashMap<>());
 
             nonMappedLeavesT1.addAll(leaves1);
@@ -3584,18 +3677,18 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
     public double normalizedEditDistance() {
         double editDistance = 0;
         double maxLength = 0;
-        for(AbstractCodeMapping mapping : getMappings()) {
-            if(mapping.isIdenticalWithExtractedVariable() || mapping.isIdenticalWithInlinedVariable()) {
+        for (AbstractCodeMapping mapping : getMappings()) {
+            if (mapping.isIdenticalWithExtractedVariable() || mapping.isIdenticalWithInlinedVariable()) {
                 continue;
             }
             String s1 = preprocessInput1(mapping.getFragment1(), mapping.getFragment2());
             String s2 = preprocessInput2(mapping.getFragment1(), mapping.getFragment2());
-            if(!s1.equals(s2)) {
+            if (!s1.equals(s2)) {
                 editDistance += StringDistance.editDistance(s1, s2);
                 maxLength += Math.max(s1.length(), s2.length());
             }
         }
-        return editDistance/maxLength;
+        return editDistance / maxLength;
     }
 
 }

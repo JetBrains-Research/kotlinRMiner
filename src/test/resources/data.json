@@ -140,6 +140,9 @@
             },
             {
                 "description": "Rename Method public getTasks() : List<Task> renamed to private findTasks() : List<Task> in class org.jetbrains.research.ml.codetracker.server.PluginServer"
+            },
+            {
+                "description": "Remove Parameter name : String in method public makeTranslatable(name String, translate (PaneLanguage) -> Unit) from class TranslationManager.kt"
             }
         ]
     },

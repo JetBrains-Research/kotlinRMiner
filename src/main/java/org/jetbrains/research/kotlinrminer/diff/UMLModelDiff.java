@@ -24,6 +24,7 @@ public class UMLModelDiff {
     private final List<UMLClassMoveDiff> innerClassMoveDiffList;
     private final List<UMLClassRenameDiff> classRenameDiffList;
     private final List<UMLClassDiff> commonClassDiffList;
+    private final List<UMLFileDiff> umlFileDiff;
     private final List<Refactoring> refactorings;
 
     public UMLModelDiff() {
@@ -34,6 +35,7 @@ public class UMLModelDiff {
         this.innerClassMoveDiffList = new ArrayList<>();
         this.classRenameDiffList = new ArrayList<>();
         this.commonClassDiffList = new ArrayList<>();
+        this.umlFileDiff = new ArrayList<>();
         this.refactorings = new ArrayList<>();
     }
 
@@ -337,6 +339,9 @@ public class UMLModelDiff {
             refactorings.addAll(classDiff.getRefactorings());
 /*            extractMergePatterns(classDiff, mergeMap);
             extractRenamePatterns(classDiff, renameMap);*/
+        }
+        for (UMLFileDiff fileDiff: umlFileDiff) {
+            refactorings.addAll(fileDiff.getRefactorings());
         }
         Map<RenamePattern, Integer> typeRenamePatternMap = typeRenamePatternMap(refactorings);
         for (RenamePattern pattern : typeRenamePatternMap.keySet()) {
@@ -1554,5 +1559,9 @@ addedOperation.isSetter()) &&
 
     public void addUMLClassDiff(UMLClassDiff classDiff) {
         this.commonClassDiffList.add(classDiff);
+    }
+
+    public void addUmlFileDiff(UMLFileDiff fileDiff) {
+        this.umlFileDiff.add(fileDiff);
     }
 }

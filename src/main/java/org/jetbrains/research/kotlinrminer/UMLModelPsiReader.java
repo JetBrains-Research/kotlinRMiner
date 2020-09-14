@@ -8,11 +8,7 @@ import static org.jetbrains.research.kotlinrminer.util.EnvironmentManager.create
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment;
 import org.jetbrains.kotlin.com.intellij.openapi.util.io.FileUtilRt;
@@ -45,19 +41,7 @@ import org.jetbrains.kotlin.psi.KtTypeParameter;
 import org.jetbrains.kotlin.psi.KtTypeReference;
 import org.jetbrains.research.kotlinrminer.decomposition.OperationBody;
 import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclaration;
-import org.jetbrains.research.kotlinrminer.uml.UMLAnnotation;
-import org.jetbrains.research.kotlinrminer.uml.UMLAttribute;
-import org.jetbrains.research.kotlinrminer.uml.UMLClass;
-import org.jetbrains.research.kotlinrminer.uml.UMLCompanionObject;
-import org.jetbrains.research.kotlinrminer.uml.UMLGeneralization;
-import org.jetbrains.research.kotlinrminer.uml.UMLJavadoc;
-import org.jetbrains.research.kotlinrminer.uml.UMLModel;
-import org.jetbrains.research.kotlinrminer.uml.UMLObject;
-import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
-import org.jetbrains.research.kotlinrminer.uml.UMLParameter;
-import org.jetbrains.research.kotlinrminer.uml.UMLTagElement;
-import org.jetbrains.research.kotlinrminer.uml.UMLType;
-import org.jetbrains.research.kotlinrminer.uml.UMLTypeParameter;
+import org.jetbrains.research.kotlinrminer.uml.*;
 import org.jetbrains.research.kotlinrminer.util.KotlinLightVirtualFile;
 
 /**
@@ -75,6 +59,9 @@ public class UMLModelPsiReader {
             List<String> importedTypes = processImports(ktFile);
 
             PsiElement[] elementsInFile = ktFile.getChildren();
+
+            List<KtNamedFunction> packageLevelFunctions = new ArrayList<>();
+
             for (PsiElement psiElement : elementsInFile) {
                 if (psiElement instanceof KtObjectDeclaration) {
                     KtObjectDeclaration objectDeclaration = (KtObjectDeclaration) psiElement;
@@ -89,9 +76,29 @@ public class UMLModelPsiReader {
                         processKtClass(ktClass, ktFile.getPackageFqName().asString(), ktFile.getVirtualFilePath(),
                                        importedTypes);
                     }
+                } else if (psiElement instanceof KtNamedFunction) {
+                    packageLevelFunctions.add((KtNamedFunction) psiElement);
                 }
             }
+            if (packageLevelFunctions.size() > 0) {
+                processPackageLevelFunctions(ktFile, packageLevelFunctions);
+            }
         }
+    }
+
+    private void processPackageLevelFunctions(KtFile ktFile, List<KtNamedFunction> packageLevelFunctions) {
+        UMLFile umlFile = new UMLFile(ktFile.getPackageFqName().asString() + ktFile.getName());
+        LocationInfo locationInfo = generateLocationInfo(ktFile, ktFile.getPackageFqName().asString(), ktFile,
+                                                         LocationInfo.CodeElementType.TYPE_DECLARATION);
+        umlFile.setLocationInfo(locationInfo);
+        for (KtNamedFunction function : packageLevelFunctions) {
+            UMLOperation umlOperation = processMethodDeclaration(ktFile, function,
+                                                                 ktFile.getPackageFqName().asString(), false,
+                                                                 ktFile.getVirtualFilePath());
+            umlOperation.setClassName(ktFile.getName());
+            umlFile.addMethod(umlOperation);
+        }
+        this.getUmlModel().addFile(umlFile);
     }
 
     public List<String> processImports(KtFile ktFile) {

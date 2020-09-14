@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.jetbrains.research.kotlinrminer.api.RefactoringMinerTimedOutException;
 import org.jetbrains.research.kotlinrminer.diff.UMLClassDiff;
+import org.jetbrains.research.kotlinrminer.diff.UMLFileDiff;
 import org.jetbrains.research.kotlinrminer.diff.UMLModelDiff;
 
 public class UMLModel {
@@ -15,6 +17,7 @@ public class UMLModel {
     private final List<UMLObject> objectList;
     private final List<UMLGeneralization> generalizationList;
     private final List<UMLRealization> realizationList;
+    private final List<UMLFile> fileList;
 
     public UMLModel(Set<String> repositoryDirectories) {
         this.repositoryDirectories = repositoryDirectories;
@@ -22,6 +25,7 @@ public class UMLModel {
         objectList = new ArrayList<>();
         generalizationList = new ArrayList<>();
         realizationList = new ArrayList<>();
+        fileList = new ArrayList<>();
     }
 
     public void addClass(UMLClass umlClass) {
@@ -40,10 +44,23 @@ public class UMLModel {
         realizationList.add(umlRealization);
     }
 
+    public void addFile(UMLFile umlFile) {
+        fileList.add(umlFile);
+    }
+
     public UMLClass getClass(UMLClass umlClassFromOtherModel) {
         for (UMLClass umlClass : classList) {
             if (umlClass.equals(umlClassFromOtherModel)) {
                 return umlClass;
+            }
+        }
+        return null;
+    }
+
+    public UMLFile getFile(UMLFile umlFileFromOtherModel) {
+        for (UMLFile umlFile : fileList) {
+            if (umlFile.equals(umlFileFromOtherModel)) {
+                return umlFile;
             }
         }
         return null;
@@ -62,13 +79,13 @@ public class UMLModel {
             if (generalization.getChild().equals(otherGeneralization.getChild())) {
                 String thisParent = generalization.getParent();
                 String otherParent = otherGeneralization.getParent();
-                String thisParentComparedString = null;
+                String thisParentComparedString;
                 if (thisParent.contains(".")) {
                     thisParentComparedString = thisParent.substring(thisParent.lastIndexOf(".") + 1);
                 } else {
                     thisParentComparedString = thisParent;
                 }
-                String otherParentComparedString = null;
+                String otherParentComparedString;
                 if (otherParent.contains(".")) {
                     otherParentComparedString = otherParent.substring(otherParent.lastIndexOf(".") + 1);
                 } else {
@@ -106,6 +123,16 @@ public class UMLModel {
                 classDiff.process();
                 if (!classDiff.isEmpty()) {
                     modelDiff.addUMLClassDiff(classDiff);
+                }
+            }
+        }
+
+        for (UMLFile umlFile : fileList) {
+            if (umlModel.fileList.contains(umlFile)) {
+                UMLFileDiff fileDiff = new UMLFileDiff(umlFile, umlModel.getFile(umlFile), modelDiff);
+                fileDiff.process();
+                if (!fileDiff.isEmpty()) {
+                    modelDiff.addUmlFileDiff(fileDiff);
                 }
             }
         }
