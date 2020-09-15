@@ -259,5 +259,35 @@
                 "description": "Push Down Method public getDescription() : String from class shapes.Rectangle to public getDescription() : String from class shapes.Square"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "cdbf991f83fd3e9fe2d0b47fc171a9d3c7ccb28e",
+        "refactorings": [
+            {
+                "description": "Add Parameter visitOnce : Boolean in method public visitCallExpressionsWithReferences(binding BindingContext, filter (KtCallExpression) -> Boolean, visitOnce Boolean, body (KtCallExpression) -> Unit) from class Expression.kt"
+            },
+            {
+                "description": "Add Parameter visitOnce : Boolean in method public visitAnnotatedWithReferences(binding BindingContext, filter (KtAnnotated) -> Boolean, visitOnce Boolean, body (KtAnnotated) -> Unit) from class Expression.kt"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "779e447cd4336832b2daa900f3dc00f78c45c09d",
+        "refactorings": [
+            {
+                "description": "Add Parameter filter : (KtExpression) -> Boolean in method public visitAllExpressions(context BindingContext, filter (KtExpression) -> Boolean, alreadyGot Set<KtElement>, body (KtExpression) -> Unit) from class Expression.kt"
+            },
+            {
+                "description": "Rename Method public processObject(files Set<KtFile>, binding BindingContext, body (KtObjectDeclaration,KClass<*>) -> Unit) renamed to public processObjects(files Set<KtFile>, binding BindingContext, body (KtObjectDeclaration,KClass<*>) -> Unit) in class io.kotless.parser.processor.SubTypesProcessor"
+            },
+            {
+                "description": "Rename Method public processClass(files Set<KtFile>, binding BindingContext, body (KtClass,KClass<*>) -> Unit) renamed to public processClassesOrObjects(files Set<KtFile>, binding BindingContext, body (KtClassOrObject,KClass<*>) -> Unit) in class io.kotless.parser.processor.SubTypesProcessor"
+            },
+            {
+                "description": "Rename Method public processClassOrObject(files Set<KtFile>, binding BindingContext, body (KtClassOrObject,KClass<*>) -> Unit) renamed to public processClasses(files Set<KtFile>, binding BindingContext, body (KtClass,KClass<*>) -> Unit) in class io.kotless.parser.processor.SubTypesProcessor"
+            }
+        ]
     }
 ]
