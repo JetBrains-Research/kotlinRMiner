@@ -241,5 +241,23 @@
                 "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.Bin2dStat"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "67c0bfffc84088dcdbb88a2b7bcc90aec3e764a9",
+        "refactorings": [
+            {
+                "description": "Pull Up Method public getDescription() : String from class shapes.Square to public getDescription() : String from class shapes.Rectangle"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "1a29b2b054ee6593bf9a262cbdb7e0a9b33283a8",
+        "refactorings": [
+            {
+                "description": "Push Down Method public getDescription() : String from class shapes.Rectangle to public getDescription() : String from class shapes.Square"
+            }
+        ]
     }
 ]
