@@ -13,8 +13,8 @@ The list of supported refactorings:
 - [x] Move And Rename Method
 - [ ] Extract Method
 - [ ] Inline Method
-- [ ] Pull Up Method
-- [ ] Push Down Method
+- [x] Pull Up Method
+- [x] Push Down Method
 - [ ] Extract Superclass
 - [ ] Extract Interface
 - [ ] Extract And Move Method
