@@ -9,6 +9,8 @@ The list of supported refactorings:
 - [x] Remove Parameter
 - [x] Reorder Parameter
 - [x] Move Method
+- [x] Move And Rename Class
+- [x] Move And Rename Method
 - [ ] Extract Method
 - [ ] Inline Method
 - [ ] Pull Up Method
@@ -16,6 +18,4 @@ The list of supported refactorings:
 - [ ] Extract Superclass
 - [ ] Extract Interface
 - [ ] Extract And Move Method
-- [ ] Move And Rename Class
-- [ ] Move And Rename Method
 - [ ] Move And Inline Method
