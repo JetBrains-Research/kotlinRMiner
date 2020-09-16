@@ -304,5 +304,14 @@
                 "description": "Add Parameter shape : Shape in method public containsPoint(shape Shape, point Point) from class shapes.Circle"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "99f12c40f4a3d73b294f201d2bf0978015b417c9",
+        "refactorings": [
+            {
+                "description": "Extract Class person.Car from class Person"
+            }
+        ]
     }
 ]
