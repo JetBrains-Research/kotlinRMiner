@@ -127,6 +127,21 @@ public class UMLModel {
             }
         }
 
+        for (UMLGeneralization umlGeneralization : generalizationList) {
+            if (!umlModel.generalizationList.contains(umlGeneralization))
+                modelDiff.reportRemovedGeneralization(umlGeneralization);
+        }
+        for (UMLGeneralization umlGeneralization : umlModel.generalizationList) {
+            if (!this.generalizationList.contains(umlGeneralization))
+                modelDiff.reportAddedGeneralization(umlGeneralization);
+        }
+
+        modelDiff.checkForGeneralizationChanges();
+        for (UMLRealization umlRealization : realizationList) {
+            if (!umlModel.realizationList.contains(umlRealization))
+                modelDiff.reportRemovedRealization(umlRealization);
+        }
+
         for (UMLFile umlFile : fileList) {
             if (umlModel.fileList.contains(umlFile)) {
                 UMLFileDiff fileDiff = new UMLFileDiff(umlFile, umlModel.getFile(umlFile), modelDiff);

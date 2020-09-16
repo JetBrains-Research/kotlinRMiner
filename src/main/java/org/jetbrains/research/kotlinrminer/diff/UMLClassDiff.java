@@ -3,6 +3,7 @@ package org.jetbrains.research.kotlinrminer.diff;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.jetbrains.research.kotlinrminer.api.RefactoringMinerTimedOutException;
 import org.jetbrains.research.kotlinrminer.decomposition.UMLOperationBodyMapper;
 import org.jetbrains.research.kotlinrminer.diff.refactoring.RenameOperationRefactoring;
@@ -122,7 +123,7 @@ public class UMLClassDiff extends UMLClassBaseDiff {
                 int index = nextClass.getOperations().indexOf(operation);
                 int lastIndex = nextClass.getOperations().lastIndexOf(operation);
                 int finalIndex = index;
-                if (index != lastIndex) {
+                if (index != lastIndex && operation.getReturnParameter() != null) {
                     double d1 = operation.getReturnParameter().getType().normalizedNameDistance(
                         nextClass.getOperations().get(index).getReturnParameter().getType());
                     double d2 = operation.getReturnParameter().getType().normalizedNameDistance(
@@ -135,7 +136,7 @@ public class UMLClassDiff extends UMLClassBaseDiff {
                     new UMLOperationBodyMapper(operation, nextClass.getOperations().get(finalIndex), this);
                 UMLOperationDiff operationSignatureDiff =
                     new UMLOperationDiff(operation, nextClass.getOperations().get(finalIndex),
-                        operationBodyMapper.getMappings());
+                                         operationBodyMapper.getMappings());
                 refactorings.addAll(operationSignatureDiff.getRefactorings());
                 this.addOperationBodyMapper(operationBodyMapper);
             }

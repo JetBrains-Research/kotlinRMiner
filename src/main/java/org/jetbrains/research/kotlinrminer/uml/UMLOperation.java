@@ -425,6 +425,10 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         return false;
     }
 
+    public boolean overridesObject() {
+        return /*isEquals() ||*/ isHashCode() || isToString() || isClone() || isCompareTo();
+    }
+
     public boolean equalsIgnoringVisibility(UMLOperation operation) {
         boolean thisEmptyBody = this.getBody() == null || this.hasEmptyBody();
         boolean otherEmptyBody = operation.getBody() == null || operation.hasEmptyBody();
@@ -670,14 +674,10 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         return locationInfo.codeRange();
     }
 
-/*   TODO: public boolean overridesObject() {
-        return isHashCode() || isToString() || isClone() || isCompareTo();
-    }*/
-
     private boolean isHashCode() {
         List<UMLType> parameterTypeList = getParameterTypeList();
         return getName().equals("hashCode") && getReturnParameter().getType().getClassType().equals(
-            "int") && parameterTypeList.size() == 0;
+            "Int") && parameterTypeList.size() == 0;
     }
 
     private boolean isToString() {
@@ -695,7 +695,7 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
     private boolean isCompareTo() {
         List<UMLType> parameterTypeList = getParameterTypeList();
         return getName().equals("compareTo") && getReturnParameter().getType().getClassType().equals(
-            "int") && parameterTypeList.size() == 1;
+            "Int") && parameterTypeList.size() == 1;
     }
 
     public boolean compatibleSignature(UMLOperation removedOperation) {
