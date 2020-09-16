@@ -289,5 +289,20 @@
                 "description": "Rename Method public processClassOrObject(files Set<KtFile>, binding BindingContext, body (KtClassOrObject,KClass<*>) -> Unit) renamed to public processClasses(files Set<KtFile>, binding BindingContext, body (KtClass,KClass<*>) -> Unit) in class io.kotless.parser.processor.SubTypesProcessor"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "f1d820596e81d3dff00d5f9d956f87f74a2d96c6",
+        "refactorings": [
+            {
+                "description": "Add Parameter point : Point in method public containsPoint(shape Shape, point Point) from class shapes.Circle"
+            },
+            {
+                "description": "Extract Interface shapes.Shape from classes [shapes.Circle, shapes.Rectangle]"
+            },
+            {
+                "description": "Add Parameter shape : Shape in method public containsPoint(shape Shape, point Point) from class shapes.Circle"
+            }
+        ]
     }
 ]

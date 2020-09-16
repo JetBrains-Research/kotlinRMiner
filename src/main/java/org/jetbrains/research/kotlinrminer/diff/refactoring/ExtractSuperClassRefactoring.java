@@ -21,7 +21,7 @@ public class ExtractSuperClassRefactoring implements Refactoring {
     }
 
     public String toString() {
-        return getName() + "\t" +
+        return getName() + " " +
             extractedClass +
             " from classes " +
             subclassSet;

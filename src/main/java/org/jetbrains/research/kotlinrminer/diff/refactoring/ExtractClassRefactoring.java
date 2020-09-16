@@ -34,7 +34,7 @@ public class ExtractClassRefactoring implements Refactoring {
     }
 
     public String toString() {
-        return getName() + "\t" +
+        return getName() + " " +
             extractedClass +
             " from class " +
             classDiff.getOriginalClass();
