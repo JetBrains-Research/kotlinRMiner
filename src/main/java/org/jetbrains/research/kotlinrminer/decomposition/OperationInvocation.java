@@ -7,12 +7,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.jetbrains.kotlin.psi.KtClassInitializer;
-import org.jetbrains.kotlin.psi.KtExpression;
-import org.jetbrains.kotlin.psi.KtFile;
-import org.jetbrains.kotlin.psi.KtNamedFunction;
-import org.jetbrains.kotlin.psi.KtParameter;
-import org.jetbrains.kotlin.psi.KtPrimaryConstructor;
+
+import org.jetbrains.kotlin.psi.*;
 import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 import org.jetbrains.research.kotlinrminer.diff.UMLModelDiff;
@@ -28,19 +24,19 @@ public class OperationInvocation extends AbstractCall {
     private List<String> subExpressions = new ArrayList<>();
     private volatile int hashCode = 0;
 
-    public OperationInvocation(KtFile ktFile, String filePath, KtNamedFunction invocation) {
+    public OperationInvocation(KtFile ktFile, String filePath, KtCallExpression invocation) {
         this.locationInfo = new LocationInfo(ktFile, filePath, invocation,
                                              LocationInfo.CodeElementType.METHOD_INVOCATION);
-        this.methodName = invocation.getName();
-        this.typeArguments = invocation.getValueParameters().size();
+        this.methodName = invocation.getCalleeExpression().getText();
+        this.typeArguments = invocation.getValueArguments().size();
         this.arguments = new ArrayList<>();
-        List<KtParameter> args = invocation.getValueParameters();
-        for (KtParameter argument : args) {
+        List<KtValueArgument> args = invocation.getValueArguments();
+        for (KtValueArgument argument : args) {
             this.arguments.add(argument.getName());
         }
-        if (invocation.getBodyExpression() != null) {
-            this.expression = invocation.getBodyExpression().toString();
-            processExpression(invocation.getBodyExpression(), this.subExpressions);
+        if (invocation.getCalleeExpression() != null) {
+            this.expression = invocation.getCalleeExpression().toString();
+            processExpression(invocation.getCalleeExpression(), this.subExpressions);
         }
     }
 

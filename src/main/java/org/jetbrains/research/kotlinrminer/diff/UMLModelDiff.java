@@ -86,26 +86,6 @@ public class UMLModelDiff {
                     typeRenamePatternMap.put(pattern, 1);
                 }
             }
-/*            else if(ref instanceof ChangeAttributeTypeRefactoring) {
-                ChangeAttributeTypeRefactoring refactoring = (ChangeAttributeTypeRefactoring)ref;
-                RenamePattern pattern = new RenamePattern(refactoring.getOriginalAttribute().getType().toString(), refactoring.getChangedTypeAttribute().getType().toString());
-                if(typeRenamePatternMap.containsKey(pattern)) {
-                    typeRenamePatternMap.put(pattern, typeRenamePatternMap.get(pattern) + 1);
-                }
-                else {
-                    typeRenamePatternMap.put(pattern, 1);
-                }
-            }
-            else if(ref instanceof ChangeReturnTypeRefactoring) {
-                ChangeReturnTypeRefactoring refactoring = (ChangeReturnTypeRefactoring)ref;
-                RenamePattern pattern = new RenamePattern(refactoring.getOriginalType().toString(), refactoring.getChangedType().toString());
-                if(typeRenamePatternMap.containsKey(pattern)) {
-                    typeRenamePatternMap.put(pattern, typeRenamePatternMap.get(pattern) + 1);
-                }
-                else {
-                    typeRenamePatternMap.put(pattern, 1);
-                }
-            }*/
         }
         return typeRenamePatternMap;
     }
@@ -527,8 +507,10 @@ public class UMLModelDiff {
        /*
         checkForExtractedAndMovedOperations(getOperationBodyMappersInCommonClasses(), getAddedAndExtractedOperationsInCommonClasses());
         checkForExtractedAndMovedOperations(getOperationBodyMappersInMovedAndRenamedClasses(), getAddedOperationsInMovedAndRenamedClasses());
-        checkForMovedAndInlinedOperations(getOperationBodyMappersInCommonClasses(), getRemovedAndInlinedOperationsInCommonClasses());
-*/
+        */
+        checkForMovedAndInlinedOperations(getOperationBodyMappersInCommonClasses(),
+                                          getRemovedAndInlinedOperationsInCommonClasses());
+
         refactorings.addAll(this.refactorings);
         for (UMLClassDiff classDiff : commonClassDiffList) {
             inferMethodSignatureRelatedRefactorings(classDiff, refactorings);
@@ -609,6 +591,125 @@ public class UMLModelDiff {
         if (removedOperations.size() <= MAXIMUM_NUMBER_OF_COMPARED_METHODS || addedOperations.size() <= MAXIMUM_NUMBER_OF_COMPARED_METHODS) {
             checkForOperationMoves(addedOperations, removedOperations);
         }
+    }
+
+
+    private void checkForMovedAndInlinedOperations(List<UMLOperationBodyMapper> mappers,
+                                                   List<UMLOperation> removedOperations) throws
+        RefactoringMinerTimedOutException {
+        for (UMLOperation removedOperation : removedOperations) {
+            for (UMLOperationBodyMapper mapper : mappers) {
+                if (!mapper.getNonMappedLeavesT2().isEmpty() || !mapper.getNonMappedInnerNodesT2().isEmpty() ||
+                    !mapper.getReplacementsInvolvingMethodInvocation().isEmpty()) {
+                    List<OperationInvocation> operationInvocations =
+                        mapper.getOperation1().getAllOperationInvocations();
+                    List<OperationInvocation> removedOperationInvocations = new ArrayList<>();
+                    for (OperationInvocation invocation : operationInvocations) {
+                        if (invocation.matchesOperation(removedOperation, mapper.getOperation1().variableTypeMap(),
+                                                        this)) {
+                            removedOperationInvocations.add(invocation);
+                        }
+                    }
+                    if (removedOperationInvocations.size() > 0 && !invocationMatchesWithAddedOperation(
+                        removedOperationInvocations.get(0), mapper.getOperation1().variableTypeMap(),
+                        mapper.getOperation2().getAllOperationInvocations())) {
+                        OperationInvocation removedOperationInvocation = removedOperationInvocations.get(0);
+                        List<String> arguments = removedOperationInvocation.getArguments();
+                        List<String> parameters = removedOperation.getParameterNameList();
+                        Map<String, String> parameterToArgumentMap = new LinkedHashMap<>();
+                        //special handling for methods with varargs parameter for which no argument is passed in the matching invocation
+                        int size = Math.min(arguments.size(), parameters.size());
+                        for (int i = 0; i < size; i++) {
+                            parameterToArgumentMap.put(parameters.get(i), arguments.get(i));
+                        }
+                        UMLOperationBodyMapper operationBodyMapper =
+                            new UMLOperationBodyMapper(removedOperation, mapper, parameterToArgumentMap,
+                                                       getUMLClassDiff(removedOperation.getClassName()));
+                        if (moveAndInlineMatchCondition(operationBodyMapper, mapper)) {
+                            InlineOperationRefactoring inlineOperationRefactoring =
+                                new InlineOperationRefactoring(operationBodyMapper, mapper.getOperation1(),
+                                                               removedOperationInvocations);
+                            refactorings.add(inlineOperationRefactoring);
+                            deleteRemovedOperation(removedOperation);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean invocationMatchesWithAddedOperation(OperationInvocation removedOperationInvocation,
+                                                        Map<String, UMLType> variableTypeMap,
+                                                        List<OperationInvocation> operationInvocationsInNewMethod) {
+        if (operationInvocationsInNewMethod.contains(removedOperationInvocation)) {
+            for (UMLOperation addedOperation : getAddedOperationsInCommonClasses()) {
+                if (removedOperationInvocation.matchesOperation(addedOperation, variableTypeMap, this)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private List<UMLOperationBodyMapper> getOperationBodyMappersInCommonClasses() {
+        List<UMLOperationBodyMapper> mappers = new ArrayList<>();
+        for (UMLClassDiff classDiff : commonClassDiffList) {
+            mappers.addAll(classDiff.getOperationBodyMapperList());
+        }
+        return mappers;
+    }
+
+    private boolean moveAndInlineMatchCondition(UMLOperationBodyMapper operationBodyMapper,
+                                                UMLOperationBodyMapper parentMapper) {
+        List<AbstractCodeMapping> mappingList = new ArrayList<>(operationBodyMapper.getMappings());
+        if ((operationBodyMapper.getOperation1().isGetter() || operationBodyMapper.getOperation1().isDelegate() != null) && mappingList.size() == 1) {
+            List<AbstractCodeMapping> parentMappingList =
+                new ArrayList<>(parentMapper.getMappings());
+            for (AbstractCodeMapping mapping : parentMappingList) {
+                if (mapping.getFragment2().equals(mappingList.get(0).getFragment2())) {
+                    return false;
+                }
+                if (mapping instanceof CompositeStatementObjectMapping) {
+                    CompositeStatementObjectMapping compositeMapping = (CompositeStatementObjectMapping) mapping;
+                    CompositeStatementObject fragment2 = (CompositeStatementObject) compositeMapping.getFragment2();
+                    for (AbstractExpression expression : fragment2.getExpressions()) {
+                        if (expression.equals(mappingList.get(0).getFragment2())) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        int delegateStatements = 0;
+        for (StatementObject statement : operationBodyMapper.getNonMappedLeavesT1()) {
+            OperationInvocation invocation = statement.invocationCoveringEntireFragment();
+            if (invocation != null && invocation.matchesOperation(operationBodyMapper.getOperation1())) {
+                delegateStatements++;
+            }
+        }
+        int mappings = operationBodyMapper.mappingsWithoutBlocks();
+        int nonMappedElementsT1 = operationBodyMapper.nonMappedElementsT1() - delegateStatements;
+        List<AbstractCodeMapping> exactMatchList = operationBodyMapper.getExactMatches();
+        int exactMatches = exactMatchList.size();
+        return mappings > 0 && (mappings > nonMappedElementsT1 ||
+            (exactMatches == 1 && !exactMatchList.get(
+                0).getFragment1().throwsNewException() && nonMappedElementsT1 - exactMatches < 10) ||
+            (exactMatches > 1 && nonMappedElementsT1 - exactMatches < 20));
+    }
+
+
+    private List<UMLOperation> getRemovedAndInlinedOperationsInCommonClasses() {
+        List<UMLOperation> removedOperations = new ArrayList<>();
+        for (UMLClassDiff classDiff : commonClassDiffList) {
+            removedOperations.addAll(classDiff.getRemovedOperations());
+            for (Refactoring ref : classDiff.getRefactorings()) {
+                if (ref instanceof InlineOperationRefactoring) {
+                    InlineOperationRefactoring extractRef = (InlineOperationRefactoring) ref;
+                    removedOperations.add(extractRef.getInlinedOperation());
+                }
+            }
+        }
+        return removedOperations;
     }
 
     private void checkForOperationMovesBetweenCommonClasses() throws RefactoringMinerTimedOutException {

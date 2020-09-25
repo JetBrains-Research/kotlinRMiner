@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
+import org.jetbrains.research.kotlinrminer.decomposition.replacement.MethodInvocationReplacement;
+import org.jetbrains.research.kotlinrminer.decomposition.replacement.ObjectCreationReplacement;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.Replacement;
 import org.jetbrains.research.kotlinrminer.diff.UMLClassBaseDiff;
+import org.jetbrains.research.kotlinrminer.diff.refactoring.ExtractVariableRefactoring;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 
 public abstract class AbstractCodeMapping {
@@ -108,7 +111,27 @@ public abstract class AbstractCodeMapping {
         }
         return types;
     }
-
+    public void temporaryVariableAssignment(Set<Refactoring> refactorings) {
+        if(this instanceof LeafMapping && getFragment1() instanceof AbstractExpression
+            && getFragment2() instanceof StatementObject) {
+            StatementObject statement = (StatementObject) getFragment2();
+            List<VariableDeclaration> variableDeclarations = statement.getVariableDeclarations();
+            boolean validReplacements = true;
+            for(Replacement replacement : getReplacements()) {
+                if(replacement instanceof MethodInvocationReplacement || replacement instanceof ObjectCreationReplacement) {
+                    validReplacements = false;
+                    break;
+                }
+            }
+            if(variableDeclarations.size() == 1 && validReplacements) {
+                VariableDeclaration variableDeclaration = variableDeclarations.get(0);
+                ExtractVariableRefactoring
+                    ref = new ExtractVariableRefactoring(variableDeclaration, operation1, operation2);
+               // processExtractVariableRefactoring(ref, refactorings);
+                identicalWithExtractedVariable = true;
+            }
+        }
+    }
     public void temporaryVariableAssignment(AbstractCodeFragment statement,
                                             List<? extends AbstractCodeFragment> nonMappedLeavesT2,
                                             Set<Refactoring> refactorings,

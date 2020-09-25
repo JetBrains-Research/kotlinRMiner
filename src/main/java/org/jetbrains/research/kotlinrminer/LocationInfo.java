@@ -166,6 +166,7 @@ public class LocationInfo {
     }
 
     public enum CodeElementType {
+        BINARY_EXPRESSION,
         WHEN_EXPRESSION,
         COMPANION_OBJECT,
         OBJECT,

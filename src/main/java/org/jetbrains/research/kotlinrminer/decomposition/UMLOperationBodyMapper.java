@@ -45,7 +45,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
     public static final String SPLIT_CONCAT_STRING_PATTERN = "(\\s)*(\\+)(\\s)*";
     private static final Pattern DOUBLE_QUOTES = Pattern.compile("\"([^\"]*)\"|(\\S+)");
     private final UMLClassBaseDiff classDiff;
-    private final UMLFileDiff fileDiff;
+    private UMLFileDiff fileDiff;
     private UMLModelDiff modelDiff;
     private UMLOperation callSiteOperation;
     private final Map<AbstractCodeFragment, UMLOperation> codeFragmentOperationMap1 = new LinkedHashMap<>();
@@ -283,6 +283,332 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         }
     }
 
+    public UMLOperationBodyMapper(UMLOperationBodyMapper operationBodyMapper,
+                                  UMLOperation addedOperation,
+                                  Map<String, String> parameterToArgumentMap1,
+                                  Map<String, String> parameterToArgumentMap2,
+                                  UMLClassBaseDiff classDiff) throws RefactoringMinerTimedOutException {
+        this.parentMapper = operationBodyMapper;
+        this.operation1 = operationBodyMapper.operation1;
+        this.callSiteOperation = operationBodyMapper.operation2;
+        this.operation2 = addedOperation;
+        this.classDiff = classDiff;
+        this.mappings = new LinkedHashSet<>();
+        this.nonMappedLeavesT1 = new ArrayList<>();
+        this.nonMappedLeavesT2 = new ArrayList<>();
+        this.nonMappedInnerNodesT1 = new ArrayList<>();
+        this.nonMappedInnerNodesT2 = new ArrayList<>();
+
+        OperationBody addedOperationBody = addedOperation.getBody();
+        if (addedOperationBody != null) {
+            CompositeStatementObject composite2 = addedOperationBody.getCompositeStatement();
+            List<StatementObject> leaves1 = operationBodyMapper.getNonMappedLeavesT1();
+            List<CompositeStatementObject> innerNodes1 = operationBodyMapper.getNonMappedInnerNodesT1();
+            //adding leaves that were mapped with replacements
+            Set<StatementObject> addedLeaves1 = new LinkedHashSet<>();
+            Set<CompositeStatementObject> addedInnerNodes1 = new LinkedHashSet<>();
+            for (StatementObject nonMappedLeaf1 : new ArrayList<>(operationBodyMapper.getNonMappedLeavesT1())) {
+                // expandAnonymousAndLambdas(nonMappedLeaf1, leaves1, innerNodes1, addedLeaves1, addedInnerNodes1,operationBodyMapper);
+            }
+            for (AbstractCodeMapping mapping : operationBodyMapper.getMappings()) {
+                if (!returnWithVariableReplacement(mapping) && !nullLiteralReplacements(
+                    mapping) && (!mapping.getReplacements().isEmpty() || !mapping.getFragment1().equalFragment(
+                    mapping.getFragment2()))) {
+                    AbstractCodeFragment fragment = mapping.getFragment1();
+                    // expandAnonymousAndLambdas(fragment, leaves1, innerNodes1, addedLeaves1, addedInnerNodes1,operationBodyMapper);
+                }
+            }
+            List<StatementObject> leaves2 = composite2.getLeaves();
+            List<CompositeStatementObject> innerNodes2 = composite2.getInnerNodes();
+            Set<StatementObject> addedLeaves2 = new LinkedHashSet<>();
+            Set<CompositeStatementObject> addedInnerNodes2 = new LinkedHashSet<>();
+            for (StatementObject statement : leaves2) {
+/*                if(!statement.getAnonymousClassDeclarations().isEmpty()) {
+                    List<UMLAnonymousClass> anonymousList = operation2.getAnonymousClassList();
+                    for(UMLAnonymousClass anonymous : anonymousList) {
+                        if(anonymous.isDirectlyNested() && statement.getLocationInfo().subsumes(anonymous.getLocationInfo())) {
+                            for(UMLOperation anonymousOperation : anonymous.getOperations()) {
+                                List<StatementObject> anonymousClassLeaves = anonymousOperation.getBody().getCompositeStatement().getLeaves();
+                                for(StatementObject anonymousLeaf : anonymousClassLeaves) {
+                                    if(!leaves2.contains(anonymousLeaf)) {
+                                        addedLeaves2.add(anonymousLeaf);
+                                        codeFragmentOperationMap2.put(anonymousLeaf, anonymousOperation);
+                                    }
+                                }
+                                List<CompositeStatementObject> anonymousClassInnerNodes = anonymousOperation.getBody().getCompositeStatement().getInnerNodes();
+                                for(CompositeStatementObject anonymousInnerNode : anonymousClassInnerNodes) {
+                                    if(!innerNodes2.contains(anonymousInnerNode)) {
+                                        addedInnerNodes2.add(anonymousInnerNode);
+                                        codeFragmentOperationMap2.put(anonymousInnerNode, anonymousOperation);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }*/
+                if (!statement.getLambdas().isEmpty()) {
+                    for (LambdaExpressionObject lambda : statement.getLambdas()) {
+                        if (lambda.getBody() != null) {
+                            List<StatementObject> lambdaLeaves = lambda.getBody().getCompositeStatement().getLeaves();
+                            for (StatementObject lambdaLeaf : lambdaLeaves) {
+                                if (!leaves2.contains(lambdaLeaf)) {
+                                    addedLeaves2.add(lambdaLeaf);
+                                    codeFragmentOperationMap2.put(lambdaLeaf, operation2);
+                                }
+                            }
+                            List<CompositeStatementObject> lambdaInnerNodes =
+                                lambda.getBody().getCompositeStatement().getInnerNodes();
+                            for (CompositeStatementObject lambdaInnerNode : lambdaInnerNodes) {
+                                if (!innerNodes2.contains(lambdaInnerNode)) {
+                                    addedInnerNodes2.add(lambdaInnerNode);
+                                    codeFragmentOperationMap2.put(lambdaInnerNode, operation2);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            leaves2.addAll(addedLeaves2);
+            resetNodes(leaves1);
+            //replace parameters with arguments in leaves1
+            if (!parameterToArgumentMap1.isEmpty()) {
+                for (StatementObject leave1 : leaves1) {
+                    leave1.replaceParametersWithArguments(parameterToArgumentMap1);
+                }
+            }
+            resetNodes(leaves2);
+            //replace parameters with arguments in leaves2
+            if (!parameterToArgumentMap2.isEmpty()) {
+                for (StatementObject leave2 : leaves2) {
+                    leave2.replaceParametersWithArguments(parameterToArgumentMap2);
+                }
+            }
+            //compare leaves from T1 with leaves from T2
+            processLeaves(leaves1, leaves2, parameterToArgumentMap2);
+
+            //adding innerNodes that were mapped with replacements
+            for (AbstractCodeMapping mapping : operationBodyMapper.getMappings()) {
+                if (!mapping.getReplacements().isEmpty() || !mapping.getFragment1().equalFragment(
+                    mapping.getFragment2())) {
+                    AbstractCodeFragment fragment = mapping.getFragment1();
+                    if (fragment instanceof CompositeStatementObject) {
+                        CompositeStatementObject statement = (CompositeStatementObject) fragment;
+                        if (!innerNodes1.contains(statement)) {
+                            innerNodes1.add(statement);
+                            addedInnerNodes1.add(statement);
+                        }
+                    }
+                }
+            }
+            innerNodes2.remove(composite2);
+            innerNodes2.addAll(addedInnerNodes2);
+            resetNodes(innerNodes1);
+            //replace parameters with arguments in innerNodes1
+            if (!parameterToArgumentMap1.isEmpty()) {
+                for (CompositeStatementObject innerNode1 : innerNodes1) {
+                    innerNode1.replaceParametersWithArguments(parameterToArgumentMap1);
+                }
+            }
+            resetNodes(innerNodes2);
+            //replace parameters with arguments in innerNode2
+            if (!parameterToArgumentMap2.isEmpty()) {
+                for (CompositeStatementObject innerNode2 : innerNodes2) {
+                    innerNode2.replaceParametersWithArguments(parameterToArgumentMap2);
+                }
+            }
+            //compare inner nodes from T1 with inner nodes from T2
+            processInnerNodes(innerNodes1, innerNodes2, parameterToArgumentMap2);
+
+            //match expressions in inner nodes from T1 with leaves from T2
+            List<AbstractExpression> expressionsT1 = new ArrayList<>();
+            for (CompositeStatementObject composite : operationBodyMapper.getNonMappedInnerNodesT1()) {
+                for (AbstractExpression expression : composite.getExpressions()) {
+                    expression.replaceParametersWithArguments(parameterToArgumentMap1);
+                    expressionsT1.add(expression);
+                }
+            }
+            int numberOfMappings = mappings.size();
+            processLeaves(expressionsT1, leaves2, parameterToArgumentMap2);
+            List<AbstractCodeMapping> mappings = new ArrayList<>(this.mappings);
+            for (int i = numberOfMappings; i < mappings.size(); i++) {
+                mappings.get(i).temporaryVariableAssignment(refactorings);
+            }
+            // TODO remove non-mapped inner nodes from T1 corresponding to mapped expressions
+
+            //remove the leaves that were mapped with replacement, if they are not mapped again for a second time
+            leaves1.removeAll(addedLeaves1);
+            leaves2.removeAll(addedLeaves2);
+            //remove the innerNodes that were mapped with replacement, if they are not mapped again for a second time
+            innerNodes1.removeAll(addedInnerNodes1);
+            innerNodes2.removeAll(addedInnerNodes2);
+            nonMappedLeavesT1.addAll(leaves1);
+            nonMappedLeavesT2.addAll(leaves2);
+            nonMappedInnerNodesT1.addAll(innerNodes1);
+            nonMappedInnerNodesT2.addAll(innerNodes2);
+
+            for (StatementObject statement : getNonMappedLeavesT2()) {
+                temporaryVariableAssignment(statement, nonMappedLeavesT2);
+            }
+            for (StatementObject statement : getNonMappedLeavesT1()) {
+                inlinedVariableAssignment(statement, nonMappedLeavesT2);
+            }
+        }
+    }
+
+    public UMLOperationBodyMapper(UMLOperation removedOperation, UMLOperationBodyMapper operationBodyMapper,
+                                  Map<String, String> parameterToArgumentMap, UMLClassBaseDiff classDiff) throws
+        RefactoringMinerTimedOutException {
+        this.parentMapper = operationBodyMapper;
+        this.operation1 = removedOperation;
+        this.operation2 = operationBodyMapper.operation2;
+        this.callSiteOperation = operationBodyMapper.operation1;
+        this.classDiff = classDiff;
+        this.fileDiff = null;
+        this.mappings = new LinkedHashSet<>();
+        this.nonMappedLeavesT1 = new ArrayList<>();
+        this.nonMappedLeavesT2 = new ArrayList<>();
+        this.nonMappedInnerNodesT1 = new ArrayList<>();
+        this.nonMappedInnerNodesT2 = new ArrayList<>();
+
+        OperationBody removedOperationBody = removedOperation.getBody();
+        if (removedOperationBody != null) {
+            CompositeStatementObject composite1 = removedOperationBody.getCompositeStatement();
+            List<StatementObject> leaves1 = composite1.getLeaves();
+            List<StatementObject> leaves2 = operationBodyMapper.getNonMappedLeavesT2();
+            //adding leaves that were mapped with replacements or are inexact matches
+            Set<StatementObject> addedLeaves2 = new LinkedHashSet<>();
+            for (AbstractCodeMapping mapping : operationBodyMapper.getMappings()) {
+                if (!returnWithVariableReplacement(mapping) && !nullLiteralReplacements(
+                    mapping) && (!mapping.getReplacements().isEmpty() || !mapping.getFragment1().equalFragment(
+                    mapping.getFragment2()))) {
+                    AbstractCodeFragment fragment = mapping.getFragment2();
+                    if (fragment instanceof StatementObject) {
+                        StatementObject statement = (StatementObject) fragment;
+                        if (!leaves2.contains(statement)) {
+                            leaves2.add(statement);
+                            addedLeaves2.add(statement);
+                        }
+                    }
+                }
+            }
+            resetNodes(leaves1);
+            //replace parameters with arguments in leaves1
+            if (!parameterToArgumentMap.isEmpty()) {
+                //check for temporary variables that the argument might be assigned to
+                for (StatementObject leave2 : leaves2) {
+                    List<VariableDeclaration> variableDeclarations = leave2.getVariableDeclarations();
+                    for (VariableDeclaration variableDeclaration : variableDeclarations) {
+                        for (String parameter : parameterToArgumentMap.keySet()) {
+                            String argument = parameterToArgumentMap.get(parameter);
+                            if (variableDeclaration.getInitializer() != null && argument.equals(
+                                variableDeclaration.getInitializer().toString())) {
+                                parameterToArgumentMap.put(parameter, variableDeclaration.getVariableName());
+                            }
+                        }
+                    }
+                }
+                for (StatementObject leave1 : leaves1) {
+                    leave1.replaceParametersWithArguments(parameterToArgumentMap);
+                }
+            }
+            //compare leaves from T1 with leaves from T2
+            processLeaves(leaves1, leaves2, parameterToArgumentMap);
+
+            List<CompositeStatementObject> innerNodes1 = composite1.getInnerNodes();
+            innerNodes1.remove(composite1);
+            List<CompositeStatementObject> innerNodes2 = operationBodyMapper.getNonMappedInnerNodesT2();
+            //adding innerNodes that were mapped with replacements or are inexact matches
+            Set<CompositeStatementObject> addedInnerNodes2 = new LinkedHashSet<>();
+            for (AbstractCodeMapping mapping : operationBodyMapper.getMappings()) {
+                if (!mapping.getReplacements().isEmpty() || !mapping.getFragment1().equalFragment(
+                    mapping.getFragment2())) {
+                    AbstractCodeFragment fragment = mapping.getFragment2();
+                    if (fragment instanceof CompositeStatementObject) {
+                        CompositeStatementObject statement = (CompositeStatementObject) fragment;
+                        if (!innerNodes2.contains(statement)) {
+                            innerNodes2.add(statement);
+                            addedInnerNodes2.add(statement);
+                        }
+                    }
+                }
+            }
+            resetNodes(innerNodes1);
+            //replace parameters with arguments in innerNodes1
+            if (!parameterToArgumentMap.isEmpty()) {
+                for (CompositeStatementObject innerNode1 : innerNodes1) {
+                    innerNode1.replaceParametersWithArguments(parameterToArgumentMap);
+                }
+            }
+            //compare inner nodes from T1 with inner nodes from T2
+            processInnerNodes(innerNodes1, innerNodes2, parameterToArgumentMap);
+
+            //match expressions in inner nodes from T2 with leaves from T1
+            List<AbstractExpression> expressionsT2 = new ArrayList<>();
+            for (CompositeStatementObject composite : operationBodyMapper.getNonMappedInnerNodesT2()) {
+                expressionsT2.addAll(composite.getExpressions());
+            }
+            processLeaves(leaves1, expressionsT2, parameterToArgumentMap);
+
+            //remove the leaves that were mapped with replacement, if they are not mapped again for a second time
+            leaves2.removeAll(addedLeaves2);
+            //remove the innerNodes that were mapped with replacement, if they are not mapped again for a second time
+            innerNodes2.removeAll(addedInnerNodes2);
+            nonMappedLeavesT1.addAll(leaves1);
+            nonMappedLeavesT2.addAll(leaves2);
+            nonMappedInnerNodesT1.addAll(innerNodes1);
+            nonMappedInnerNodesT2.addAll(innerNodes2);
+
+            for (StatementObject statement : getNonMappedLeavesT2()) {
+                temporaryVariableAssignment(statement, nonMappedLeavesT2);
+            }
+            for (StatementObject statement : getNonMappedLeavesT1()) {
+                inlinedVariableAssignment(statement, nonMappedLeavesT2);
+            }
+        }
+    }
+
+    private boolean returnWithVariableReplacement(AbstractCodeMapping mapping) {
+        if (mapping.getReplacements().size() == 1) {
+            Replacement r = mapping.getReplacements().iterator().next();
+            if (r.getType().equals(ReplacementType.VARIABLE_NAME)) {
+                String fragment1 = mapping.getFragment1().getString();
+                String fragment2 = mapping.getFragment2().getString();
+                if (fragment1.equals("return " + r.getBefore() + ";\n") && fragment2.equals(
+                    "return " + r.getAfter() + "\n")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean nullLiteralReplacements(AbstractCodeMapping mapping) {
+        int numberOfReplacements = mapping.getReplacements().size();
+        int nullLiteralReplacements = 0;
+        int methodInvocationReplacementsToIgnore = 0;
+        int variableNameReplacementsToIgnore = 0;
+        for (Replacement replacement : mapping.getReplacements()) {
+            if (replacement.getType().equals(ReplacementType.NULL_LITERAL_REPLACED_WITH_CONDITIONAL_EXPRESSION) ||
+                replacement.getType().equals(ReplacementType.VARIABLE_REPLACED_WITH_NULL_LITERAL) ||
+                (replacement.getType().equals(
+                    ReplacementType.ARGUMENT_REPLACED_WITH_VARIABLE) && (replacement.getBefore().equals(
+                    "null") || replacement.getAfter().equals("null")))) {
+                nullLiteralReplacements++;
+            } else if (replacement instanceof MethodInvocationReplacement) {
+                MethodInvocationReplacement invocationReplacement = (MethodInvocationReplacement) replacement;
+                OperationInvocation invokedOperationBefore = invocationReplacement.getInvokedOperationBefore();
+                OperationInvocation invokedOperationAfter = invocationReplacement.getInvokedOperationAfter();
+                if (invokedOperationBefore.getName().equals(invokedOperationAfter.getName()) &&
+                    invokedOperationBefore.getArguments().size() == invokedOperationAfter.getArguments().size()) {
+                    methodInvocationReplacementsToIgnore++;
+                }
+            } else if (replacement.getType().equals(ReplacementType.VARIABLE_NAME)) {
+                variableNameReplacementsToIgnore++;
+            }
+        }
+        return nullLiteralReplacements > 0 && numberOfReplacements == nullLiteralReplacements + methodInvocationReplacementsToIgnore + variableNameReplacementsToIgnore;
+    }
+
     private void resetNodes(List<? extends AbstractCodeFragment> nodes) {
         for (AbstractCodeFragment node : nodes) {
             node.resetArgumentization();
@@ -302,7 +628,8 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
                 leaves2.forEach(leaf2 -> {
                     String argumentizedString1 = preprocessInput1(leaf1, leaf2);
                     String argumentizedString2 = preprocessInput2(leaf1, leaf2);
-                    if ((leaf1.getString().equals(leaf2.getString()) || argumentizedString1.equals(argumentizedString2)) &&
+                    if ((leaf1.getString().equals(leaf2.getString()) || argumentizedString1.equals(
+                        argumentizedString2)) &&
                         leaf1.getDepth() == leaf2.getDepth()) {
                         LeafMapping mapping = createLeafMapping(leaf1, leaf2, parameterToArgumentMap);
                         mappingSet.add(mapping);
@@ -324,7 +651,8 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
                 leaves2.forEach(leaf2 -> {
                     String argumentizedString1 = preprocessInput1(leaf1, leaf2);
                     String argumentizedString2 = preprocessInput2(leaf1, leaf2);
-                    if ((leaf1.getString().equals(leaf2.getString()) || argumentizedString1.equals(argumentizedString2))) {
+                    if ((leaf1.getString().equals(leaf2.getString()) || argumentizedString1.equals(
+                        argumentizedString2))) {
                         LeafMapping mapping = createLeafMapping(leaf1, leaf2, parameterToArgumentMap);
                         mappingSet.add(mapping);
                     }
@@ -401,7 +729,8 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
                 leaves1.forEach(leaf1 -> {
                     String argumentizedString1 = preprocessInput1(leaf1, leaf2);
                     String argumentizedString2 = preprocessInput2(leaf1, leaf2);
-                    if ((leaf1.getString().equals(leaf2.getString()) || argumentizedString1.equals(argumentizedString2)) &&
+                    if ((leaf1.getString().equals(leaf2.getString()) || argumentizedString1.equals(
+                        argumentizedString2)) &&
                         leaf1.getDepth() == leaf2.getDepth()) {
                         LeafMapping mapping = createLeafMapping(leaf1, leaf2, parameterToArgumentMap);
                         mappingSet.add(mapping);
@@ -423,7 +752,8 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
                 leaves1.forEach(leaf1 -> {
                     String argumentizedString1 = preprocessInput1(leaf1, leaf2);
                     String argumentizedString2 = preprocessInput2(leaf1, leaf2);
-                    if ((leaf1.getString().equals(leaf2.getString()) || argumentizedString1.equals(argumentizedString2))) {
+                    if ((leaf1.getString().equals(leaf2.getString()) || argumentizedString1.equals(
+                        argumentizedString2))) {
                         LeafMapping mapping = createLeafMapping(leaf1, leaf2, parameterToArgumentMap);
                         mappingSet.add(mapping);
                     }
@@ -502,7 +832,8 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
                     if (!intersection.isEmpty()) {
                         for (Replacement commonReplacement : intersection) {
                             if (commonReplacement.getType().equals(Replacement.ReplacementType.VARIABLE_NAME) &&
-                                variableDeclarationMapping.getFragment1().getVariableDeclaration(commonReplacement.getBefore()) != null &&
+                                variableDeclarationMapping.getFragment1().getVariableDeclaration(
+                                    commonReplacement.getBefore()) != null &&
                                 variableDeclarationMapping.getFragment2().getVariableDeclaration(
                                     commonReplacement.getAfter()) != null) {
                                 mappingsToBeAdded.add(variableDeclarationMapping);
@@ -3689,6 +4020,38 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
             }
         }
         return editDistance / maxLength;
+    }
+
+    public List<AbstractCodeMapping> getExactMatches() {
+        List<AbstractCodeMapping> exactMatches = new ArrayList<>();
+        for (AbstractCodeMapping mapping : getMappings()) {
+            if (mapping.isExact() && mapping.getFragment1().countableStatement() && mapping.getFragment2().countableStatement() &&
+                !mapping.getFragment1().getString().equals("try"))
+                exactMatches.add(mapping);
+        }
+        return exactMatches;
+    }
+
+    public Set<Replacement> getReplacementsInvolvingMethodInvocation() {
+        Set<Replacement> replacements = new LinkedHashSet<>();
+        for (AbstractCodeMapping mapping : getMappings()) {
+            for (Replacement replacement : mapping.getReplacements()) {
+                if (replacement instanceof MethodInvocationReplacement ||
+                    replacement instanceof VariableReplacementWithMethodInvocation ||
+                    //  replacement instanceof ClassInstanceCreationWithMethodInvocationReplacement ||
+                    replacement.getType().equals(
+                        ReplacementType.ARGUMENT_REPLACED_WITH_RIGHT_HAND_SIDE_OF_ASSIGNMENT_EXPRESSION)) {
+                    replacements.add(replacement);
+                }
+            }
+        }
+        return replacements;
+    }
+
+    public void addChildMapper(UMLOperationBodyMapper mapper) {
+        this.childMappers.add(mapper);
+        //TODO add logic to remove the mappings from "this" mapper,
+        //which are less similar than the mappings of the mapper passed as parameter
     }
 
 }

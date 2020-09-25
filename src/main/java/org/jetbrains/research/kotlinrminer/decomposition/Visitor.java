@@ -2,7 +2,6 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.com.intellij.psi.stubs.IStubElementType;
-import org.jetbrains.kotlin.com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.kotlin.psi.*;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -15,7 +14,7 @@ public class Visitor extends KtVisitor {
     private final KtFile ktFile;
     private final List<String> variables = new ArrayList<>();
     private final List<String> types = new ArrayList<>();
-    private final Map<String, List<KtCallExpression>> methodInvocationMap = new LinkedHashMap<>();
+    private final Map<String, List<OperationInvocation>> methodInvocationMap = new LinkedHashMap<>();
     private final List<VariableDeclaration> variableDeclarations = new ArrayList<>();
     private final List<String> stringLiterals = new ArrayList<>();
     private final List<String> numberLiterals = new ArrayList<>();
@@ -67,17 +66,6 @@ public class Visitor extends KtVisitor {
     }
 
     @Override
-    public Object visitNamedFunction(@NotNull KtNamedFunction function, Object data) {
-        List<KtCallExpression> invocations = methodInvocationMap.getOrDefault(function.getName(), new ArrayList<>());
-        invocations.addAll(PsiTreeUtil.findChildrenOfType(function, KtCallExpression.class));
-        Collection<KtVariableDeclaration> variableDecl =
-                PsiTreeUtil.findChildrenOfType(function, KtVariableDeclaration.class);
-        variableDecl.forEach(v -> variableDeclarations.add(new VariableDeclaration(ktFile, filePath, v)));
-        variableDecl.forEach(v -> variables.add(v.getName()));
-        return super.visitNamedFunction(function, data);
-    }
-
-    @Override
     public Object visitProperty(@NotNull KtProperty property, Object data) {
         variableDeclarations.add(new VariableDeclaration(ktFile, filePath, property));
         return super.visitProperty(property, data);
@@ -102,7 +90,7 @@ public class Visitor extends KtVisitor {
     @Override
     public Object visitLambdaExpression(@NotNull KtLambdaExpression expression, Object data) {
         LambdaExpressionObject lambda =
-                new LambdaExpressionObject(expression.getContainingKtFile(), filePath, expression);
+            new LambdaExpressionObject(expression.getContainingKtFile(), filePath, expression);
         lambdas.add(lambda);
         if (current.getUserObject() != null) {
             AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
@@ -111,11 +99,18 @@ public class Visitor extends KtVisitor {
         return super.visitLambdaExpression(expression, data);
     }
 
-    //TODO: add processing of arguments
     @Override
     public Object visitCallExpression(@NotNull KtCallExpression expression, Object data) {
-        List<KtCallExpression> invocations = methodInvocationMap.getOrDefault(expression.getName(), new ArrayList<>());
-        invocations.addAll(PsiTreeUtil.findChildrenOfType(expression, KtCallExpression.class));
+        String methodInvocation = processMethodInvocation(expression);
+        OperationInvocation invocation =
+            new OperationInvocation(ktFile, filePath, expression);
+        if (methodInvocationMap.containsKey(methodInvocation)) {
+            methodInvocationMap.get(methodInvocation).add(invocation);
+        } else {
+            List<OperationInvocation> list = new ArrayList<>();
+            list.add(invocation);
+            methodInvocationMap.put(methodInvocation, list);
+        }
         return super.visitCallExpression(expression, data);
     }
 
@@ -252,6 +247,20 @@ public class Visitor extends KtVisitor {
         return super.visitThisExpression(expression, data);
     }
 
+    public static String processMethodInvocation(KtCallExpression node) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(node.getCalleeExpression().getText());
+        sb.append("(");
+        List<KtValueArgument> arguments = node.getValueArguments();
+        if (arguments.size() > 0) {
+            for (int i = 0; i < arguments.size() - 1; i++)
+                sb.append(arguments.get(i).toString()).append(", ");
+            sb.append(arguments.get(arguments.size() - 1).toString());
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
     public List<String> getVariables() {
         return variables;
     }
@@ -306,5 +315,9 @@ public class Visitor extends KtVisitor {
 
     public Map<String, List<ObjectCreation>> getCreationMap() {
         return creationMap;
+    }
+
+    public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
+        return this.methodInvocationMap;
     }
 }

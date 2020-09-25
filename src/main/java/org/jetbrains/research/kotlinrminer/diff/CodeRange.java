@@ -3,6 +3,9 @@ package org.jetbrains.research.kotlinrminer.diff;
 import com.fasterxml.jackson.core.io.JsonStringEncoder;
 import com.fasterxml.jackson.core.util.BufferRecyclers;
 import org.jetbrains.research.kotlinrminer.LocationInfo;
+import org.jetbrains.research.kotlinrminer.decomposition.AbstractCodeFragment;
+
+import java.util.Set;
 
 public class CodeRange {
     private final String filePath;
@@ -68,8 +71,8 @@ public class CodeRange {
 
     public boolean subsumes(CodeRange other) {
         return this.filePath.equals(other.filePath) &&
-                this.startLine <= other.startLine &&
-                this.endLine >= other.endLine;
+            this.startLine <= other.startLine &&
+            this.endLine >= other.endLine;
     }
 
     public String toString() {
@@ -99,7 +102,8 @@ public class CodeRange {
 
     private void encodeStringProperty(StringBuilder sb, String propertyName, String value, boolean last) {
         if (value != null)
-            sb.append("\t").append("\t").append("\"").append(propertyName).append("\"").append(": ").append("\"").append(value).append("\"");
+            sb.append("\t").append("\t").append("\"").append(propertyName).append("\"").append(": ").append(
+                "\"").append(value).append("\"");
         else
             sb.append("\t").append("\t").append("\"").append(propertyName).append("\"").append(": ").append(value);
         insertNewLine(sb, last);
@@ -115,6 +119,29 @@ public class CodeRange {
             sb.append("\n");
         else
             sb.append(",").append("\n");
+    }
+
+    public static CodeRange computeRange(Set<AbstractCodeFragment> codeFragments) {
+        String filePath = null;
+        int minStartLine = 0;
+        int maxEndLine = 0;
+        int startColumn = 0;
+        int endColumn = 0;
+
+        for (AbstractCodeFragment fragment : codeFragments) {
+            LocationInfo info = fragment.getLocationInfo();
+            filePath = info.getFilePath();
+            if (minStartLine == 0 || info.getStartLine() < minStartLine) {
+                minStartLine = info.getStartLine();
+                startColumn = info.getStartColumn();
+            }
+            if (info.getEndLine() > maxEndLine) {
+                maxEndLine = info.getEndLine();
+                endColumn = info.getEndColumn();
+            }
+        }
+        return new CodeRange(filePath, minStartLine, maxEndLine, startColumn, endColumn,
+                             LocationInfo.CodeElementType.LIST_OF_STATEMENTS);
     }
 
 }

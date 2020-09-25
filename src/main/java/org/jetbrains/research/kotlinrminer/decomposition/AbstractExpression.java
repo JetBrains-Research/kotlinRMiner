@@ -53,7 +53,7 @@ public class AbstractExpression extends AbstractCodeFragment {
         this.expression = expression.getText();
         this.owner = null;
         this.creationMap = visitor.getCreationMap();
-        this.methodInvocationMap = new HashMap<>();
+        this.methodInvocationMap = visitor.getMethodInvocationMap();
     }
 
     public void setOwner(CompositeStatementObject owner) {

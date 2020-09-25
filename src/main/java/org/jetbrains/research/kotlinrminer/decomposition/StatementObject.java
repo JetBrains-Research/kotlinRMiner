@@ -16,7 +16,7 @@ public class StatementObject extends AbstractStatement {
     private final List<String> variables;
     private final List<String> types;
     private final List<VariableDeclaration> variableDeclarations;
-    //TODO private Map<String, List<OperationInvocation>> methodInvocationMap;
+    private Map<String, List<OperationInvocation>> methodInvocationMap;
     //TODO private List<AnonymousClassDeclarationObject> anonymousClassDeclarations;
     private final List<String> stringLiterals;
     private final List<String> numberLiterals;
@@ -42,6 +42,7 @@ public class StatementObject extends AbstractStatement {
         this.variables = visitor.getVariables();
         this.types = visitor.getTypes();
         this.variableDeclarations = visitor.getVariableDeclarations();
+        this.methodInvocationMap = visitor.getMethodInvocationMap();
         this.stringLiterals = visitor.getStringLiterals();
         this.numberLiterals = visitor.getNumberLiterals();
         this.nullLiterals = visitor.getNullLiterals();
@@ -90,8 +91,7 @@ public class StatementObject extends AbstractStatement {
 
     @Override
     public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
-        //TODO: fix it
-        return new HashMap<>();
+        return this.methodInvocationMap;
     }
 
     @Override

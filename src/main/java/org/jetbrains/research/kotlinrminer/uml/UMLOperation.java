@@ -9,11 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.research.kotlinrminer.LocationInfo;
-import org.jetbrains.research.kotlinrminer.decomposition.CompositeStatementObject;
-import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
-import org.jetbrains.research.kotlinrminer.decomposition.OperationBody;
-import org.jetbrains.research.kotlinrminer.decomposition.OperationInvocation;
-import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclaration;
+import org.jetbrains.research.kotlinrminer.decomposition.*;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 
@@ -313,6 +309,59 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
             i++;
         }
         return true;
+    }
+
+    public OperationInvocation isDelegate() {
+        if (getBody() != null) {
+            List<AbstractStatement> statements = getBody().getCompositeStatement().getStatements();
+            if (statements.size() == 1 && statements.get(0) instanceof StatementObject) {
+                StatementObject statement = (StatementObject) statements.get(0);
+                Map<String, List<OperationInvocation>> operationInvocationMap = statement.getMethodInvocationMap();
+                for (String key : operationInvocationMap.keySet()) {
+                    List<OperationInvocation> operationInvocations = operationInvocationMap.get(key);
+                    for (OperationInvocation operationInvocation : operationInvocations) {
+                        if (operationInvocation.matchesOperation(this, this.variableTypeMap(),
+                                                                 null) || operationInvocation.getMethodName().equals(
+                            this.getName())) {
+                            return operationInvocation;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean isGetter() {
+        if (getBody() != null) {
+            List<AbstractStatement> statements = getBody().getCompositeStatement().getStatements();
+            List<UMLParameter> parameters = getParametersWithoutReturnType();
+            if (statements.size() == 1 && statements.get(0) instanceof StatementObject) {
+                StatementObject statement = (StatementObject) statements.get(0);
+                if (statement.getString().startsWith("return ")) {
+                    for (String variable : statement.getVariables()) {
+                        if (statement.getString().equals("return " + variable + ";\n") && parameters.size() == 0) {
+                            return true;
+                        } else if (statement.getString().equals(
+                            "return " + variable + ".keySet()" + "\n") && parameters.size() == 0) {
+                            return true;
+                        } else if (statement.getString().equals(
+                            "return " + variable + ".values()" + "\n") && parameters.size() == 0) {
+                            return true;
+                        }
+                    }
+                    UMLParameter returnParameter = getReturnParameter();
+                    if ((name.startsWith("is") || name.startsWith("has")) && parameters.size() == 0 &&
+                        returnParameter != null && returnParameter.getType().getClassType().equals("Boolean")) {
+                        return true;
+                    }
+                    if (statement.getString().equals("return null\n")) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public boolean equalSignatureWithIdenticalNameIgnoringChangedTypes(UMLOperation operation) {

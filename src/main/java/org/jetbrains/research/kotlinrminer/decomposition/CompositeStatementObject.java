@@ -340,8 +340,20 @@ public class CompositeStatementObject extends AbstractStatement {
 
     @Override
     public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
-        //TODO: implement it
-        return new HashMap<>();
+        Map<String, List<OperationInvocation>> map = new LinkedHashMap<String, List<OperationInvocation>>();
+        for(AbstractExpression expression : expressionList) {
+            Map<String, List<OperationInvocation>> expressionMap = expression.getMethodInvocationMap();
+            for(String key : expressionMap.keySet()) {
+                if(map.containsKey(key)) {
+                    map.get(key).addAll(expressionMap.get(key));
+                }
+                else {
+                    List<OperationInvocation> list = new ArrayList<OperationInvocation>(expressionMap.get(key));
+                    map.put(key, list);
+                }
+            }
+        }
+        return map;
     }
 
     @Override
