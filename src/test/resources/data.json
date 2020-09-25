@@ -106,7 +106,19 @@
         "sha1": "0d8728b310668daf7af510e74315556b4eb23a60",
         "refactorings": [
             {
+                "description": "Change Parameter Type t : Document to t : T in method public getData(t T) : List<S> in class org.jetbrains.research.ml.codetracker.tracking.LoggedData"
+            },
+            {
                 "description": "Rename Method private createFile(project Project, task Task, language Language) : VirtualFile? renamed to private getOrCreateFile(project Project, task Task, language Language) : VirtualFile? in class org.jetbrains.research.ml.codetracker.tracking.TaskFileHandler"
+            },
+            {
+                "description": "Change Parameter Type t : Unit to t : T in method public getData(t T) : List<S> in class org.jetbrains.research.ml.codetracker.tracking.LoggedData"
+            },
+            {
+                "description": "Move Method public getData(t Document) : List<String?> from class org.jetbrains.research.ml.codetracker.tracking.DocumentLoggedData to public getData(t T) : List<S> from class org.jetbrains.research.ml.codetracker.tracking.LoggedData"
+            },
+            {
+                "description": "Move Method public getData(t Unit) : List<String> from class org.jetbrains.research.ml.codetracker.tracking.UiLoggedData to public getData(t T) : List<S> from class org.jetbrains.research.ml.codetracker.tracking.LoggedData"
             }
         ]
     },
@@ -311,6 +323,15 @@
         "refactorings": [
             {
                 "description": "Extract Class person.Car from class Person"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "85f42cbb8cda603dca6544f4c7039ab268256f48",
+        "refactorings": [
+            {
+                "description": "Inline Method public isAgeMoreThanZero() : Boolean inlined to public isAgeValid() : Boolean in class Person"
             }
         ]
     }
