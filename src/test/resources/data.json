@@ -200,6 +200,9 @@
             },
             {
                 "description": "Move Method internal createGeomInteractionBuilder(renders List<Aes<*>>, geomKind GeomKind, statKind StatKind, multilayer Boolean) : GeomInteractionBuilder from class jetbrains.datalore.plot.config.PlotConfigClientSideUtil to private createGeomInteractionBuilder(renders List<Aes<*>>, geomKind GeomKind, statKind StatKind, multilayer Boolean) : GeomInteractionBuilder from class jetbrains.datalore.plot.config.GeomInteractionUtil"
+            },
+            {
+                "description": "Move Method private createAxisAesList(geomBuilder GeomInteractionBuilder, geomKind GeomKind) : List<Aes<*>> from class jetbrains.datalore.plot.config.PlotConfigClientSideUtil to private createAxisAesList(geomBuilder GeomInteractionBuilder, geomKind GeomKind) : List<Aes<*>> from class jetbrains.datalore.plot.config.GeomInteractionUtil"
             }
         ]
     },
@@ -332,6 +335,15 @@
         "refactorings": [
             {
                 "description": "Inline Method public isAgeMoreThanZero() : Boolean inlined to public isAgeValid() : Boolean in class Person"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "ee3937e9d8ab68ff3c23b081a045cfe2c0625070",
+        "refactorings": [
+            {
+                "description": "Inline Method public getTextId() : String inlined to public getPersonId() : String in class Person"
             }
         ]
     }

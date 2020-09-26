@@ -32,7 +32,8 @@ public class OperationInvocation extends AbstractCall {
         this.arguments = new ArrayList<>();
         List<KtValueArgument> args = invocation.getValueArguments();
         for (KtValueArgument argument : args) {
-            this.arguments.add(argument.getName());
+            if (argument.getName() != null)
+                this.arguments.add(argument.getName());
         }
         if (invocation.getCalleeExpression() != null) {
             this.expression = invocation.getCalleeExpression().toString();
@@ -48,7 +49,8 @@ public class OperationInvocation extends AbstractCall {
         this.arguments = new ArrayList<>();
         List<KtParameter> args = invocation.getValueParameters();
         for (KtParameter argument : args) {
-            this.arguments.add(argument.getName());
+            if (argument.getName() != null)
+                this.arguments.add(argument.getName());
         }
     }
 
