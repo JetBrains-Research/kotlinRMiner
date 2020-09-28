@@ -169,6 +169,7 @@ public class LocationInfo {
         BINARY_EXPRESSION,
         WHEN_EXPRESSION,
         COMPANION_OBJECT,
+        DOT_QUALIFIED_EXPRESSION,
         OBJECT,
         TYPE_DECLARATION,
         METHOD_DECLARATION,

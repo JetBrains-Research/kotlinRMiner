@@ -228,21 +228,31 @@ public class OperationBody {
             }
         } else if (statement instanceof KtBinaryExpression) {
             KtBinaryExpression binaryStatement = (KtBinaryExpression) statement;
-            CompositeStatementObject child = new CompositeStatementObject(ktFile, filePath, binaryStatement, parent.getDepth() + 1,
-                                                        CodeElementType.BINARY_EXPRESSION);
+            CompositeStatementObject child =
+                new CompositeStatementObject(ktFile, filePath, binaryStatement, parent.getDepth() + 1,
+                                             CodeElementType.BINARY_EXPRESSION);
             parent.addStatement(child);
             processStatement(ktFile, filePath, child, binaryStatement.getLeft());
             processStatement(ktFile, filePath, child, binaryStatement.getRight());
         } else if (statement instanceof KtCallExpression) {
-            KtCallExpression binaryStatement = (KtCallExpression) statement;
+            KtCallExpression callExpression = (KtCallExpression) statement;
             StatementObject child =
-                new StatementObject(ktFile, filePath, binaryStatement, parent.getDepth() + 1,
-                                             CodeElementType.METHOD_INVOCATION);
+                new StatementObject(ktFile, filePath, callExpression, parent.getDepth() + 1,
+                                    CodeElementType.METHOD_INVOCATION);
             parent.addStatement(child);
         } else if (statement instanceof KtNameReferenceExpression) {
-            KtNameReferenceExpression continueStatement = (KtNameReferenceExpression) statement;
-            StatementObject child = new StatementObject(ktFile, filePath, continueStatement, parent.getDepth() + 1,
-                                                        CodeElementType.METHOD_INVOCATION);
+            KtNameReferenceExpression nameReferenceExpression = (KtNameReferenceExpression) statement;
+            StatementObject child =
+                new StatementObject(ktFile, filePath, nameReferenceExpression, parent.getDepth() + 1,
+                                    CodeElementType.METHOD_INVOCATION);
+            parent.addStatement(child);
+        } else if (statement instanceof KtDotQualifiedExpression) {
+            KtDotQualifiedExpression dotQualifiedExpression = (KtDotQualifiedExpression) statement;
+            CompositeStatementObject child =
+                new CompositeStatementObject(ktFile, filePath, dotQualifiedExpression, parent.getDepth() + 1,
+                                             CodeElementType.DOT_QUALIFIED_EXPRESSION);
+            processStatement(ktFile, filePath, child, dotQualifiedExpression.getSelectorExpression());
+            processStatement(ktFile, filePath, child, dotQualifiedExpression.getReceiverExpression());
             parent.addStatement(child);
         }
     }
