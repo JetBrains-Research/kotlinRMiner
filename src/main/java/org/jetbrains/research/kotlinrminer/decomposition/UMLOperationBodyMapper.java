@@ -3597,6 +3597,13 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         return false;
     }
 
+    public boolean containsExtractOperationRefactoring(UMLOperation extractedOperation) {
+        if (classDiff != null) {
+            return classDiff.containsExtractOperationRefactoring(operation1, extractedOperation);
+        }
+        return false;
+    }
+
     @Override
     public int compareTo(@NotNull UMLOperationBodyMapper operationBodyMapper) {
         int thisCallChainIntersectionSum = 0;
