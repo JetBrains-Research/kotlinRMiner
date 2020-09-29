@@ -355,5 +355,35 @@
                 "description": "Extract Method public printId() extracted from public printInfo() in class Person"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "b1dd91ea6f418acd3e5ee49c2a40eaf499c1240e",
+        "refactorings": [
+            {
+                "description": "Extract Method protected visitReferenceTree(reference KtElement, target KtElement) extracted from public visitReferenceExpression(expression KtReferenceExpression) in class io.kotless.parser.utils.psi.visitor.KtReferenceFollowingVisitor"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "e1cbb66d414fdfc7662789bc20b4e288655d4149",
+        "refactorings": [
+            {
+                "description": "Extract Method private dumpGeneratedFiles(generated Set<TFFile>) extracted from public act() in class io.kotless.plugin.gradle.tasks.gen.KotlessGenerateTask"
+            },
+            {
+                "description": "Rename Parameter file : File to directory : File in method public writeToDirectory(directory File) : File in class io.kotless.terraform.TFFile"
+            },
+            {
+                "description": "Rename Method public write(file File) renamed to public writeToDirectory(directory File) : File in class io.kotless.terraform.TFFile"
+            },
+            {
+                "description": "Add Parameter path : String in method internal toSchema(path String) : io.io.kotless.Webapp.Webapp.ApiGateway.Webapp.ApiGateway.Deployment from class Converters.kt"
+            },
+            {
+                "description": "Extract Method private dumpGeneratedFiles(infra TFFile) extracted from public act() in class io.kotless.plugin.gradle.tasks.gen.KotlessLocalGenerateTask"
+            }
+        ]
     }
 ]

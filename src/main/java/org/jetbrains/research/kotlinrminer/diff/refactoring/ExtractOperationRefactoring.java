@@ -61,7 +61,7 @@ public class ExtractOperationRefactoring implements Refactoring {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getName()).append("\t");
+        sb.append(getName()).append(" ");
         sb.append(extractedOperation);
         sb.append(" extracted from ");
         sb.append(sourceOperationBeforeExtraction);
