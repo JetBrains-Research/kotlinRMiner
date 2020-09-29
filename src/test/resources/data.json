@@ -385,5 +385,53 @@
                 "description": "Extract Method private dumpGeneratedFiles(infra TFFile) extracted from public act() in class io.kotless.plugin.gradle.tasks.gen.KotlessLocalGenerateTask"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "fa0b54989337508e93a6c690dbad248173d528b9",
+        "refactorings": [
+            {
+                "description": "Extract Method private initMaps() extracted from public initialize() in class ui.Controller"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "22da56bd58ec51896626689321b4c04084543ba7",
+        "refactorings": [
+            {
+                "description": "Extract Method private sendDataToServer(request Request) : Boolean extracted from public sendTrackingData(file File) in class PluginServer"
+            },
+            {
+                "description": "Extract Method private sendActivityTrackerData() extracted from public sendTrackingData(file File) in class PluginServer"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "997be50343d6ba9aa70657cc6e68677f238d8700",
+        "refactorings": [
+            {
+                "description": "Move Class Task moved to models.Task"
+            },
+            {
+                "description": "Move Class Example moved to models.Example"
+            },
+            {
+                "description": "Extract Method private getCollection(url String, collection Model) : List<T> extracted from public getTasks() : List<Task> in class PluginServer"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/codetracker.git",
+        "sha1": "1569025cddabed1e13621dd4f4e3c61dfb766aa7",
+        "refactorings": [
+            {
+                "description": "Extract Method private initWithServer(panel JPanel, project Project, scale Double) extracted from public createContent(project Project) : JComponent in class org.jetbrains.research.ml.codetracker.ui.MainController"
+            },
+            {
+                "description": "Extract Method private initWithoutServer(panel JPanel, project Project, scale Double) extracted from public createContent(project Project) : JComponent in class org.jetbrains.research.ml.codetracker.ui.MainController"
+            }
+        ]
     }
 ]
