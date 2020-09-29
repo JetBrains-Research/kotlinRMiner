@@ -346,5 +346,14 @@
                 "description": "Inline Method public getTextId() : String inlined to public getPersonId() : String in class Person"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "036af43fb8c000db957af741cc31f4c6cefac363",
+        "refactorings": [
+            {
+                "description": "Extract Method public printId() extracted from public printInfo() in class Person"
+            }
+        ]
     }
 ]
