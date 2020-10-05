@@ -208,7 +208,7 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
             KtUserType qualifier = userType.getQualifier();
             if (qualifier != null) {
                 UMLType left = extractTypeObject(ktFile, filePath, qualifier);
-                LeafType rightType = extractTypeObject(userType.getText());
+                LeafType rightType = extractTypeObject(userType.getReferencedName());
                 return new CompositeType(left, rightType);
             } else return extractTypeObject(type.getText());
         } else if (type instanceof KtTypeReference) {
@@ -251,8 +251,9 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
                 if (element instanceof KtUserType) {
                     KtUserType userType = (KtUserType) element;
                     if (userType.getQualifier() != null) {
+                        LeafType rightType = extractTypeObject(userType.getReferencedName());
                         UMLType left = extractTypeObject(ktFile, filePath, userType.getQualifier());
-                        return new CompositeType(left, (LeafType) umlType);
+                        return new CompositeType(left, rightType);
                     }
                 }
                 return umlType;

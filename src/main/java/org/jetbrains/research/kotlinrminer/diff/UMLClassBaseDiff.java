@@ -1093,15 +1093,18 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
                 mapperSet.add(operationBodyMapper);
             } else if (mappedElementsMoreThanNonMappedT1AndT2(mappings, operationBodyMapper) &&
                 absoluteDifferenceInPosition <= differenceInPosition &&
-                compatibleSignatures(removedOperation, addedOperation, absoluteDifferenceInPosition)) {
+                compatibleSignatures(removedOperation, addedOperation, absoluteDifferenceInPosition) &&
+                removedOperation.testAnnotationCheck(addedOperation)) {
                 mapperSet.add(operationBodyMapper);
             } else if (mappedElementsMoreThanNonMappedT2(mappings, operationBodyMapper) &&
                 absoluteDifferenceInPosition <= differenceInPosition &&
-                isPartOfMethodExtracted(removedOperation, addedOperation)) {
+                isPartOfMethodExtracted(removedOperation, addedOperation) &&
+                removedOperation.testAnnotationCheck(addedOperation)) {
                 mapperSet.add(operationBodyMapper);
             } else if (mappedElementsMoreThanNonMappedT1(mappings, operationBodyMapper) &&
                 absoluteDifferenceInPosition <= differenceInPosition &&
-                isPartOfMethodInlined(removedOperation, addedOperation)) {
+                isPartOfMethodInlined(removedOperation, addedOperation) &&
+                removedOperation.testAnnotationCheck(addedOperation)) {
                 mapperSet.add(operationBodyMapper);
             }
         } else {
@@ -1157,7 +1160,9 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
         if (allMappingsAreExactMatches(operationBodyMapper)) {
             if (operationBodyMapper.nonMappedElementsT1() == 0 && operationBodyMapper.nonMappedElementsT2() == 0)
                 return true;
-            else if (operationBodyMapper.nonMappedElementsT1() > 0 && operationBodyMapper.getNonMappedInnerNodesT1().size() == 0 && operationBodyMapper.nonMappedElementsT2() == 0) {
+            else if (operationBodyMapper.nonMappedElementsT1() > 0 &&
+                operationBodyMapper.getNonMappedInnerNodesT1().size() == 0 &&
+                operationBodyMapper.nonMappedElementsT2() == 0) {
                 int countableStatements = 0;
                 int parameterizedVariableDeclarationStatements = 0;
                 UMLOperation addedOperation = operationBodyMapper.getOperation2();

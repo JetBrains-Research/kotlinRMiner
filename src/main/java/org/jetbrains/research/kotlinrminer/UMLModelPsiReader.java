@@ -87,7 +87,7 @@ public class UMLModelPsiReader {
     }
 
     private void processPackageLevelFunctions(KtFile ktFile, List<KtNamedFunction> packageLevelFunctions) {
-        UMLFile umlFile = new UMLFile(ktFile.getPackageFqName().asString() + ktFile.getName());
+        UMLFile umlFile = new UMLFile(ktFile.getPackageFqName().asString() + "." + ktFile.getName());
         LocationInfo locationInfo = generateLocationInfo(ktFile, ktFile.getPackageFqName().asString(), ktFile,
                                                          LocationInfo.CodeElementType.TYPE_DECLARATION);
         umlFile.setLocationInfo(locationInfo);

@@ -19,7 +19,6 @@ import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
 import org.jetbrains.research.kotlinrminer.util.ReplacementUtil;
 
 public class OperationInvocation extends AbstractCall {
-
     private String methodName;
     private List<String> subExpressions = new ArrayList<>();
     private volatile int hashCode = 0;
@@ -33,10 +32,10 @@ public class OperationInvocation extends AbstractCall {
         List<KtValueArgument> args = invocation.getValueArguments();
         for (KtValueArgument argument : args) {
             if (argument.getName() != null)
-                this.arguments.add(argument.getName());
+                this.arguments.add(argument.getText());
         }
         if (invocation.getCalleeExpression() != null) {
-            this.expression = invocation.getCalleeExpression().toString();
+            this.expression = invocation.getCalleeExpression().getText();
             processExpression(invocation.getCalleeExpression(), this.subExpressions);
         }
     }
@@ -50,7 +49,7 @@ public class OperationInvocation extends AbstractCall {
         List<KtParameter> args = invocation.getValueParameters();
         for (KtParameter argument : args) {
             if (argument.getName() != null)
-                this.arguments.add(argument.getName());
+                this.arguments.add(argument.getText());
         }
     }
 

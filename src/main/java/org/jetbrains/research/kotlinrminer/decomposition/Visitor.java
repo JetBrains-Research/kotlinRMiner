@@ -254,8 +254,8 @@ public class Visitor extends KtVisitor {
         List<KtValueArgument> arguments = node.getValueArguments();
         if (arguments.size() > 0) {
             for (int i = 0; i < arguments.size() - 1; i++)
-                sb.append(arguments.get(i).toString()).append(", ");
-            sb.append(arguments.get(arguments.size() - 1).toString());
+                sb.append(arguments.get(i).getText()).append(", ");
+            sb.append(arguments.get(arguments.size() - 1).getText());
         }
         sb.append(")");
         return sb.toString();

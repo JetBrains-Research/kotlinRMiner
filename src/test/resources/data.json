@@ -19,24 +19,6 @@
     },
     {
         "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
-        "sha1": "a62a22b34cffda8733140a9e8b654b224def656c",
-        "refactorings": [
-            {
-                "description": "Add Parameter shape : Shape in method public containsPoint(point Point, shape Shape) from class shapes.Rectangle"
-            }
-        ]
-    },
-    {
-        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
-        "sha1": "7bdbbfa25c164d7071aec044acb4f5199a4b927c",
-        "refactorings": [
-            {
-                "description": "Remove Parameter shape : Shape in method public containsPoint(point Point, shape Shape) from class shapes.Rectangle"
-            }
-        ]
-    },
-    {
-        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
         "sha1": "b7fec8bacc7e10044ca8fbc85dc13264d1d894f9",
         "refactorings": [
             {
@@ -74,9 +56,6 @@
             },
             {
                 "description": "Add Parameter deleteAfter : Boolean in method public sendTrackingData(file File, deleteAfter Boolean) from class PluginServer"
-            },
-            {
-                "description": "Rename Class DocumentLogger renamed to DocumentLogger"
             },
             {
                 "description": "Remove Parameter project : Project in method public startTracking(project Project) from class Plugin"
@@ -124,18 +103,6 @@
     },
     {
         "repository": "https://github.com/JetBrains-Research/codetracker.git",
-        "sha1": "703d6d2e874eaed2e5bd0808def0c6e5237ef97c",
-        "refactorings": [
-            {
-                "description": "Remove Parameter postActivity : () -> Unit in method public sendCodeTrackerData(file File, deleteAfter () -> Boolean, postActivity () -> Unit) from class org.jetbrains.research.ml.codetracker.server.TrackerQueryExecutor"
-            },
-            {
-                "description": "Remove Parameter deleteAfter : () -> Boolean in method public sendCodeTrackerData(file File, deleteAfter () -> Boolean, postActivity () -> Unit) from class org.jetbrains.research.ml.codetracker.server.TrackerQueryExecutor"
-            }
-        ]
-    },
-    {
-        "repository": "https://github.com/JetBrains-Research/codetracker.git",
         "sha1": "49ad7099a7715347f4636a868ecd5c70c74df85f",
         "refactorings": [
             {
@@ -152,18 +119,6 @@
             },
             {
                 "description": "Rename Method public getTasks() : List<Task> renamed to private findTasks() : List<Task> in class org.jetbrains.research.ml.codetracker.server.PluginServer"
-            },
-            {
-                "description": "Remove Parameter name : String in method public makeTranslatable(name String, translate (PaneLanguage) -> Unit) from class TranslationManager.kt"
-            }
-        ]
-    },
-    {
-        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
-        "sha1": "4166aa06dbcf055f73cdb6ebae20afbaec3b952d",
-        "refactorings": [
-            {
-                "description": "Reorder Parameter [point : Point, shape : Shape] to [shape : Shape, point : Point] in method public containsPoint(shape Shape, point Point) in class shapes.Rectangle"
             }
         ]
     },
@@ -176,6 +131,9 @@
             },
             {
                 "description": "Move And Rename Method public userOutlierTooltips() from class jetbrains.datalore.plot.builder.tooltip.TooltipContentGeneratorTest to public configOutlierTooltips() from class jetbrains.datalore.plot.config.TooltipConfigTest"
+            },
+            {
+                "description": "Move Method public defaultTooltips() from class jetbrains.datalore.plot.builder.tooltip.TooltipContentGeneratorTest to public defaultTooltips() from class jetbrains.datalore.plot.config.TooltipConfigTest"
             }
         ]
     },
@@ -310,13 +268,7 @@
         "sha1": "f1d820596e81d3dff00d5f9d956f87f74a2d96c6",
         "refactorings": [
             {
-                "description": "Add Parameter point : Point in method public containsPoint(shape Shape, point Point) from class shapes.Circle"
-            },
-            {
                 "description": "Extract Interface shapes.Shape from classes [shapes.Circle, shapes.Rectangle]"
-            },
-            {
-                "description": "Add Parameter shape : Shape in method public containsPoint(shape Shape, point Point) from class shapes.Circle"
             }
         ]
     },
@@ -379,9 +331,6 @@
                 "description": "Rename Method public write(file File) renamed to public writeToDirectory(directory File) : File in class io.kotless.terraform.TFFile"
             },
             {
-                "description": "Add Parameter path : String in method internal toSchema(path String) : io.io.kotless.Webapp.Webapp.ApiGateway.Webapp.ApiGateway.Deployment from class Converters.kt"
-            },
-            {
                 "description": "Extract Method private dumpGeneratedFiles(infra TFFile) extracted from public act() in class io.kotless.plugin.gradle.tasks.gen.KotlessLocalGenerateTask"
             }
         ]
@@ -431,6 +380,159 @@
             },
             {
                 "description": "Extract Method private initWithoutServer(panel JPanel, project Project, scale Double) extracted from public createContent(project Project) : JComponent in class org.jetbrains.research.ml.codetracker.ui.MainController"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "d396ad3df39bcea35398a807833323929422734f",
+        "refactorings": [
+            {
+                "description": "Remove Parameter group : String in method public getDependency(project Project, group String, name String) : Dependency? from class io.kotless.plugin.gradle.utils.Dependencies"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "9689625b77ad018fae9711a3a6021debf031eeb7",
+        "refactorings": [
+            {
+                "description": "Move Class io.kotless.plugin.gradle.utils.Dependencies moved to io.kotless.plugin.gradle.utils.gradle.Dependencies"
+            },
+            {
+                "description": "Move Class io.kotless.plugin.gradle.utils.Groups moved to io.kotless.plugin.gradle.utils.gradle.Groups"
+            },
+            {
+                "description": "Rename Class io.kotless.plugin.gradle.utils.Archiver renamed to io.kotless.plugin.gradle.utils.Archive"
+            },
+            {
+                "description": "Change Parameter Type archiver : Archiver to archiver : Archive in method public download(url URL, toFile File, archiver Archive) in class io.kotless.plugin.gradle.utils.Downloads"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "0dd96c0d843fe0d281fad45e155c2ba769b69887",
+        "refactorings": [
+            {
+                "description": "Add Parameter task : String in method public test generate time site example(task String, time IntRange) from class io.kotless.plugin.gradle.ExampleProjectTests"
+            },
+            {
+                "description": "Add Parameter time : IntRange in method public test generate time site example(task String, time IntRange) from class io.kotless.plugin.gradle.ExampleProjectTests"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "0be03b9e8500424f3d1ed8dd006bb4f46c255c90",
+        "refactorings": [
+            {
+                "description": "Move Class io.kotless.Lambda moved to io.kotless.resource.Lambda"
+            },
+            {
+                "description": "Move Class io.kotless.Permission moved to io.kotless.permission.Permission"
+            },
+            {
+                "description": "Move Class io.kotless.StaticResource moved to io.kotless.resource.StaticResource"
+            },
+            {
+                "description": "Rename Class io.kotless.Webapp renamed to io.kotless.Application"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.ApiGateway.Deployment to entity : Application.ApiGateway.Deployment in method public generate(entity Application.ApiGateway.Deployment, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.apigateway.DeploymentFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.ApiGateway to entity : Application.ApiGateway in method public generate(entity Application.ApiGateway, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.apigateway.DomainFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.ApiGateway to entity : Application.ApiGateway in method public generate(entity Application.ApiGateway, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.apigateway.RestAPIFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.Events.Scheduled to entity : Application.Events.Scheduled in method public mayRun(entity Application.Events.Scheduled, context GenerationContext) : Boolean in class io.kotless.gen.factory.event.ScheduledEventsFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.Events.Scheduled to entity : Application.Events.Scheduled in method public generate(entity Application.Events.Scheduled, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.event.ScheduledEventsFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp to entity : Application in method public generate(entity Application, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.info.InfoFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.ApiGateway.DynamicRoute to entity : Application.ApiGateway.DynamicRoute in method public generate(entity Application.ApiGateway.DynamicRoute, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.route.dynamic.DynamicRouteFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp to entity : Application in method public generate(entity Application, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.route.static.StaticRoleFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.ApiGateway.StaticRoute to entity : Application.ApiGateway.StaticRoute in method public generate(entity Application.ApiGateway.StaticRoute, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.route.static.StaticRouteFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.Route53 to entity : Application.Route53 in method public generate(entity Application.Route53, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.route53.CertificateFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.Route53 to entity : Application.Route53 in method public generate(entity Application.Route53, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.route53.ZoneFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.Route53 to entity : Application.Route53 in method public generate(entity Application.Route53, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.route53.RecordFactory"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "f9b886f864eb46122936a7ffe4c8d128cfc78765",
+        "refactorings": [
+            {
+                "description": "Rename Method private getBaseFolder(element KtElement, binding BindingContext, context ProcessorContext) : File renamed to private getStaticRootFolder(element KtElement, binding BindingContext, context ProcessorContext) : File in class io.kotless.parser.ktor.processor.route.StaticRoutesProcessor"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "530fa72a73bc4b04d647fcd46cba63518320a407",
+        "refactorings": [
+            {
+                "description": "Move Method private getParent(name String) : Path? from class io.kotless.parser.spring.SpringParser to private getParent(name String) : Path? from class io.kotless.parser.spring.processor.route.StaticRoutesProcessor"
+            },
+            {
+                "description": "Move Method private createResource(file File, path URIPath, context ProcessorContext) from class io.kotless.parser.spring.SpringParser to private createResource(file File, path URIPath, context ProcessorContext) from class io.kotless.parser.spring.processor.route.StaticRoutesProcessor"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "2552b58ae42daa0e82294e76f2ecf76e5c6443b1",
+        "refactorings": [
+            {
+                "description": "Rename Method public getMethod(binding BindingContext, func KtNamedFunction) : HttpMethod renamed to public getMethods(binding BindingContext, func KtNamedFunction) : Set<HttpMethod> in class io.kotless.parser.spring.processor.route.SpringAnnotationUtils"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "8a3e4f2d9fbca882ec9497b0fbaa2cb94d8dca00",
+        "refactorings": [
+            {
+                "description": "Add Parameter context : BindingContext in method public visitAnnotatedWithReferences(context BindingContext, filter (KtAnnotated) -> Boolean, body (KtAnnotated) -> Unit) from class Expression.kt"
+            },
+            {
+                "description": "Rename Method public visitAnnotated(filter (KtAnnotated) -> Boolean, body (KtAnnotated) -> Unit) renamed to public visitAnnotatedWithReferences(context BindingContext, filter (KtAnnotated) -> Boolean, body (KtAnnotated) -> Unit) in class Expression.kt"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains/kotless.git",
+        "sha1": "7456af0d1354403723c651ac11edbf4fd630432c",
+        "refactorings": [
+            {
+                "description": "Move Class io.kotless.parser.SpringParser moved to io.kotless.parser.spring.SpringParser"
+            },
+            {
+                "description": "Rename Parameter inputStream : InputStream to input : InputStream in method public handleRequest(input InputStream, output OutputStream, context Context) in class io.kotless.dsl.spring.Kotless"
+            },
+            {
+                "description": "Rename Parameter outputStream : OutputStream to output : OutputStream in method public handleRequest(input InputStream, output OutputStream, context Context) in class io.kotless.dsl.spring.Kotless"
+            },
+            {
+                "description": "Change Parameter Type param : KProperty1<out Annotation, Array<out T>> to param : KProperty<Array<T>> in method public getArrayValue(context BindingContext, param KProperty<Array<T>>) : Array<T> in class Getters.kt"
             }
         ]
     }

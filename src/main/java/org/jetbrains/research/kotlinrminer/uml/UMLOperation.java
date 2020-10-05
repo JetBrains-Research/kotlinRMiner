@@ -144,6 +144,14 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         return false;
     }
 
+    public boolean testAnnotationCheck(UMLOperation operation) {
+        if (this.hasTestAnnotation() && !operation.hasTestAnnotation())
+            return false;
+        if (!this.hasTestAnnotation() && operation.hasTestAnnotation())
+            return false;
+        return true;
+    }
+
     public UMLJavadoc getJavadoc() {
         return javadoc;
     }
@@ -517,6 +525,7 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
                 this.visibility.equals(operation.visibility) &&
                 this.isAbstract == operation.isAbstract &&
                 thisEmptyBody == otherEmptyBody &&
+                this.getParameterTypeList().equals(operation.getParameterTypeList()) &&
                 equalTypeParameters(operation);
         }
         return false;
@@ -565,6 +574,7 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         return result;
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(visibility);
@@ -625,6 +635,7 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         return sb.toString();
     }
 
+    @Override
     public int compareTo(UMLOperation operation) {
         return this.toString().compareTo(operation.toString());
     }
