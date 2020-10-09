@@ -535,5 +535,167 @@
                 "description": "Change Parameter Type param : KProperty1<out Annotation, Array<out T>> to param : KProperty<Array<T>> in method public getArrayValue(context BindingContext, param KProperty<Array<T>>) : Array<T> in class Getters.kt"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "3c9f66a80b0b8c0fa939b5e83aad316e62b0441b",
+        "refactorings": [
+            {
+                "description": "Move Method public testEmpty() from class io.ktor.util.ConcurrentMapTest to public testEmpty() from class io.ktor.util.collections.ConcurrentMapTest"
+            },
+            {
+                "description": "Move Method public testAdd() from class io.ktor.util.ConcurrentMapTest to public testAdd() from class io.ktor.util.collections.ConcurrentMapTest"
+            },
+            {
+                "description": "Move Method public testRemove() from class io.ktor.util.ConcurrentMapTest to public testRemove() from class io.ktor.util.collections.ConcurrentMapTest"
+            },
+            {
+                "description": "Move Method public testMany() from class io.ktor.util.ConcurrentMapTest to public testMany() from class io.ktor.util.collections.ConcurrentMapTest"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "71643f70f10ef4852e63479f132bfaa64b496848",
+        "refactorings": [
+            {
+                "description": "Rename Class io.ktor.client.tests.features.CookiesTest renamed to io.ktor.client.tests.features.CookiesMockTest"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "f0de3df4f83eaacd380d00274786761f613f0087",
+        "refactorings": [
+            {
+                "description": "Rename Method private tryAddToPhaseFastpath(phase PipelinePhase, block PipelineInterceptor<TSubject, TContext>) : Boolean renamed to private tryAddToPhaseFastPath(phase PipelinePhase, block PipelineInterceptor<TSubject, TContext>) : Boolean in class io.ktor.util.pipeline.Pipeline"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "8b6f0742b03c9964d93365b86864f7bd4e2f9769",
+        "refactorings": [
+            {
+                "description": "Change Package io.ktor.network.util to io.ktor.util.network"
+            },
+            {
+                "description": "Move Class io.ktor.network.util.NetworkAddress moved to io.ktor.util.network.NetworkAddress"
+            },
+            {
+                "description": "Move Class io.ktor.network.util.UnresolvedAddressException moved to io.ktor.util.network.UnresolvedAddressException"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "b27460ca7d0872b5f9560e937597aecddfb69941",
+        "refactorings": [
+            {
+                "description": "Add Parameter size : Int in method private setupMethod(easyHandle EasyHandle, method String, size Int) from class io.ktor.client.engine.curl.internal.CurlMultiApiHandler"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "22b5d7a47d109fb3713adde0d7cc9a226f8d4a34",
+        "refactorings": [
+            {
+                "description": "Rename Parameter contentType : ContentType to pattern : ContentType in method public match(pattern ContentType) : Boolean in class io.ktor.http.ContentType"
+            },
+            {
+                "description": "Rename Parameter contentType : String to pattern : String in method public match(pattern String) : Boolean in class io.ktor.http.ContentType"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "cb2cd6a4cdf05fcf9c27b7fbb6526cbf4922f371",
+        "refactorings": [
+            {
+                "description": "Add Parameter module : SerialModule in method private elementSerializer(module SerialModule) : KSerializer<*> from class KotlinxSerializer.kt"
+            },
+            {
+                "description": "Add Parameter module : SerialModule in method private elementSerializer(module SerialModule) : KSerializer<*> from class SerializerLookup.kt"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "72611f5cf3f2e4cc1e69696ad6f427793321b496",
+        "refactorings": [
+            {
+                "description": "Add Parameter passParamsInURL : Boolean in method private oauth2RequestAccessToken(client HttpClient, method HttpMethod, usedRedirectUrl String?, baseUrl String, clientId String, clientSecret String, state String?, code String?, extraParameters Map<String, String>, configure () -> Unit, useBasicAuth Boolean, nonceManager NonceManager, passParamsInURL Boolean, grantType String) : OAuthAccessTokenResponse.OAuth2 from class OAuth2.kt"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "7bb6daf27b34d4ad2b206baf393e28374a43e603",
+        "refactorings": [
+            {
+                "description": "Add Parameter task : NSURLSessionTask in method public URLSession(session NSURLSession, task NSURLSessionTask, didReceiveChallenge NSURLAuthenticationChallenge, completionHandler (NSURLSessionAuthChallengeDisposition,NSURLCredential?) -> Unit) from class io.ktor.client.engine.ios.IosResponseReader"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "84e03d526cef5793338c5e534578dcd9a30aa43a",
+        "refactorings": [
+            {
+                "description": "Extract Method private requestNextView(atLeast Int) : IoBuffer? extracted from public request(atLeast Int) : IoBuffer? in class io.ktor.utils.io.ByteChannelSequentialBase"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "41459eca6ce16fccc92f0318bcc93bd2022c263c",
+        "refactorings": [
+            {
+                "description": "Extract Class io.ktor.locations.LocationsImpl from class io.ktor.locations.Locations"
+            },
+            {
+                "description": "Move Method private create(allParameters Parameters) : Any from class io.ktor.locations.Locations to private create(allParameters Parameters) : Any from class io.ktor.locations.BackwardCompatibleImpl"
+            },
+            {
+                "description": "Move Method private createFromParameters(parameters Parameters, name String, type Type, optional Boolean) : Any? from class io.ktor.locations.Locations to private createFromParameters(parameters Parameters, name String, type Type, optional Boolean) : Any? from class io.ktor.locations.BackwardCompatibleImpl"
+            },
+            {
+                "description": "Move Method private combine(relativePath String, queryValues List<Pair<String, String>>) : ResolvedUriInfo from class io.ktor.locations.Locations to private combine(relativePath String, queryValues List<Pair<String, String>>) : ResolvedUriInfo from class io.ktor.locations.BackwardCompatibleImpl"
+            },
+            {
+                "description": "Add Parameter visited : MutableSet<KClass<*>> in method private getOrCreateInfo(locationClass KClass<*>, visited MutableSet<KClass<*>>) : LocationInfo from class io.ktor.locations.BackwardCompatibleImpl"
+            },
+            {
+                "description": "Move Method private getOrCreateInfo(locationClass KClass<*>) : LocationInfo from class io.ktor.locations.Locations to private getOrCreateInfo(locationClass KClass<*>, visited MutableSet<KClass<*>>) : LocationInfo from class io.ktor.locations.BackwardCompatibleImpl"
+            },
+            {
+                "description": "Move Method private pathAndQuery(location Any) : ResolvedUriInfo from class io.ktor.locations.Locations to private pathAndQuery(location Any) : ResolvedUriInfo from class io.ktor.locations.BackwardCompatibleImpl"
+            },
+            {
+                "description": "Move Method public href(location Any) : String from class io.ktor.locations.Locations to public href(instance Any) : String from class io.ktor.locations.LocationsImpl"
+            },
+            {
+                "description": "Rename Parameter location : Any to instance : Any in method public href(instance Any) : String in class io.ktor.locations.LocationsImpl"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "4e5cd9b1a500a82817bf3c7c6ec3f2c7c47ea157",
+        "refactorings": [
+            {
+                "description": "Add Parameter closeRequest : Boolean in method public handleRequest(closeRequest Boolean, setup () -> Unit) : TestApplicationCall from class io.ktor.server.testing.TestApplicationEngine"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "05461e94d64109eb47e14132eda6f16059cb71db",
+        "refactorings": [
+            {
+                "description": "Rename Class io.ktor.util.FLG renamed to io.ktor.util.GzipHeaderFlags"
+            }
+        ]
     }
 ]

@@ -42,7 +42,7 @@ public class RenamePackageRefactoring implements Refactoring {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getName()).append("\t");
+        sb.append(getName()).append(" ");
         String originalPath =
             pattern.getBefore().endsWith(".") ? pattern.getBefore().substring(0, pattern.getBefore().length() - 1) :
                 pattern.getBefore();
