@@ -697,5 +697,146 @@
                 "description": "Rename Class io.ktor.util.FLG renamed to io.ktor.util.GzipHeaderFlags"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "4e5ab80a1dc918f11d5a6a7cfa5d2829246abdb5",
+        "refactorings": [
+            {
+                "description": "Move And Rename Class io.ktor.client.features.HttpConnectTimeoutException moved and renamed to io.ktor.network.sockets.ConnectTimeoutException"
+            },
+            {
+                "description": "Move And Rename Class io.ktor.client.features.HttpSocketTimeoutException moved and renamed to io.ktor.network.sockets.SocketTimeoutException"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "86fb0294aaee3e1104efca22b2612d9fc6ffc1ab",
+        "refactorings": [
+            {
+                "description": "Remove Parameter handleErrors : Boolean in method private executeChallenges(context AuthenticationContext, handleErrors Boolean) from class io.ktor.auth.Authentication"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "4644d060756f33a8190af6ae2971e2937817608e",
+        "refactorings": [
+            {
+                "description": "Rename Parameter ex : Exception to cause : Exception in method public failed(cause Exception) in class io.ktor.client.engine.apache.ApacheResponseConsumerDispatching"
+            },
+            {
+                "description": "Add Parameter configuration : () -> Unit in method public connect(address InetSocketAddress, configuration () -> Unit) : Socket from class io.ktor.client.engine.cio.ConnectionFactory"
+            },
+            {
+                "description": "Add Parameter requestData : HttpRequestData? in method private connect(requestData HttpRequestData?) : Socket from class io.ktor.client.engine.cio.Endpoint"
+            },
+            {
+                "description": "Add Parameter engine : OkHttpClient in method private executeWebSocketRequest(engine OkHttpClient, engineRequest Request, callContext CoroutineContext) : HttpResponseData from class io.ktor.client.engine.okhttp.OkHttpEngine"
+            },
+            {
+                "description": "Add Parameter engine : OkHttpClient in method private executeHttpRequest(engine OkHttpClient, engineRequest Request, callContext CoroutineContext, requestData HttpRequestData) : HttpResponseData from class io.ktor.client.engine.okhttp.OkHttpEngine"
+            },
+            {
+                "description": "Add Parameter requestData : HttpRequestData in method private executeHttpRequest(engine OkHttpClient, engineRequest Request, callContext CoroutineContext, requestData HttpRequestData) : HttpResponseData from class io.ktor.client.engine.okhttp.OkHttpEngine"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "e000408b88a9eb3b74a5a500163884d2e45c95b4",
+        "refactorings": [
+            {
+                "description": "Extract Method private sendErrorIfNotCommitted(status Int) extracted from public handle(target String, baseRequest Request, request HttpServletRequest, response HttpServletResponse) in class io.ktor.server.jetty.JettyKtorHandler"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "62073708d8499ffb047baaf0d35ffa500341b7f1",
+        "refactorings": [
+            {
+                "description": "Extract Method private setTyped(data SessionProviderData<S>, value Any?) extracted from public set(name String, value Any?) in class io.ktor.sessions.SessionData"
+            },
+            {
+                "description": "Change Parameter Type session : Any to session : T in method public serialize(session T) : String in class io.ktor.sessions.SessionSerializerReflection"
+            },
+            {
+                "description": "Change Parameter Type value : Any to value : S in method public store(call ApplicationCall, value S) : String in class io.ktor.sessions.SessionTrackerById"
+            },
+            {
+                "description": "Change Parameter Type value : Any to value : S in method public validate(value S) in class io.ktor.sessions.SessionTrackerById"
+            },
+            {
+                "description": "Change Parameter Type serializer : SessionSerializerReflection<T> to serializer : SessionSerializer<T> in method private assertSerializeDeserialize(session T, serializer SessionSerializer<T>) in class io.ktor.tests.server.sessions.AutoSerializerTest"
+            },
+            {
+                "description": "Change Parameter Type value : Any to value : S in method public validate(value S) in class io.ktor.sessions.SessionTrackerByValue"
+            },
+            {
+                "description": "Change Parameter Type value : Any to value : S in method public store(call ApplicationCall, value S) : String in class io.ktor.sessions.SessionTrackerByValue"
+            },
+            {
+                "description": "Change Parameter Type value : Any to value : S in method public store(call ApplicationCall, value S) : String in class io.ktor.sessions.SessionTracker"
+            },
+            {
+                "description": "Change Parameter Type value : Any to value : S in method public validate(value S) in class io.ktor.sessions.SessionTracker"
+            },
+            {
+                "description": "Change Parameter Type session : Any to session : T in method public serialize(session T) : String in class io.ktor.sessions.SessionSerializer"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "0bcdf147e596a15712335ba5c30ec3dd0b835dee",
+        "refactorings": [
+            {
+                "description": "Inline Method private checkIfRangeETagHeader(versions List<Version>, ifRange String) : Boolean inlined to private checkIfRangeHeader(content OutgoingContent.ReadChannelContent, call ApplicationCall) : Boolean in class io.ktor.features.PartialContent"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "f8b38d00eb01ec8c933f099a712a475f5ad1278e",
+        "refactorings": [
+            {
+                "description": "Extract Method private checkIfRangeETagHeader(versions List<Version>, ifRange String) : Boolean extracted from private checkIfRangeHeader(content OutgoingContent.ReadChannelContent, call ApplicationCall) : Boolean in class io.ktor.features.PartialContent"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "b5aa91042f8a310946cd00c1d3d56c68126a1cef",
+        "refactorings": [
+            {
+                "description": "Move Class io.ktor.utils.io.ByteChannelNativeTests moved to io.ktor.utils.io.tests.ByteChannelNativeTests"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "39d46062a23796460c5f7fd682eb5b733d063c0b",
+        "refactorings": [
+            {
+                "description": "Extract Superclass io.ktor.client.engine.HttpClientEngineBase from classes [io.ktor.client.engine.android.AndroidClientEngine, io.ktor.client.engine.apache.ApacheEngine, io.ktor.client.engine.cio.CIOEngine, io.ktor.client.engine.js.JsClientEngine, io.ktor.client.engine.curl.CurlClientEngine, io.ktor.client.engine.ios.IosClientEngine, io.ktor.client.engine.jetty.JettyHttp2Engine, io.ktor.client.engine.mock.MockEngine, io.ktor.client.engine.okhttp.OkHttpEngine, io.ktor.server.testing.client.TestHttpClientEngine]"
+            },
+            {
+                "description": "Pull Up Method public close() from class io.ktor.client.engine.ios.IosClientEngine to public close() from class io.ktor.client.engine.HttpClientEngineBase"
+            },
+            {
+                "description": "Pull Up Method public close() from class io.ktor.client.engine.js.JsClientEngine to public close() from class io.ktor.client.engine.HttpClientEngineBase"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/ktorio/ktor.git",
+        "sha1": "33c21dcf0f1a88e30877e6709150211df57517c0",
+        "refactorings": [
+            {
+                "description": "Rename Method internal skipSpHTab(text CharArrayBuilder, start Int, end Int) : Int renamed to internal skipSpacesAndHorizontalTabs(text CharArrayBuilder, start Int, end Int) : Int in class Tokenizer.kt"
+            }
+        ]
     }
 ]
