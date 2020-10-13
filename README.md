@@ -1,4 +1,6 @@
 # kotlinRMiner
+[![JB Research](https://jb.gg/badges/research-flat-square.svg)](https://research.jetbrains.org/)
+
 A library that detects performed refactorings in code changes written in Kotlin.
 The library is based on [RefactoringMiner](https://github.com/tsantalis/RefactoringMiner), a tool that detects performed refactorings in code changes written in Java.
 
