@@ -3,13 +3,14 @@ package org.jetbrains.research.kotlinrminer.uml;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
 /**
- * Represents an object in Kotlin
+ * Represents an object in Kotlin.
  */
 public class UMLObject implements Comparable<UMLObject>, Serializable, LocationInfoProvider {
     private final List<UMLOperation> methods;

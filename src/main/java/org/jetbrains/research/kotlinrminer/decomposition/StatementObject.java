@@ -3,7 +3,6 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 import org.jetbrains.kotlin.psi.KtExpression;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +15,7 @@ public class StatementObject extends AbstractStatement {
     private final List<String> variables;
     private final List<String> types;
     private final List<VariableDeclaration> variableDeclarations;
-    private Map<String, List<OperationInvocation>> methodInvocationMap;
+    private final Map<String, List<OperationInvocation>> methodInvocationMap;
     //TODO private List<AnonymousClassDeclarationObject> anonymousClassDeclarations;
     private final List<String> stringLiterals;
     private final List<String> numberLiterals;
@@ -34,7 +33,7 @@ public class StatementObject extends AbstractStatement {
                            String filePath,
                            KtExpression statement,
                            int depth,
-                           LocationInfo.CodeElementType codeElementType) {
+                           CodeElementType codeElementType) {
         super();
         this.locationInfo = new LocationInfo(cu, filePath, statement, codeElementType);
         Visitor visitor = new Visitor(cu, filePath);

@@ -3,8 +3,6 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
-import org.jetbrains.research.kotlinrminer.LocationInfo.*;
 
 import java.util.*;
 
@@ -19,7 +17,7 @@ public class CompositeStatementObject extends AbstractStatement {
                                     String filePath,
                                     KtElement statement,
                                     int depth,
-                                    LocationInfo.CodeElementType codeElementType) {
+                                    CodeElementType codeElementType) {
         super();
         this.setDepth(depth);
         this.locationInfo = new LocationInfo(cu, filePath, statement, codeElementType);
@@ -232,10 +230,10 @@ public class CompositeStatementObject extends AbstractStatement {
     }
 
     public boolean isLoop() {
-        return this.locationInfo.getCodeElementType().equals(LocationInfo.CodeElementType.ENHANCED_FOR_STATEMENT) ||
-                this.locationInfo.getCodeElementType().equals(CodeElementType.FOR_STATEMENT) ||
-                this.locationInfo.getCodeElementType().equals(CodeElementType.WHILE_STATEMENT) ||
-                this.locationInfo.getCodeElementType().equals(CodeElementType.DO_STATEMENT);
+        return this.locationInfo.getCodeElementType().equals(CodeElementType.ENHANCED_FOR_STATEMENT) ||
+            this.locationInfo.getCodeElementType().equals(CodeElementType.FOR_STATEMENT) ||
+            this.locationInfo.getCodeElementType().equals(CodeElementType.WHILE_STATEMENT) ||
+            this.locationInfo.getCodeElementType().equals(CodeElementType.DO_STATEMENT);
     }
 
     public CompositeStatementObject loopWithVariables(String currentElementName, String collectionName) {
@@ -259,7 +257,7 @@ public class CompositeStatementObject extends AbstractStatement {
                     return innerNode;
                 }
             } else if (innerNode.getLocationInfo().getCodeElementType().equals(CodeElementType.FOR_STATEMENT) ||
-                    innerNode.getLocationInfo().getCodeElementType().equals(CodeElementType.WHILE_STATEMENT)) {
+                innerNode.getLocationInfo().getCodeElementType().equals(CodeElementType.WHILE_STATEMENT)) {
                 boolean collectionNameMatched = false;
                 for (AbstractExpression expression : innerNode.getExpressions()) {
                     if (expression.getVariables().contains(collectionName)) {
@@ -312,7 +310,7 @@ public class CompositeStatementObject extends AbstractStatement {
                 for (LambdaExpressionObject lambda : statementObject.getLambdas()) {
                     if (lambda.getBody() != null) {
                         Map<String, List<OperationInvocation>> lambdaMap =
-                                lambda.getBody().getCompositeStatement().getAllMethodInvocations();
+                            lambda.getBody().getCompositeStatement().getAllMethodInvocations();
                         for (String key : lambdaMap.keySet()) {
                             if (map.containsKey(key)) {
                                 map.get(key).addAll(lambdaMap.get(key));
@@ -340,15 +338,14 @@ public class CompositeStatementObject extends AbstractStatement {
 
     @Override
     public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
-        Map<String, List<OperationInvocation>> map = new LinkedHashMap<String, List<OperationInvocation>>();
-        for(AbstractExpression expression : expressionList) {
+        Map<String, List<OperationInvocation>> map = new LinkedHashMap<>();
+        for (AbstractExpression expression : expressionList) {
             Map<String, List<OperationInvocation>> expressionMap = expression.getMethodInvocationMap();
-            for(String key : expressionMap.keySet()) {
-                if(map.containsKey(key)) {
+            for (String key : expressionMap.keySet()) {
+                if (map.containsKey(key)) {
                     map.get(key).addAll(expressionMap.get(key));
-                }
-                else {
-                    List<OperationInvocation> list = new ArrayList<OperationInvocation>(expressionMap.get(key));
+                } else {
+                    List<OperationInvocation> list = new ArrayList<>(expressionMap.get(key));
                     map.put(key, list);
                 }
             }

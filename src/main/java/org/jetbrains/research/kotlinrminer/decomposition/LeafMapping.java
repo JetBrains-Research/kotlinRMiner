@@ -1,7 +1,6 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 
@@ -73,12 +72,12 @@ public class LeafMapping extends AbstractCodeMapping implements Comparable<LeafM
     private double parentEditDistance() {
         CompositeStatementObject parent1 = getFragment1().getParent();
         while (parent1 != null && parent1.getLocationInfo().getCodeElementType().equals(
-                LocationInfo.CodeElementType.BLOCK)) {
+                CodeElementType.BLOCK)) {
             parent1 = parent1.getParent();
         }
         CompositeStatementObject parent2 = getFragment2().getParent();
         while (parent2 != null && parent2.getLocationInfo().getCodeElementType().equals(
-                LocationInfo.CodeElementType.BLOCK)) {
+               CodeElementType.BLOCK)) {
             parent2 = parent2.getParent();
         }
         if (parent1 == null && parent2 == null) {

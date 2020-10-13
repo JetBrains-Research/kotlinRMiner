@@ -12,7 +12,7 @@ import org.jetbrains.research.kotlinrminer.uml.*;
 import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
 import org.jetbrains.research.kotlinrminer.util.ReplacementUtil;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.Replacement.*;
-import org.jetbrains.research.kotlinrminer.LocationInfo.*;
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo.*;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.VariableReplacementWithMethodInvocation.*;
 
 import java.util.*;
@@ -573,10 +573,8 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
             if (r.getType().equals(ReplacementType.VARIABLE_NAME)) {
                 String fragment1 = mapping.getFragment1().getString();
                 String fragment2 = mapping.getFragment2().getString();
-                if (fragment1.equals("return " + r.getBefore() + ";\n") && fragment2.equals(
-                    "return " + r.getAfter() + "\n")) {
-                    return true;
-                }
+                return fragment1.equals("return " + r.getBefore() + ";\n") && fragment2.equals(
+                    "return " + r.getAfter() + "\n");
             }
         }
         return false;
@@ -3722,12 +3720,6 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
                         containsMapping =
                             comp1.contains(mapping.getFragment1()) && comp2.contains(mapping.getFragment2());
                     }
-/*                    TODO: Implement VariableReplacementAnalysis
-
-                       if(containsMapping && (VariableReplacementAnalysis.bothFragmentsUseVariable(v1, mapping)
-                       || VariableReplacementAnalysis.bothFragmentsUseVariable(v2, mapping))) {
-                        count++;
-                    }*/
                 }
             }
         }

@@ -1,7 +1,5 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
-import org.jetbrains.research.kotlinrminer.LocationInfo;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +13,7 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
 
     public String getArgumentizedString() {
         return codeFragmentAfterReplacingParametersWithArguments != null ?
-                codeFragmentAfterReplacingParametersWithArguments : getString();
+            codeFragmentAfterReplacingParametersWithArguments : getString();
     }
 
     public int getDepth() {
@@ -91,12 +89,12 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
                     if (start >= 1) {
                         String previousChar = afterReplacements.substring(start - 1, start);
                         if (previousChar.equals("(") || previousChar.equals(",") || previousChar.equals(
-                                " ") || previousChar.equals("=")) {
+                            " ") || previousChar.equals("=")) {
                             isArgument = true;
                         }
                         String beforeMatch = afterReplacements.substring(0, start);
                         String afterMatch =
-                                afterReplacements.substring(start + parameter.length());
+                            afterReplacements.substring(start + parameter.length());
 
                         if (quoteBefore(beforeMatch) && quoteAfter(afterMatch)) {
                             isInsideStringLiteral = true;
@@ -229,7 +227,7 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
             if (initializer.startsWith("(")) {
                 //ignore casting
                 String initializerWithoutCasting =
-                        initializer.substring(initializer.indexOf(")") + 1);
+                    initializer.substring(initializer.indexOf(")") + 1);
 
                 return initializerWithoutCasting.equals(expression);
             }
@@ -261,14 +259,14 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
         }
         //covers the cases of methods with only one statement in their body
         if (this instanceof AbstractStatement && this.getParent() != null &&
-                this.getParent().statementCount() == 1 && this.getParent().getParent() == null) {
+            this.getParent().statementCount() == 1 && this.getParent().getParent() == null) {
             return true;
         }
         return !statement.equals("{") && !statement.startsWith("catch(") && !statement.startsWith(
-                "case ") && !statement.startsWith("else ") &&
-                !statement.startsWith("return True") && !statement.startsWith(
-                "return False") && !statement.startsWith("return this") && !statement.startsWith(
-                "return null") && !statement.startsWith("return");
+            "case ") && !statement.startsWith("else ") &&
+            !statement.startsWith("return True") && !statement.startsWith(
+            "return False") && !statement.startsWith("return this") && !statement.startsWith(
+            "return null") && !statement.startsWith("return");
     }
 
     public OperationInvocation invocationCoveringEntireFragment() {
@@ -291,9 +289,9 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
                         invocation.coverage = AbstractCall.StatementCoverageType.VARIABLE_DECLARATION_INITIALIZER_CALL;
                         return invocation;
                     } else if (invocation.getLocationInfo().getCodeElementType().equals(
-                        LocationInfo.CodeElementType.SUPER_CONSTRUCTOR_INVOCATION) ||
+                        CodeElementType.SUPER_CONSTRUCTOR_INVOCATION) ||
                         invocation.getLocationInfo().getCodeElementType().equals(
-                            LocationInfo.CodeElementType.CONSTRUCTOR_INVOCATION)) {
+                            CodeElementType.CONSTRUCTOR_INVOCATION)) {
                         invocation.coverage = AbstractCall.StatementCoverageType.ONLY_CALL;
                         return invocation;
                     }

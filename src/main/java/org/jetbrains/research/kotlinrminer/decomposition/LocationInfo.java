@@ -1,4 +1,4 @@
-package org.jetbrains.research.kotlinrminer;
+package org.jetbrains.research.kotlinrminer.decomposition;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.com.intellij.openapi.editor.Document;
@@ -8,6 +8,11 @@ import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
+import static org.jetbrains.research.kotlinrminer.util.PsiUtils.countColumn;
+
+/**
+ * Provides an information about the element's location in the file.
+ */
 public class LocationInfo {
     private final String filePath;
     private final int startOffset;
@@ -44,22 +49,6 @@ public class LocationInfo {
         if (this.endColumn > 0) {
             this.endColumn += 1;
         }
-    }
-
-    private int countColumn(int lineNumber, Document doc) {
-        int count = 0;
-        final String line =
-            doc.getText(new TextRange(doc.getLineStartOffset(lineNumber), doc.getLineEndOffset(lineNumber)));
-        for (char c : line.toCharArray()) {
-            if (c == ' ') {
-                count++;
-            } else if (c == '\t') {
-                count += 4;
-            } else {
-                return count;
-            }
-        }
-        return count;
     }
 
     public String getFilePath() {
@@ -100,8 +89,8 @@ public class LocationInfo {
 
     public CodeRange codeRange() {
         return new CodeRange(getFilePath(),
-            getStartLine(), getEndLine(),
-            getStartColumn(), getEndColumn(), getCodeElementType());
+                             getStartLine(), getEndLine(),
+                             getStartColumn(), getEndColumn(), getCodeElementType());
     }
 
     public boolean subsumes(LocationInfo other) {
@@ -163,83 +152,5 @@ public class LocationInfo {
             return false;
         }
         return startOffset == other.startOffset;
-    }
-
-    public enum CodeElementType {
-        BINARY_EXPRESSION,
-        WHEN_EXPRESSION,
-        COMPANION_OBJECT,
-        DOT_QUALIFIED_EXPRESSION,
-        OBJECT,
-        TYPE_DECLARATION,
-        METHOD_DECLARATION,
-        FIELD_DECLARATION,
-        SINGLE_VARIABLE_DECLARATION,
-        VARIABLE_DECLARATION_STATEMENT,
-        VARIABLE_DECLARATION_EXPRESSION,
-        VARIABLE_DECLARATION_INITIALIZER,
-        ANONYMOUS_CLASS_DECLARATION,
-        LAMBDA_EXPRESSION,
-        LAMBDA_EXPRESSION_BODY,
-        CLASS_INSTANCE_CREATION,
-        ARRAY_CREATION,
-        METHOD_INVOCATION,
-        SUPER_METHOD_INVOCATION,
-        LABELED_STATEMENT,
-        FOR_STATEMENT("for"),
-        FOR_STATEMENT_CONDITION,
-        FOR_STATEMENT_INITIALIZER,
-        FOR_STATEMENT_UPDATER,
-        ENHANCED_FOR_STATEMENT("for"),
-        ENHANCED_FOR_STATEMENT_PARAMETER_NAME,
-        ENHANCED_FOR_STATEMENT_EXPRESSION,
-        ENHANCED_FOR_STATEMENT_RANGE,
-        WHILE_STATEMENT("while"),
-        WHILE_STATEMENT_CONDITION,
-        IF_STATEMENT("if"),
-        IF_STATEMENT_CONDITION,
-        DO_STATEMENT("do"),
-        DO_STATEMENT_CONDITION,
-        SYNCHRONIZED_STATEMENT("synchronized"),
-        SYNCHRONIZED_STATEMENT_EXPRESSION,
-        TRY_STATEMENT("try"),
-        TRY_STATEMENT_RESOURCE,
-        CATCH_CLAUSE("catch"),
-        CATCH_CLAUSE_EXCEPTION_NAME,
-        EXPRESSION_STATEMENT,
-        ASSERT_STATEMENT,
-        RETURN_STATEMENT,
-        THROW_STATEMENT,
-        CONSTRUCTOR_INVOCATION,
-        SUPER_CONSTRUCTOR_INVOCATION,
-        BREAK_STATEMENT,
-        CONTINUE_STATEMENT,
-        EMPTY_STATEMENT,
-        BLOCK("{"),
-        FINALLY_BLOCK("finally"),
-        TYPE,
-        LIST_OF_STATEMENTS,
-        ANNOTATION,
-        SINGLE_MEMBER_ANNOTATION_VALUE,
-        NORMAL_ANNOTATION_MEMBER_VALUE_PAIR;
-
-        private String name;
-
-        CodeElementType() {
-
-        }
-
-        CodeElementType(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public CodeElementType setName(String name) {
-            this.name = name;
-            return this;
-        }
     }
 }

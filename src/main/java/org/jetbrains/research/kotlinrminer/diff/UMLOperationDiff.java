@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.decomposition.AbstractCodeMapping;
 import org.jetbrains.research.kotlinrminer.diff.refactoring.AddMethodAnnotationRefactoring;
@@ -19,7 +20,6 @@ import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 import org.jetbrains.research.kotlinrminer.uml.UMLParameter;
 
 public class UMLOperationDiff {
-
     private final UMLOperation removedOperation;
     private final UMLOperation addedOperation;
     private final List<UMLParameter> addedParameters;
@@ -30,7 +30,7 @@ public class UMLOperationDiff {
     private boolean abstractionChanged;
     private boolean returnTypeChanged;
     private boolean qualifiedReturnTypeChanged;
-    private boolean operationRenamed;
+    private final boolean operationRenamed;
     private boolean parametersReordered;
     private Set<AbstractCodeMapping> mappings = new LinkedHashSet<>();
 
@@ -84,7 +84,7 @@ public class UMLOperationDiff {
                 if (removedParameter.getName().equals(addedParameter.getName())) {
                     UMLParameterDiff parameterDiff =
                         new UMLParameterDiff(removedParameter, addedParameter, removedOperation, addedOperation,
-                            mappings);
+                                             mappings);
                     parameterDiffList.add(parameterDiff);
                     addedParameterIterator.remove();
                     removedParameterIterator.remove();
@@ -103,7 +103,7 @@ public class UMLOperationDiff {
                     !existsAnotherAddedParameterWithTheSameType(addedParameter)) {
                     UMLParameterDiff parameterDiff =
                         new UMLParameterDiff(removedParameter, addedParameter, removedOperation, addedOperation,
-                            mappings);
+                                             mappings);
                     parameterDiffList.add(parameterDiff);
                     addedParameterIterator.remove();
                     removedParameterIterator.remove();
@@ -127,7 +127,7 @@ public class UMLOperationDiff {
                     if (indexOfRemovedParameter == indexOfAddedParameter) {
                         UMLParameterDiff parameterDiff =
                             new UMLParameterDiff(removedParameter, addedParameter, removedOperation, addedOperation,
-                                mappings);
+                                                 mappings);
                         parameterDiffList.add(parameterDiff);
                         addedParameterIterator.remove();
                         removedParameterIterator.remove();
@@ -307,7 +307,8 @@ public class UMLOperationDiff {
         for (UMLAnnotationDiff annotationDiff : annotationListDiff.getAnnotationDiffList()) {
             ModifyMethodAnnotationRefactoring refactoring =
                 new ModifyMethodAnnotationRefactoring(annotationDiff.getRemovedAnnotation(),
-                    annotationDiff.getAddedAnnotation(), removedOperation, addedOperation);
+                                                      annotationDiff.getAddedAnnotation(), removedOperation,
+                                                      addedOperation);
             refactorings.add(refactoring);
         }
         return refactorings;

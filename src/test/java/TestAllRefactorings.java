@@ -17,7 +17,6 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
 /**
- * Testing Kotlin Miner
  * Tests are defined in resources/data.json
  */
 public class TestAllRefactorings {

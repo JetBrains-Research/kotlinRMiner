@@ -3,7 +3,7 @@ package org.jetbrains.research.kotlinrminer.uml;
 import org.jetbrains.kotlin.psi.*;
 import org.jetbrains.research.kotlinrminer.decomposition.*;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 
 import java.io.Serializable;
@@ -55,11 +55,11 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
         String thisTypeArguments = this.typeArgumentsToString();
         String otherTypeArguments = type.typeArgumentsToString();
         if ((thisTypeArguments.equals("<?>") && otherTypeArguments.startsWith("<? ")) ||
-                (thisTypeArguments.startsWith("<? ") && otherTypeArguments.equals("<?>"))) {
+            (thisTypeArguments.startsWith("<? ") && otherTypeArguments.equals("<?>"))) {
             return true;
         }
         if ((thisTypeArguments.equals("<Object>") && otherTypeArguments.contains("<Object>")) ||
-                (otherTypeArguments.equals("<Object>") && thisTypeArguments.contains("<Object>"))) {
+            (otherTypeArguments.equals("<Object>") && thisTypeArguments.contains("<Object>"))) {
             return true;
         }
         if (this.typeArguments.size() != type.typeArguments.size()) {
@@ -91,7 +91,7 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
         else if (this.isParameterized() && this.typeArgumentsToString().equals("<?>") && !typeObject.isParameterized())
             return this.arrayDimension == typeObject.arrayDimension;
         else if (!this.isParameterized() && typeObject.isParameterized() && typeObject.typeArgumentsToString().equals(
-                "<?>"))
+            "<?>"))
             return this.arrayDimension == typeObject.arrayDimension;
         return false;
     }
@@ -152,7 +152,7 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
         List<UMLType> typeArgumentDecomposition = new ArrayList<>();
         if (qualifiedName.contains("<") && qualifiedName.contains(">")) {
             String typeArguments =
-                    qualifiedName.substring(qualifiedName.indexOf("<") + 1, qualifiedName.lastIndexOf(">"));
+                qualifiedName.substring(qualifiedName.indexOf("<") + 1, qualifiedName.lastIndexOf(">"));
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < typeArguments.length(); i++) {
                 char charAt = typeArguments.charAt(i);
@@ -194,7 +194,7 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
     public static UMLType extractTypeObject(KtFile ktFile, String filePath, KtElement type, int extraDimensions) {
         UMLType umlType = extractTypeObject(ktFile, filePath, type);
         if (!(umlType instanceof Untyped)) {
-            umlType.locationInfo = new LocationInfo(ktFile, filePath, type, LocationInfo.CodeElementType.TYPE);
+            umlType.locationInfo = new LocationInfo(ktFile, filePath, type, CodeElementType.TYPE);
             umlType.arrayDimension += extraDimensions;
         }
         return umlType;
@@ -217,15 +217,15 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
             if (element instanceof KtFunctionType) {
                 KtFunctionType functionType = (KtFunctionType) element;
                 UMLType returnType = functionType.getReturnTypeReference() == null ?
-                        null : extractTypeObject(functionType.getReturnTypeReference().getText());
+                    null : extractTypeObject(functionType.getReturnTypeReference().getText());
                 if (returnType != null)
                     returnType.isNullable =
-                            functionType.getReturnTypeReference().getTypeElement() instanceof KtNullableType;
+                        functionType.getReturnTypeReference().getTypeElement() instanceof KtNullableType;
                 UMLType receiver = functionType.getReceiverTypeReference() == null ?
-                        null : extractTypeObject(functionType.getReceiverTypeReference().getText());
+                    null : extractTypeObject(functionType.getReceiverTypeReference().getText());
                 if (receiver != null)
                     receiver.isNullable =
-                            functionType.getReceiverTypeReference().getTypeElement() instanceof KtNullableType;
+                        functionType.getReceiverTypeReference().getTypeElement() instanceof KtNullableType;
                 List<UMLType> umlTypeList = new ArrayList<>();
                 if (functionType.getParameterList() != null) {
                     List<KtParameter> parameterList = functionType.getParameterList().getParameters();
@@ -233,7 +233,7 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
                         UMLType umlType = extractTypeObject(ktParameter.getText());
                         if (ktParameter.getTypeReference() != null)
                             umlType.isNullable =
-                                    ktParameter.getTypeReference().getTypeElement() instanceof KtNullableType;
+                                ktParameter.getTypeReference().getTypeElement() instanceof KtNullableType;
                         umlTypeList.add(umlType);
                     }
                 }

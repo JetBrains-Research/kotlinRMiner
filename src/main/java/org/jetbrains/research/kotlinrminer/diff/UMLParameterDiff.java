@@ -2,6 +2,7 @@ package org.jetbrains.research.kotlinrminer.diff;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.decomposition.AbstractCodeMapping;
 import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclaration;
@@ -13,15 +14,14 @@ import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 import org.jetbrains.research.kotlinrminer.uml.UMLParameter;
 
 public class UMLParameterDiff {
-
     private final UMLParameter removedParameter;
     private final UMLParameter addedParameter;
     private boolean typeChanged;
     private boolean qualifiedTypeChanged;
     private boolean nameChanged;
-    private UMLOperation removedOperation;
-    private UMLOperation addedOperation;
-    private Set<AbstractCodeMapping> mappings;
+    private final UMLOperation removedOperation;
+    private final UMLOperation addedOperation;
+    private final Set<AbstractCodeMapping> mappings;
 
     public UMLParameterDiff(UMLParameter removedParameter, UMLParameter addedParameter,
                             UMLOperation removedOperation, UMLOperation addedOperation,
@@ -82,7 +82,7 @@ public class UMLParameterDiff {
     }
 
     public Set<Refactoring> getRefactorings() {
-        Set<Refactoring> refactorings = new LinkedHashSet<Refactoring>();
+        Set<Refactoring> refactorings = new LinkedHashSet<>();
         VariableDeclaration originalVariable = getRemovedParameter().getVariableDeclaration();
         VariableDeclaration newVariable = getAddedParameter().getVariableDeclaration();
         Set<AbstractCodeMapping> references = VariableReferenceExtractor
@@ -91,14 +91,14 @@ public class UMLParameterDiff {
         if (isNameChanged() && !inconsistentReplacement(originalVariable, newVariable)) {
             renameRefactoring =
                 new RenameVariableRefactoring(originalVariable, newVariable, removedOperation,
-                    addedOperation, references);
+                                              addedOperation, references);
             refactorings.add(renameRefactoring);
         }
         if ((isTypeChanged() || isQualifiedTypeChanged()) &&
             !inconsistentReplacement(originalVariable, newVariable)) {
             ChangeVariableTypeRefactoring refactoring =
                 new ChangeVariableTypeRefactoring(originalVariable, newVariable, removedOperation,
-                    addedOperation, references);
+                                                  addedOperation, references);
             if (renameRefactoring != null) {
                 refactoring.addRelatedRefactoring(renameRefactoring);
             }

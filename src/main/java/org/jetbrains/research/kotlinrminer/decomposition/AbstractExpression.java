@@ -4,9 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtExpression;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,12 +26,12 @@ public class AbstractExpression extends AbstractCodeFragment {
     private final List<String> postfixExpressions;
     private final List<LambdaExpressionObject> lambdas;
     private final Map<String, List<ObjectCreation>> creationMap;
-    private Map<String, List<OperationInvocation>> methodInvocationMap;
+    private final Map<String, List<OperationInvocation>> methodInvocationMap;
 
     public AbstractExpression(@NotNull KtFile cu,
                               @NotNull String filePath,
                               @NotNull KtExpression expression,
-                              @NotNull LocationInfo.CodeElementType codeElementType) {
+                              @NotNull CodeElementType codeElementType) {
         this.locationInfo = new LocationInfo(cu, filePath, expression, codeElementType);
         Visitor visitor = new Visitor(cu, filePath);
         expression.accept(visitor);

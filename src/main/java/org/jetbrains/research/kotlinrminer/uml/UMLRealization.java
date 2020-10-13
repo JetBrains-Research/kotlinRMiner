@@ -25,7 +25,7 @@ public class UMLRealization implements Comparable<UMLRealization> {
         if (o instanceof UMLRealization) {
             UMLRealization umlRealization = (UMLRealization) o;
             return this.client.equals(umlRealization.client) &&
-                    this.supplier.equals(umlRealization.supplier);
+                this.supplier.equals(umlRealization.supplier);
         }
         return false;
     }

@@ -3,12 +3,13 @@ package org.jetbrains.research.kotlinrminer.uml;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
+
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
 /**
- * Represents a companion object in Kotlin
+ * Represents a companion object in Kotlin.
  */
 public class UMLCompanionObject implements Comparable<UMLCompanionObject>, Serializable, LocationInfoProvider {
     private final List<UMLOperation> methods;

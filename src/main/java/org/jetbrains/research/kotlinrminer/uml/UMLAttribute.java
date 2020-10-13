@@ -2,7 +2,8 @@ package org.jetbrains.research.kotlinrminer.uml;
 
 import java.io.Serializable;
 import java.util.List;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
+
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
 import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclaration;
 import org.jetbrains.research.kotlinrminer.decomposition.VariableDeclarationProvider;

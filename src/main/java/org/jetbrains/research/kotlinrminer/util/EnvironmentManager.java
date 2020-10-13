@@ -19,7 +19,7 @@ import static org.jetbrains.kotlin.metadata.jvm.deserialization.JvmProtoBufUtil.
 public class EnvironmentManager {
 
     /**
-     * Creates KotlinCoreEnvironment with specified classpath
+     * Creates KotlinCoreEnvironment with specified classpath.
      */
     public static KotlinCoreEnvironment createKotlinCoreEnvironment(Set<File> libraries) {
         setIdeaIoUseFallback();

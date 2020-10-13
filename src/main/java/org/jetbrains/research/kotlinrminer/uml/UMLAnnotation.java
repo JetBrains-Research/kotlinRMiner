@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jetbrains.kotlin.psi.KtAnnotation;
 import org.jetbrains.kotlin.psi.KtAnnotationEntry;
 import org.jetbrains.kotlin.psi.KtFile;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
+import org.jetbrains.research.kotlinrminer.decomposition.CodeElementType;
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.AbstractExpression;
 import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
@@ -20,7 +22,7 @@ public class UMLAnnotation implements Serializable, LocationInfoProvider {
 
     public UMLAnnotation(KtFile cu, String filePath, KtAnnotation annotation) {
         this.typeName = annotation.getName();
-        this.locationInfo = new LocationInfo(cu, filePath, annotation, LocationInfo.CodeElementType.ANNOTATION);
+        this.locationInfo = new LocationInfo(cu, filePath, annotation, CodeElementType.ANNOTATION);
         List<KtAnnotationEntry> ktAnnotationEntries = annotation.getEntries();
         //TODO: process annotation entries
     }

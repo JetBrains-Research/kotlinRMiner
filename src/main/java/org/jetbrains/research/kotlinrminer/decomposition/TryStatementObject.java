@@ -5,10 +5,9 @@ import java.util.List;
 
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtTryExpression;
-import org.jetbrains.research.kotlinrminer.LocationInfo.CodeElementType;
 
 public class TryStatementObject extends CompositeStatementObject {
-    private List<CompositeStatementObject> catchClauses;
+    private final List<CompositeStatementObject> catchClauses;
     private CompositeStatementObject finallyClause;
 
     public TryStatementObject(KtFile cu, String filePath, KtTryExpression statement, int depth) {
@@ -34,8 +33,7 @@ public class TryStatementObject extends CompositeStatementObject {
 
     @Override
     public List<VariableDeclaration> getVariableDeclarations() {
-        List<VariableDeclaration> variableDeclarations = new ArrayList<>();
-        variableDeclarations.addAll(super.getVariableDeclarations());
+        List<VariableDeclaration> variableDeclarations = new ArrayList<>(super.getVariableDeclarations());
         for (CompositeStatementObject catchClause : catchClauses) {
             variableDeclarations.addAll(catchClause.getVariableDeclarations());
         }

@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Wrapper for VirtualFile that retains path on machine
+ * Wrapper for VirtualFile that retains path on machine.
  */
 public class KotlinLightVirtualFile extends LightVirtualFile {
     private final String path;

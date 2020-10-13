@@ -7,31 +7,17 @@ import org.jetbrains.research.kotlinrminer.decomposition.UMLOperationBodyMapper;
 
 public class ReplacementUtil {
     private static final String[] SPECIAL_CHARACTERS =
-            {";", ",", ")", "=", "+", "-", ">", "<", ".", "]", " ", "(", "["};
+        {";", ",", ")", "=", "+", "-", ">", "<", ".", "]", " ", "(", "["};
     private static final String[] SPECIAL_ARGUMENT_CHARACTERS =
-            {";", ",", ")", "=", "+", "-", ">", "<", ".", "]", " "};
-
-    public static String keepReservedTokens(String input) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < input.length(); i++) {
-            char c = input.charAt(i);
-            for (String character : SPECIAL_CHARACTERS) {
-                if (character.equals(Character.toString(c))) {
-                    sb.append(c);
-                    break;
-                }
-            }
-        }
-        return sb.toString();
-    }
+        {";", ",", ")", "=", "+", "-", ">", "<", ".", "]", " "};
 
     public static int countInstances(String completeString, String subString) {
         for (String character : SPECIAL_CHARACTERS) {
             int index = completeString.indexOf(subString + character);
             if (index != -1) {
                 return
-                        (completeString.length() - completeString.replace(subString + character, "").length()) /
-                                (subString.length() + 1);
+                    (completeString.length() - completeString.replace(subString + character, "").length()) /
+                        (subString.length() + 1);
             }
         }
         return 0;
@@ -87,7 +73,7 @@ public class ReplacementUtil {
         boolean replacementOccurred = false;
         for (String character : SPECIAL_CHARACTERS) {
             if (temp.contains(subString1 + character) &&
-                    completeString2.contains(subString2 + character)) {
+                completeString2.contains(subString2 + character)) {
                 StringBuffer sb = new StringBuffer();
                 Pattern p1 = Pattern.compile(Pattern.quote(subString1 + character));
                 Matcher m1 = p1.matcher(temp);
@@ -98,7 +84,7 @@ public class ReplacementUtil {
                     int start2 = m2.start();
                     String characterBeforeMatch1 = start1 == 0 ? "" : String.valueOf(temp.charAt(start1 - 1));
                     String characterBeforeMatch2 =
-                            start2 == 0 ? "" : String.valueOf(completeString2.charAt(start2 - 1));
+                        start2 == 0 ? "" : String.valueOf(completeString2.charAt(start2 - 1));
                     if (compatibleCharacterBeforeMatch(characterBeforeMatch1, characterBeforeMatch2)) {
                         m1.appendReplacement(sb, Matcher.quoteReplacement(subString2 + character));
                         replacementOccurred = true;
@@ -109,11 +95,11 @@ public class ReplacementUtil {
             }
         }
         if (!replacementOccurred &&
-                !UMLOperationBodyMapper.containsMethodSignatureOfAnonymousClass(completeString1) &&
-                !UMLOperationBodyMapper.containsMethodSignatureOfAnonymousClass(completeString2)) {
+            !UMLOperationBodyMapper.containsMethodSignatureOfAnonymousClass(completeString1) &&
+            !UMLOperationBodyMapper.containsMethodSignatureOfAnonymousClass(completeString2)) {
             for (String character : SPECIAL_CHARACTERS) {
                 if (temp.contains(character + subString1) &&
-                        completeString2.contains(character + subString2)) {
+                    completeString2.contains(character + subString2)) {
                     StringBuffer sb = new StringBuffer();
                     Pattern p1 = Pattern.compile(Pattern.quote(character + subString1));
                     Matcher m1 = p1.matcher(temp);
@@ -123,12 +109,11 @@ public class ReplacementUtil {
                         int end1 = m1.end();
                         int end2 = m2.end();
                         String characterAfterMatch1 =
-                                end1 == temp.length() ? "" : String.valueOf(temp.charAt(end1));
+                            end1 == temp.length() ? "" : String.valueOf(temp.charAt(end1));
                         String characterAfterMatch2 = end2 == completeString2.length() ? "" :
-                                String.valueOf(completeString2.charAt(end2));
+                            String.valueOf(completeString2.charAt(end2));
                         if (compatibleCharacterAfterMatch(characterAfterMatch1, characterAfterMatch2)) {
                             m1.appendReplacement(sb, Matcher.quoteReplacement(character + subString2));
-                            replacementOccurred = true;
                         }
                     }
                     m1.appendTail(sb);
@@ -184,17 +169,17 @@ public class ReplacementUtil {
             int start1 = m1.start();
             int start2 = m2.start();
             String characterBeforeMatch1 =
-                    start1 == 0 ? "" : String.valueOf(completeString1.charAt(start1 - 1));
+                start1 == 0 ? "" : String.valueOf(completeString1.charAt(start1 - 1));
             String characterBeforeMatch2 =
-                    start2 == 0 ? "" : String.valueOf(completeString2.charAt(start2 - 1));
+                start2 == 0 ? "" : String.valueOf(completeString2.charAt(start2 - 1));
             int end1 = m1.end();
             int end2 = m2.end();
             String characterAfterMatch1 =
-                    end1 == completeString1.length() ? "" : String.valueOf(completeString1.charAt(end1));
+                end1 == completeString1.length() ? "" : String.valueOf(completeString1.charAt(end1));
             String characterAfterMatch2 =
-                    end2 == completeString2.length() ? "" : String.valueOf(completeString2.charAt(end2));
+                end2 == completeString2.length() ? "" : String.valueOf(completeString2.charAt(end2));
             if (characterBeforeMatch1.equals(characterBeforeMatch2) &&
-                    characterAfterMatch1.equals(characterAfterMatch2)) {
+                characterAfterMatch1.equals(characterAfterMatch2)) {
                 compatibleMatches++;
             }
             matches++;

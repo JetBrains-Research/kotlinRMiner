@@ -1,6 +1,5 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
-import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.Replacement;
 import org.jetbrains.research.kotlinrminer.diff.refactoring.ChangeVariableTypeRefactoring;
 
@@ -9,10 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 public class TypeReplacementAnalysis {
-
     private final Set<AbstractCodeMapping> mappings;
     private final Set<ChangeVariableTypeRefactoring> changedTypes = new LinkedHashSet<>();
-
 
     public TypeReplacementAnalysis(Set<AbstractCodeMapping> mappings) {
         this.mappings = mappings;
@@ -34,44 +31,20 @@ public class TypeReplacementAnalysis {
                     for (VariableDeclaration declaration1 : declarations1) {
                         for (VariableDeclaration declaration2 : declarations2) {
                             if (declaration1.getVariableName().equals(declaration2.getVariableName()) &&
-                                    (!declaration1.getType().equals(
-                                            declaration2.getType()) || !declaration1.getType().equalsQualified(
-                                            declaration2.getType())) &&
-                                    !containsVariableDeclarationWithSameNameAndType(declaration1, declarations2)) {
+                                (!declaration1.getType().equals(
+                                    declaration2.getType()) || !declaration1.getType().equalsQualified(
+                                    declaration2.getType())) &&
+                                !containsVariableDeclarationWithSameNameAndType(declaration1, declarations2)) {
                                 ChangeVariableTypeRefactoring ref =
-                                        new ChangeVariableTypeRefactoring(declaration1, declaration2,
-                                                                          mapping.getOperation1(),
-                                                                          mapping.getOperation2(),
-                                                                          VariableReferenceExtractor.findReferences(
-                                                                                  declaration1, declaration2,
-                                                                                  mappings));
+                                    new ChangeVariableTypeRefactoring(declaration1, declaration2,
+                                                                      mapping.getOperation1(),
+                                                                      mapping.getOperation2(),
+                                                                      VariableReferenceExtractor.findReferences(
+                                                                          declaration1, declaration2,
+                                                                          mappings));
                                 changedTypes.add(ref);
                                 break;
                             }
-                        }
-                    }
-                }
-            }
-            if (fragment1.getLocationInfo().getCodeElementType().equals(
-                    LocationInfo.CodeElementType.ENHANCED_FOR_STATEMENT) &&
-                    fragment2.getLocationInfo().getCodeElementType().equals(
-                            LocationInfo.CodeElementType.ENHANCED_FOR_STATEMENT)) {
-                List<VariableDeclaration> declarations1 = fragment1.getVariableDeclarations();
-                List<VariableDeclaration> declarations2 = fragment2.getVariableDeclarations();
-                for (VariableDeclaration declaration1 : declarations1) {
-                    for (VariableDeclaration declaration2 : declarations2) {
-                        if (declaration1.getVariableName().equals(declaration2.getVariableName()) &&
-                                (!declaration1.getType().equals(
-                                        declaration2.getType()) || !declaration1.getType().equalsQualified(
-                                        declaration2.getType())) &&
-                                !containsVariableDeclarationWithSameNameAndType(declaration1, declarations2)) {
-/*TODO:                            ChangeVariableTypeRefactoring ref =
-                                    new ChangeVariableTypeRefactoring(declaration1, declaration2,
-                                                                      mapping.getOperation1(), mapping.getOperation2(),
-                                                                      VariableReferenceExtractor.findReferences(
-                                                                              declaration1, declaration2, mappings));
-                            changedTypes.add(ref);
-                            break;*/
                         }
                     }
                 }
@@ -83,7 +56,7 @@ public class TypeReplacementAnalysis {
                                                                    List<VariableDeclaration> declarations) {
         for (VariableDeclaration d : declarations) {
             if (d.getVariableName().equals(declaration.getVariableName()) && d.getType().equals(
-                    declaration.getType()) && d.getType().equalsQualified(declaration.getType())) {
+                declaration.getType()) && d.getType().equalsQualified(declaration.getType())) {
                 return true;
             }
         }

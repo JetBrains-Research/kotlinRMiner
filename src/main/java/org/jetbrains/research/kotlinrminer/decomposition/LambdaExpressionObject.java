@@ -2,8 +2,6 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtLambdaExpression;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
-import org.jetbrains.research.kotlinrminer.LocationInfo.CodeElementType;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
 public class LambdaExpressionObject implements LocationInfoProvider {

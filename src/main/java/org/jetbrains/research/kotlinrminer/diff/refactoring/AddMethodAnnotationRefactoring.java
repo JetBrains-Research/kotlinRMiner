@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringType;
@@ -12,10 +13,9 @@ import org.jetbrains.research.kotlinrminer.uml.UMLAnnotation;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
 
 public class AddMethodAnnotationRefactoring implements Refactoring {
-
-    private UMLAnnotation annotation;
-    private UMLOperation operationBefore;
-    private UMLOperation operationAfter;
+    private final UMLAnnotation annotation;
+    private final UMLOperation operationBefore;
+    private final UMLOperation operationAfter;
 
     public AddMethodAnnotationRefactoring(UMLAnnotation annotation, UMLOperation operationBefore,
                                           UMLOperation operationAfter) {
@@ -38,22 +38,22 @@ public class AddMethodAnnotationRefactoring implements Refactoring {
 
     @Override
     public List<CodeRange> leftSide() {
-        List<CodeRange> ranges = new ArrayList<CodeRange>();
+        List<CodeRange> ranges = new ArrayList<>();
         ranges.add(operationBefore.codeRange()
-            .setDescription("original method declaration")
-            .setCodeElement(operationBefore.toString()));
+                       .setDescription("original method declaration")
+                       .setCodeElement(operationBefore.toString()));
         return ranges;
     }
 
     @Override
     public List<CodeRange> rightSide() {
-        List<CodeRange> ranges = new ArrayList<CodeRange>();
+        List<CodeRange> ranges = new ArrayList<>();
         ranges.add(annotation.codeRange()
-            .setDescription("added annotation")
-            .setCodeElement(annotation.toString()));
+                       .setDescription("added annotation")
+                       .setCodeElement(annotation.toString()));
         ranges.add(operationAfter.codeRange()
-            .setDescription("method declaration with added annotation")
-            .setCodeElement(operationAfter.toString()));
+                       .setDescription("method declaration with added annotation")
+                       .setCodeElement(operationAfter.toString()));
         return ranges;
     }
 
@@ -69,18 +69,18 @@ public class AddMethodAnnotationRefactoring implements Refactoring {
 
     @Override
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
-        Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<ImmutablePair<String, String>>();
+        Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(
-            new ImmutablePair<String, String>(getOperationBefore().getLocationInfo().getFilePath(),
-                getOperationBefore().getClassName()));
+            new ImmutablePair<>(getOperationBefore().getLocationInfo().getFilePath(),
+                                getOperationBefore().getClassName()));
         return pairs;
     }
 
     @Override
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
-        Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<ImmutablePair<String, String>>();
-        pairs.add(new ImmutablePair<String, String>(getOperationAfter().getLocationInfo().getFilePath(),
-            getOperationAfter().getClassName()));
+        Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
+        pairs.add(new ImmutablePair<>(getOperationAfter().getLocationInfo().getFilePath(),
+                                      getOperationAfter().getClassName()));
         return pairs;
     }
 

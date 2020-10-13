@@ -1,7 +1,7 @@
 package org.jetbrains.research.kotlinrminer.uml;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 

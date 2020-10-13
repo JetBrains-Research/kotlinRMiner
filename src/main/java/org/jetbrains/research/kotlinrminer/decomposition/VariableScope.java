@@ -3,7 +3,6 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 import org.jetbrains.kotlin.com.intellij.openapi.editor.Document;
 import org.jetbrains.kotlin.com.intellij.psi.FileViewProvider;
 import org.jetbrains.kotlin.psi.KtFile;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
 
 import static org.jetbrains.research.kotlinrminer.util.PsiUtils.countColumn;
 
@@ -82,13 +81,13 @@ public class VariableScope {
 
     public String toString() {
         return startLine + ":" + startColumn +
-                "-" +
-                endLine + ":" + endColumn;
+            "-" +
+            endLine + ":" + endColumn;
     }
 
     public boolean subsumes(LocationInfo other) {
         return this.filePath.equals(other.getFilePath()) &&
-                this.startOffset <= other.getStartOffset() &&
-                this.endOffset >= other.getEndOffset();
+            this.startOffset <= other.getStartOffset() &&
+            this.endOffset >= other.getEndOffset();
     }
 }

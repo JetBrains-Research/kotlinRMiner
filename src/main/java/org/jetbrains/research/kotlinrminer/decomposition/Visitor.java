@@ -37,11 +37,6 @@ public class Visitor extends KtVisitor {
     }
 
     @Override
-    public Object visitKtElement(@NotNull KtElement element, Object data) {
-        return super.visitKtElement(element, data);
-    }
-
-    @Override
     public Object visitDeclaration(@NotNull KtDeclaration dcl, Object data) {
         if (dcl instanceof KtVariableDeclaration) {
             VariableDeclaration variableDeclaration = new VariableDeclaration(dcl.getContainingKtFile(), filePath, dcl);
@@ -56,29 +51,9 @@ public class Visitor extends KtVisitor {
     }
 
     @Override
-    public Object visitSecondaryConstructor(@NotNull KtSecondaryConstructor constructor, Object data) {
-        return super.visitSecondaryConstructor(constructor, data);
-    }
-
-    @Override
-    public Object visitPrimaryConstructor(@NotNull KtPrimaryConstructor constructor, Object data) {
-        return super.visitPrimaryConstructor(constructor, data);
-    }
-
-    @Override
     public Object visitProperty(@NotNull KtProperty property, Object data) {
         variableDeclarations.add(new VariableDeclaration(ktFile, filePath, property));
         return super.visitProperty(property, data);
-    }
-
-    @Override
-    public Object visitModifierList(@NotNull KtModifierList list, Object data) {
-        return super.visitModifierList(list, data);
-    }
-
-    @Override
-    public Object visitAnnotation(@NotNull KtAnnotation annotation, Object data) {
-        return super.visitAnnotation(annotation, data);
     }
 
     @Override

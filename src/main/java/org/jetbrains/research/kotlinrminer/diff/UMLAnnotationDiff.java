@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jetbrains.research.kotlinrminer.decomposition.AbstractExpression;
 import org.jetbrains.research.kotlinrminer.uml.UMLAnnotation;
 
 public class UMLAnnotationDiff {
-
     private final UMLAnnotation removedAnnotation;
     private final UMLAnnotation addedAnnotation;
     private final List<AbstractMap.SimpleEntry<String, AbstractExpression>> removedMemberValuePairs;
@@ -50,7 +50,7 @@ public class UMLAnnotationDiff {
             for (String key1 : memberValuePairs1.keySet()) {
                 if (memberValuePairs2.containsKey(key1)) {
                     matchedMemberValuePairs.put(new AbstractMap.SimpleEntry<>(key1, memberValuePairs1.get(key1)),
-                        new AbstractMap.SimpleEntry<>(key1, memberValuePairs2.get(key1)));
+                                                new AbstractMap.SimpleEntry<>(key1, memberValuePairs2.get(key1)));
                 } else {
                     removedMemberValuePairs.add(new AbstractMap.SimpleEntry<>(key1, memberValuePairs1.get(key1)));
                 }
@@ -58,7 +58,7 @@ public class UMLAnnotationDiff {
             for (String key2 : memberValuePairs2.keySet()) {
                 if (memberValuePairs1.containsKey(key2)) {
                     matchedMemberValuePairs.put(new AbstractMap.SimpleEntry<>(key2, memberValuePairs1.get(key2)),
-                        new AbstractMap.SimpleEntry<>(key2, memberValuePairs2.get(key2)));
+                                                new AbstractMap.SimpleEntry<>(key2, memberValuePairs2.get(key2)));
                 } else {
                     addedMemberValuePairs.add(new AbstractMap.SimpleEntry<>(key2, memberValuePairs2.get(key2)));
                 }

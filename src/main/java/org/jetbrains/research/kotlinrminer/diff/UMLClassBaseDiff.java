@@ -36,7 +36,6 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
     private final List<UMLOperationDiff> operationDiffList;
 
     private UMLAnnotationListDiff annotationListDiff;
-    //protected List<UMLAttributeDiff> attributeDiffList;
     protected List<Refactoring> refactorings;
     private Set<MethodInvocationReplacement> consistentMethodInvocationRenames;
     private final Set<CandidateAttributeRefactoring> candidateAttributeRenames =
@@ -69,7 +68,6 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
 /*        this.addedAnonymousClasses = new ArrayList<UMLAnonymousClass>();
         this.removedAnonymousClasses = new ArrayList<UMLAnonymousClass>();*/
         this.operationDiffList = new ArrayList<>();
-        // this.attributeDiffList = new ArrayList<UMLAttributeDiff>();
         this.refactorings = new ArrayList<>();
         this.modelDiff = modelDiff;
     }
@@ -166,13 +164,6 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
             UMLAttribute attributeWithTheSameName = nextClass.attributeWithTheSameNameIgnoringChangedType(attribute);
             if (attributeWithTheSameName == null) {
                 this.removedAttributes.add(attribute);
-            } else if (!attributeDiffListContainsAttribute(attribute, attributeWithTheSameName)) {
-/*          TODO:      UMLAttributeDiff attributeDiff =
-                        new UMLAttributeDiff(attribute, attributeWithTheSameName, operationBodyMapperList);
-                if (!attributeDiff.isEmpty()) {
-                    refactorings.addAll(attributeDiff.getRefactorings());
-                    this.attributeDiffList.add(attributeDiff);
-                }*/
             }
         }
         for (UMLAttribute attribute : nextClass.getAttributes()) {
@@ -180,13 +171,6 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
                 originalClass.attributeWithTheSameNameIgnoringChangedType(attribute);
             if (attributeWithTheSameName == null) {
                 this.addedAttributes.add(attribute);
-            } else if (!attributeDiffListContainsAttribute(attributeWithTheSameName, attribute)) {
-/*      TODO:          UMLAttributeDiff attributeDiff =
-                        new UMLAttributeDiff(attributeWithTheSameName, attribute, operationBodyMapperList);
-                if (!attributeDiff.isEmpty()) {
-                    refactorings.addAll(attributeDiff.getRefactorings());
-                    this.attributeDiffList.add(attributeDiff);
-                }*/
             }
         }
     }
@@ -493,23 +477,6 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
                     mergedVariables.add(a1.getVariableDeclaration());
                 }
             }
-            UMLAttribute a2 = findAttributeInNextClass(merge.getAfter());
-            Set<CandidateMergeVariableRefactoring> set = mergeMap.get(merge);
-            for (CandidateMergeVariableRefactoring candidate : set) {
-                if (mergedVariables.size() > 1 && mergedVariables.size() == merge.getMergedVariables().size() && a2 != null) {
-/* TODO:                   MergeAttributeRefactoring ref =
-                            new MergeAttributeRefactoring(mergedAttributes, a2, getOriginalClassName(),
-                                                          getNextClassName(), set);
-                    if (!refactorings.contains(ref)) {
-                        refactorings.add(ref);
-                        break;//it's not necessary to repeat the same process for all candidates in the set
-                    }*/
-                } else {
-                    candidate.setMergedAttributes(mergedAttributes);
-                    candidate.setNewAttribute(a2);
-                    candidateAttributeMerges.add(candidate);
-                }
-            }
         }
         for (SplitVariableReplacement split : splitMap.keySet()) {
             Set<UMLAttribute> splitAttributes = new LinkedHashSet<>();
@@ -519,23 +486,6 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
                 if (a2 != null) {
                     splitAttributes.add(a2);
                     splitVariables.add(a2.getVariableDeclaration());
-                }
-            }
-            UMLAttribute a1 = findAttributeInOriginalClass(split.getBefore());
-            Set<CandidateSplitVariableRefactoring> set = splitMap.get(split);
-            for (CandidateSplitVariableRefactoring candidate : set) {
-                if (splitVariables.size() > 1 && splitVariables.size() == split.getSplitVariables().size() && a1 != null) {
-/*   TODO:                 SplitAttributeRefactoring ref =
-                            new SplitAttributeRefactoring(a1, splitAttributes, getOriginalClassName(),
-                                                          getNextClassName(), set);
-                    if (!refactorings.contains(ref)) {
-                        refactorings.add(ref);
-                        break;//it's not necessary to repeat the same process for all candidates in the set
-                    }*/
-                } else {
-                    candidate.setSplitAttributes(splitAttributes);
-                    candidate.setOldAttribute(a1);
-                    candidateAttributeSplits.add(candidate);
                 }
             }
         }
@@ -603,8 +553,6 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
                         //field is declared in a superclass or outer class
                         candidateAttributeRenames.add(candidate);
                     }
-                } else if (candidate.getRenamedVariableDeclaration() != null) {
-                    //inline field
                 }
             }
         }
@@ -724,16 +672,6 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
                                     mergedVariables.add(a1.getVariableDeclaration());
                                 }
                             }
-                            UMLAttribute a2 = findAttributeInNextClass(renamedAttributeName);
-                            if (mergedVariables.size() > 1 && mergedVariables.size() == merge.getMergedVariables().size() && a2 != null) {
-/* TODO:                               MergeAttributeRefactoring ref =
-                                        new MergeAttributeRefactoring(mergedAttributes, a2, getOriginalClassName(),
-                                                                      getNextClassName(),
-                                                                      new LinkedHashSet<CandidateMergeVariableRefactoring>());
-                                if (!refactorings.contains(ref)) {
-                                    newRefactorings.add(ref);
-                                }*/
-                            }
                         }
                     } else if (refactoring instanceof SplitVariableRefactoring) {
                         SplitVariableRefactoring split = (SplitVariableRefactoring) refactoring;
@@ -772,16 +710,6 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
                                     splitAttributes.add(a2);
                                     splitVariables.add(a2.getVariableDeclaration());
                                 }
-                            }
-                            UMLAttribute a1 = findAttributeInOriginalClass(originalAttributeName);
-                            if (splitVariables.size() > 1 && splitVariables.size() == split.getSplitVariables().size() && a1 != null) {
-/* TODO:                               SplitAttributeRefactoring ref =
-                                        new SplitAttributeRefactoring(a1, splitAttributes, getOriginalClassName(),
-                                                                      getNextClassName(),
-                                                                      new LinkedHashSet<CandidateSplitVariableRefactoring>());
-                                if (!refactorings.contains(ref)) {
-                                    newRefactorings.add(ref);
-                                }*/
                             }
                         }
                     }

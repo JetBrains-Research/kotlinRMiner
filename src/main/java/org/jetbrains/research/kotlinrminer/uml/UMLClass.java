@@ -6,7 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
+
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.LocationInfoProvider;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 
@@ -206,14 +207,14 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
                 String otherAttributeType = otherAttribute.getType().getClassType();
                 int thisArrayDimension = attribute.getType().getArrayDimension();
                 int otherArrayDimension = otherAttribute.getType().getArrayDimension();
-                String thisAttributeTypeComparedString = null;
+                String thisAttributeTypeComparedString;
                 if (thisAttributeType.contains(".")) {
                     thisAttributeTypeComparedString =
                         thisAttributeType.substring(thisAttributeType.lastIndexOf(".") + 1);
                 } else {
                     thisAttributeTypeComparedString = thisAttributeType;
                 }
-                String otherAttributeTypeComparedString = null;
+                String otherAttributeTypeComparedString;
                 if (otherAttributeType.contains(".")) {
                     otherAttributeTypeComparedString =
                         otherAttributeType.substring(otherAttributeType.lastIndexOf(".") + 1);
@@ -241,14 +242,14 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
                         String otherParameterType = otherParameter.getType().getClassType();
                         int thisArrayDimension = parameter.getType().getArrayDimension();
                         int otherArrayDimension = otherParameter.getType().getArrayDimension();
-                        String thisParameterTypeComparedString = null;
+                        String thisParameterTypeComparedString;
                         if (thisParameterType.contains(".")) {
                             thisParameterTypeComparedString =
                                 thisParameterType.substring(thisParameterType.lastIndexOf(".") + 1);
                         } else {
                             thisParameterTypeComparedString = thisParameterType;
                         }
-                        String otherParameterTypeComparedString = null;
+                        String otherParameterTypeComparedString;
                         if (otherParameterType.contains(".")) {
                             otherParameterTypeComparedString =
                                 otherParameterType.substring(otherParameterType.lastIndexOf(".") + 1);
@@ -312,15 +313,6 @@ public class UMLClass extends UMLAbstractClass implements Comparable<UMLClass>, 
 
     public int compareTo(UMLClass umlClass) {
         return this.toString().compareTo(umlClass.toString());
-    }
-
-    public boolean implementsInterface(Set<UMLType> interfaces) {
-        for (UMLType type : interfaces) {
-            if (implementedInterfaces.contains(type)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean isSubTypeOf(UMLClass umlClass) {

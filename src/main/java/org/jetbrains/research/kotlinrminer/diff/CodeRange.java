@@ -2,7 +2,8 @@ package org.jetbrains.research.kotlinrminer.diff;
 
 import com.fasterxml.jackson.core.io.JsonStringEncoder;
 import com.fasterxml.jackson.core.util.BufferRecyclers;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
+import org.jetbrains.research.kotlinrminer.decomposition.CodeElementType;
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.AbstractCodeFragment;
 
 import java.util.Set;
@@ -13,12 +14,12 @@ public class CodeRange {
     private final int endLine;
     private final int startColumn;
     private final int endColumn;
-    private final LocationInfo.CodeElementType codeElementType;
+    private final CodeElementType codeElementType;
     private String description;
     private String codeElement;
 
     public CodeRange(String filePath, int startLine, int endLine,
-                     int startColumn, int endColumn, LocationInfo.CodeElementType codeElementType) {
+                     int startColumn, int endColumn, CodeElementType codeElementType) {
         this.filePath = filePath;
         this.startLine = startLine;
         this.endLine = endLine;
@@ -47,7 +48,7 @@ public class CodeRange {
         return endColumn;
     }
 
-    public LocationInfo.CodeElementType getCodeElementType() {
+    public CodeElementType getCodeElementType() {
         return codeElementType;
     }
 
@@ -141,7 +142,7 @@ public class CodeRange {
             }
         }
         return new CodeRange(filePath, minStartLine, maxEndLine, startColumn, endColumn,
-                             LocationInfo.CodeElementType.LIST_OF_STATEMENTS);
+                             CodeElementType.LIST_OF_STATEMENTS);
     }
 
 }

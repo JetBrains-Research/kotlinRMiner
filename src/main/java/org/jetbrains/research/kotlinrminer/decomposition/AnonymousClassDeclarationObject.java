@@ -3,7 +3,6 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtLambdaExpression;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class AnonymousClassDeclarationObject implements LocationInfoProvider {
 
     public AnonymousClassDeclarationObject(KtFile ktFile, String filePath, KtElement anonymous) {
         this.locationInfo =
-                new LocationInfo(ktFile, filePath, anonymous, LocationInfo.CodeElementType.ANONYMOUS_CLASS_DECLARATION);
+            new LocationInfo(ktFile, filePath, anonymous, CodeElementType.ANONYMOUS_CLASS_DECLARATION);
         this.elementNode = anonymous;
         this.anonName = anonymous.toString();
     }

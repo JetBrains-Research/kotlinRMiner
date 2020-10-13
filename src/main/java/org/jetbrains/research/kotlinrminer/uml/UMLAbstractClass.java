@@ -1,7 +1,7 @@
 package org.jetbrains.research.kotlinrminer.uml;
 
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo;
 import org.jetbrains.research.kotlinrminer.diff.RenamePattern;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
@@ -61,19 +61,11 @@ public abstract class UMLAbstractClass {
         return null;
     }
 
-    public boolean containsOperationWithTheSameSignature(UMLOperation operation) {
-        for (UMLOperation originalOperation : operations) {
-            if (originalOperation.equalSignature(operation))
-                return true;
-        }
-        return false;
-    }
-
     public boolean containsOperationWithTheSameSignatureIgnoringChangedTypes(UMLOperation operation) {
         for (UMLOperation originalOperation : operations) {
             if (originalOperation.equalSignatureIgnoringChangedTypes(operation)) {
                 boolean originalOperationEmptyBody =
-                        originalOperation.getBody() == null || originalOperation.hasEmptyBody();
+                    originalOperation.getBody() == null || originalOperation.hasEmptyBody();
                 boolean operationEmptyBody = operation.getBody() == null || operation.hasEmptyBody();
                 if (originalOperationEmptyBody == operationEmptyBody)
                     return true;
@@ -157,17 +149,17 @@ public abstract class UMLAbstractClass {
         }
         if (this.isTestClass() && umlClass.isTestClass()) {
             return commonOperations.size() > Math.floor(totalOperations / 2.0) || commonOperations.containsAll(
-                    this.operations);
+                this.operations);
         }
         if (this.isSingleAbstractMethodInterface() && umlClass.isSingleAbstractMethodInterface()) {
             return commonOperations.size() == totalOperations;
         }
         return (commonOperations.size() >= Math.floor(
-                totalOperations / 2.0) && (commonAttributes.size() > 2 || totalAttributes == 0)) ||
-                (commonAttributes.size() >= Math.floor(
-                        totalAttributes / 2.0) && (commonOperations.size() > 2 || totalOperations == 0)) ||
-                (commonOperations.size() == totalOperations && commonOperations.size() > 2 && this.attributes.size() == umlClass.attributes.size()) ||
-                (commonOperations.size() == totalOperations && commonOperations.size() > 2 && totalAttributes == 1);
+            totalOperations / 2.0) && (commonAttributes.size() > 2 || totalAttributes == 0)) ||
+            (commonAttributes.size() >= Math.floor(
+                totalAttributes / 2.0) && (commonOperations.size() > 2 || totalOperations == 0)) ||
+            (commonOperations.size() == totalOperations && commonOperations.size() > 2 && this.attributes.size() == umlClass.attributes.size()) ||
+            (commonOperations.size() == totalOperations && commonOperations.size() > 2 && totalAttributes == 1);
     }
 
     public boolean hasSameAttributesAndOperations(UMLAbstractClass umlClass) {
@@ -211,7 +203,7 @@ public abstract class UMLAbstractClass {
         List<UMLAttribute> attributesOfType = new ArrayList<>();
         for (UMLAttribute attribute : attributes) {
             if (targetClass.endsWith("." + attribute.getType().getClassType()) ||
-                    targetClass.equals(attribute.getType().getClassType())) {
+                targetClass.equals(attribute.getType().getClassType())) {
                 attributesOfType.add(attribute);
             }
         }
@@ -237,8 +229,8 @@ public abstract class UMLAbstractClass {
             if (!operation.isConstructor() /*&& !operation.overridesObject()*/) {
                 totalOperations++;
                 if (umlClass.containsOperationWithTheSameSignatureIgnoringChangedTypes(operation) ||
-                        (pattern != null && umlClass.containsOperationWithTheSameRenamePattern(operation,
-                                                                                               pattern.reverse()))) {
+                    (pattern != null && umlClass.containsOperationWithTheSameRenamePattern(operation,
+                                                                                           pattern.reverse()))) {
                     commonOperations.add(operation);
                 }
             }
@@ -247,7 +239,7 @@ public abstract class UMLAbstractClass {
             if (!operation.isConstructor() /*&& !operation.overridesObject()*/) {
                 totalOperations++;
                 if (this.containsOperationWithTheSameSignatureIgnoringChangedTypes(operation) ||
-                        (pattern != null && this.containsOperationWithTheSameRenamePattern(operation, pattern))) {
+                    (pattern != null && this.containsOperationWithTheSameRenamePattern(operation, pattern))) {
                     commonOperations.add(operation);
                 }
             }
@@ -257,33 +249,33 @@ public abstract class UMLAbstractClass {
         for (UMLAttribute attribute : attributes) {
             totalAttributes++;
             if (umlClass.containsAttributeWithTheSameNameIgnoringChangedType(attribute) ||
-                    (pattern != null && umlClass.containsAttributeWithTheSameRenamePattern(attribute,
-                                                                                           pattern.reverse()))) {
+                (pattern != null && umlClass.containsAttributeWithTheSameRenamePattern(attribute,
+                                                                                       pattern.reverse()))) {
                 commonAttributes.add(attribute);
             }
         }
         for (UMLAttribute attribute : umlClass.attributes) {
             totalAttributes++;
             if (this.containsAttributeWithTheSameNameIgnoringChangedType(attribute) ||
-                    (pattern != null && this.containsAttributeWithTheSameRenamePattern(attribute, pattern))) {
+                (pattern != null && this.containsAttributeWithTheSameRenamePattern(attribute, pattern))) {
                 commonAttributes.add(attribute);
             }
         }
         if (this.isTestClass() && umlClass.isTestClass()) {
             return commonOperations.size() > Math.floor(totalOperations / 2.0) || commonOperations.containsAll(
-                    this.operations);
+                this.operations);
         }
         if (this.isSingleAbstractMethodInterface() && umlClass.isSingleAbstractMethodInterface()) {
             return commonOperations.size() == totalOperations;
         }
         return (commonOperations.size() > Math.floor(
-                totalOperations / 2.0) && (commonAttributes.size() > 2 || totalAttributes == 0)) ||
-                (commonOperations.size() > Math.floor(
-                        totalOperations / 3.0 * 2.0) && (commonAttributes.size() >= 2 || totalAttributes == 0)) ||
-                (commonAttributes.size() > Math.floor(
-                        totalAttributes / 2.0) && (commonOperations.size() > 2 || totalOperations == 0)) ||
-                (commonOperations.size() == totalOperations && commonOperations.size() > 2 && this.attributes.size() == umlClass.attributes.size()) ||
-                (commonOperations.size() == totalOperations && commonOperations.size() > 2 && totalAttributes == 1);
+            totalOperations / 2.0) && (commonAttributes.size() > 2 || totalAttributes == 0)) ||
+            (commonOperations.size() > Math.floor(
+                totalOperations / 3.0 * 2.0) && (commonAttributes.size() >= 2 || totalAttributes == 0)) ||
+            (commonAttributes.size() > Math.floor(
+                totalAttributes / 2.0) && (commonOperations.size() > 2 || totalOperations == 0)) ||
+            (commonOperations.size() == totalOperations && commonOperations.size() > 2 && this.attributes.size() == umlClass.attributes.size()) ||
+            (commonOperations.size() == totalOperations && commonOperations.size() > 2 && totalAttributes == 1);
     }
 
     public boolean containsAttributeWithTheSameRenamePattern(UMLAttribute attribute, RenamePattern pattern) {
@@ -293,7 +285,7 @@ public abstract class UMLAbstractClass {
             String originalAttributeName = originalAttribute.getName();
             if (originalAttributeName.contains(pattern.getBefore())) {
                 String originalAttributeNameAfterReplacement =
-                        originalAttributeName.replace(pattern.getBefore(), pattern.getAfter());
+                    originalAttributeName.replace(pattern.getBefore(), pattern.getAfter());
                 if (originalAttributeNameAfterReplacement.equals(attribute.getName()))
                     return true;
             }
@@ -308,7 +300,7 @@ public abstract class UMLAbstractClass {
             String originalOperationName = originalOperation.getName();
             if (originalOperationName.contains(pattern.getBefore())) {
                 String originalOperationNameAfterReplacement =
-                        originalOperationName.replace(pattern.getBefore(), pattern.getAfter());
+                    originalOperationName.replace(pattern.getBefore(), pattern.getAfter());
                 if (originalOperationNameAfterReplacement.equals(operation.getName()))
                     return true;
             }
@@ -320,11 +312,11 @@ public abstract class UMLAbstractClass {
         List<UMLOperation> matchingOperations = new ArrayList<>();
         for (UMLOperation originalOperation : operations) {
             boolean matchesOperation = isInterface() ?
-                    originalOperation.equalSignatureIgnoringChangedTypes(operation) :
-                    originalOperation.equalSignatureWithIdenticalNameIgnoringChangedTypes(operation);
+                originalOperation.equalSignatureIgnoringChangedTypes(operation) :
+                originalOperation.equalSignatureWithIdenticalNameIgnoringChangedTypes(operation);
             if (matchesOperation) {
                 boolean originalOperationEmptyBody =
-                        originalOperation.getBody() == null || originalOperation.hasEmptyBody();
+                    originalOperation.getBody() == null || originalOperation.hasEmptyBody();
                 boolean operationEmptyBody = operation.getBody() == null || operation.hasEmptyBody();
                 if (originalOperationEmptyBody == operationEmptyBody)
                     matchingOperations.add(originalOperation);

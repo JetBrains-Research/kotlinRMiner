@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.ConsistentReplacementDetector;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.MergeVariableReplacement;
@@ -36,7 +35,6 @@ import org.jetbrains.research.kotlinrminer.uml.UMLParameter;
 import org.jetbrains.research.kotlinrminer.util.PrefixSuffixUtils;
 
 public class VariableReplacementAnalysis {
-
     private final Set<AbstractCodeMapping> mappings;
     private final List<StatementObject> nonMappedLeavesT1;
     private final List<StatementObject> nonMappedLeavesT2;
@@ -50,17 +48,17 @@ public class VariableReplacementAnalysis {
     private final UMLOperationDiff operationDiff;
     private final UMLClassBaseDiff classDiff;
     private final Set<RenameVariableRefactoring> variableRenames =
-            new LinkedHashSet<>();
+        new LinkedHashSet<>();
     private final Set<MergeVariableRefactoring> variableMerges =
-            new LinkedHashSet<>();
+        new LinkedHashSet<>();
     private final Set<SplitVariableRefactoring> variableSplits =
-            new LinkedHashSet<>();
+        new LinkedHashSet<>();
     private final Set<CandidateAttributeRefactoring> candidateAttributeRenames =
-            new LinkedHashSet<>();
+        new LinkedHashSet<>();
     private final Set<CandidateMergeVariableRefactoring> candidateAttributeMerges =
-            new LinkedHashSet<>();
+        new LinkedHashSet<>();
     private final Set<CandidateSplitVariableRefactoring> candidateAttributeSplits =
-            new LinkedHashSet<>();
+        new LinkedHashSet<>();
 
     public VariableReplacementAnalysis(UMLOperationBodyMapper mapper, Set<Refactoring> refactorings,
                                        UMLClassBaseDiff classDiff) {
@@ -80,7 +78,7 @@ public class VariableReplacementAnalysis {
         this.refactorings = refactorings;
         this.callSiteOperation = mapper.getCallSiteOperation();
         this.operationDiff =
-                classDiff != null ? classDiff.getOperationDiff(operation1, operation2) : null;
+            classDiff != null ? classDiff.getOperationDiff(operation1, operation2) : null;
         this.classDiff = classDiff;
         findVariableSplits();
         findVariableMerges();
@@ -92,7 +90,7 @@ public class VariableReplacementAnalysis {
     private static boolean returnVariableMapping(AbstractCodeMapping mapping,
                                                  Replacement replacement) {
         return mapping.getFragment1().getString().equals("return " + replacement.getBefore() + "\n") &&
-                mapping.getFragment2().getString().equals("return " + replacement.getAfter() + "\n");
+            mapping.getFragment2().getString().equals("return " + replacement.getAfter() + "\n");
     }
 
     public static String prepareLine(String line) {
@@ -127,11 +125,11 @@ public class VariableReplacementAnalysis {
     public static boolean bothFragmentsUseVariable(VariableDeclaration v1,
                                                    AbstractCodeMapping mapping) {
         return mapping.getFragment1().getVariables().contains(v1.getVariableName()) &&
-                mapping.getFragment2().getVariables().contains(v1.getVariableName());
+            mapping.getFragment2().getVariables().contains(v1.getVariableName());
     }
 
     private static boolean containsVariableDeclarationWithName(
-            Set<VariableDeclaration> variableDeclarations, String variableName) {
+        Set<VariableDeclaration> variableDeclarations, String variableName) {
         for (VariableDeclaration declaration : variableDeclarations) {
             if (declaration.getVariableName().equals(variableName)) {
                 return true;
@@ -148,13 +146,13 @@ public class VariableReplacementAnalysis {
                         for (UMLAttribute addedAttribute : classDiff.getAddedAttributes()) {
                             VariableDeclaration variableDeclaration = addedAttribute.getVariableDeclaration();
                             if (addedAttribute.getName().equals(replacement.getAfter()) &&
-                                    variableDeclaration.getInitializer() != null &&
-                                    variableDeclaration.getInitializer().getString()
-                                            .equals(replacement.getBefore())) {
+                                variableDeclaration.getInitializer() != null &&
+                                variableDeclaration.getInitializer().getString()
+                                    .equals(replacement.getBefore())) {
                                 ExtractAttributeRefactoring
-                                        refactoring =
-                                        new ExtractAttributeRefactoring(addedAttribute, classDiff.getOriginalClass(),
-                                                                        classDiff.getNextClass());
+                                    refactoring =
+                                    new ExtractAttributeRefactoring(addedAttribute, classDiff.getOriginalClass(),
+                                                                    classDiff.getNextClass());
                                 refactoring.addReference(mapping);
                                 refactorings.add(refactoring);
                             }
@@ -175,27 +173,27 @@ public class VariableReplacementAnalysis {
                         for (ObjectCreation creation : creations) {
                             for (String argument : creation.arguments) {
                                 SimpleEntry<VariableDeclaration, UMLOperation> v2 = getVariableDeclaration2(
-                                        new Replacement("", argument, Replacement.ReplacementType.VARIABLE_NAME));
+                                    new Replacement("", argument, Replacement.ReplacementType.VARIABLE_NAME));
                                 SimpleEntry<VariableDeclaration, UMLOperation> v1 = getVariableDeclaration1(
-                                        new Replacement(declaration.getVariableName(), "",
-                                                        Replacement.ReplacementType.VARIABLE_NAME));
+                                    new Replacement(declaration.getVariableName(), "",
+                                                    Replacement.ReplacementType.VARIABLE_NAME));
                                 if (v2 != null && v1 != null) {
                                     Set<AbstractCodeMapping> references =
-                                            VariableReferenceExtractor.findReferences(v1.getKey(), v2.getKey(),
-                                                                                      mappings);
+                                        VariableReferenceExtractor.findReferences(v1.getKey(), v2.getKey(),
+                                                                                  mappings);
                                     RenameVariableRefactoring ref =
-                                            new RenameVariableRefactoring(v1.getKey(), v2.getKey(), v1.getValue(),
-                                                                          v2.getValue(), references);
+                                        new RenameVariableRefactoring(v1.getKey(), v2.getKey(), v1.getValue(),
+                                                                      v2.getValue(), references);
                                     if (!existsConflictingExtractVariableRefactoring(ref) &&
-                                            !existsConflictingMergeVariableRefactoring(ref) &&
-                                            !existsConflictingSplitVariableRefactoring(ref)) {
+                                        !existsConflictingMergeVariableRefactoring(ref) &&
+                                        !existsConflictingSplitVariableRefactoring(ref)) {
                                         variableRenames.add(ref);
                                         if (!v1.getKey().getType().equals(v2.getKey().getType()) ||
-                                                !v1.getKey().getType().equalsQualified(v2.getKey().getType())) {
+                                            !v1.getKey().getType().equalsQualified(v2.getKey().getType())) {
                                             ChangeVariableTypeRefactoring refactoring =
-                                                    new ChangeVariableTypeRefactoring(v1.getKey(), v2.getKey(),
-                                                                                      v1.getValue(),
-                                                                                      v2.getValue(), references);
+                                                new ChangeVariableTypeRefactoring(v1.getKey(), v2.getKey(),
+                                                                                  v1.getValue(),
+                                                                                  v2.getValue(), references);
                                             refactoring.addRelatedRefactoring(ref);
                                             refactorings.add(refactoring);
                                         }
@@ -235,10 +233,10 @@ public class VariableReplacementAnalysis {
 
     private void findVariableSplits() {
         Map<SplitVariableReplacement, Set<AbstractCodeMapping>> splitMap =
-                new LinkedHashMap<>();
+            new LinkedHashMap<>();
         Map<String, Map<VariableReplacementWithMethodInvocation, Set<AbstractCodeMapping>>>
-                variableInvocationExpressionMap =
-                new LinkedHashMap<>();
+            variableInvocationExpressionMap =
+            new LinkedHashMap<>();
         for (AbstractCodeMapping mapping : mappings) {
             for (Replacement replacement : mapping.getReplacements()) {
                 if (replacement instanceof SplitVariableReplacement) {
@@ -252,24 +250,24 @@ public class VariableReplacementAnalysis {
                     }
                 } else if (replacement instanceof VariableReplacementWithMethodInvocation) {
                     VariableReplacementWithMethodInvocation variableReplacement =
-                            (VariableReplacementWithMethodInvocation) replacement;
+                        (VariableReplacementWithMethodInvocation) replacement;
                     processVariableReplacementWithMethodInvocation(variableReplacement, mapping,
                                                                    variableInvocationExpressionMap,
                                                                    VariableReplacementWithMethodInvocation.Direction.INVOCATION_TO_VARIABLE);
                 } else if (replacement.getType().equals(Replacement.ReplacementType.VARIABLE_NAME)) {
                     for (StatementObject statement : nonMappedLeavesT1) {
                         VariableDeclaration variableDeclaration =
-                                statement.getVariableDeclaration(replacement.getBefore());
+                            statement.getVariableDeclaration(replacement.getBefore());
                         if (variableDeclaration != null) {
                             AbstractExpression initializer = variableDeclaration.getInitializer();
                             if (initializer != null) {
                                 OperationInvocation invocation = initializer.invocationCoveringEntireFragment();
                                 if (invocation != null) {
                                     VariableReplacementWithMethodInvocation variableReplacement =
-                                            new VariableReplacementWithMethodInvocation(initializer.getString(),
-                                                                                        replacement.getAfter(),
-                                                                                        invocation,
-                                                                                        VariableReplacementWithMethodInvocation.Direction.INVOCATION_TO_VARIABLE);
+                                        new VariableReplacementWithMethodInvocation(initializer.getString(),
+                                                                                    replacement.getAfter(),
+                                                                                    invocation,
+                                                                                    VariableReplacementWithMethodInvocation.Direction.INVOCATION_TO_VARIABLE);
                                     processVariableReplacementWithMethodInvocation(variableReplacement, mapping,
                                                                                    variableInvocationExpressionMap,
                                                                                    VariableReplacementWithMethodInvocation.Direction.INVOCATION_TO_VARIABLE);
@@ -291,9 +289,9 @@ public class VariableReplacementAnalysis {
                             String expression = invocation.getExpression();
                             if (expression != null) {
                                 VariableReplacementWithMethodInvocation variableReplacement =
-                                        new VariableReplacementWithMethodInvocation(initializer.getString(),
-                                                                                    parameterName, invocation,
-                                                                                    VariableReplacementWithMethodInvocation.Direction.INVOCATION_TO_VARIABLE);
+                                    new VariableReplacementWithMethodInvocation(initializer.getString(),
+                                                                                parameterName, invocation,
+                                                                                VariableReplacementWithMethodInvocation.Direction.INVOCATION_TO_VARIABLE);
                                 processVariableReplacementWithMethodInvocation(variableReplacement, null,
                                                                                variableInvocationExpressionMap,
                                                                                VariableReplacementWithMethodInvocation.Direction.INVOCATION_TO_VARIABLE);
@@ -305,12 +303,12 @@ public class VariableReplacementAnalysis {
         }
         for (String key : variableInvocationExpressionMap.keySet()) {
             Map<VariableReplacementWithMethodInvocation, Set<AbstractCodeMapping>> map =
-                    variableInvocationExpressionMap.get(key);
+                variableInvocationExpressionMap.get(key);
             Set<AbstractCodeMapping> mappings = new LinkedHashSet<>();
             Set<String> splitVariables = new LinkedHashSet<>();
             for (VariableReplacementWithMethodInvocation replacement : map.keySet()) {
                 if (!PrefixSuffixUtils.normalize(key)
-                        .equals(PrefixSuffixUtils.normalize(replacement.getAfter()))) {
+                    .equals(PrefixSuffixUtils.normalize(replacement.getAfter()))) {
                     splitVariables.add(replacement.getAfter());
                     mappings.addAll(map.get(replacement));
                 }
@@ -325,7 +323,7 @@ public class VariableReplacementAnalysis {
             Set<UMLOperation> splitVariableOperations = new LinkedHashSet<>();
             for (String variableName : split.getSplitVariables()) {
                 SimpleEntry<VariableDeclaration, UMLOperation> declaration =
-                        getVariableDeclaration2(split, variableName);
+                    getVariableDeclaration2(split, variableName);
                 if (declaration != null) {
                     splitVariables.add(declaration.getKey());
                     splitVariableOperations.add(declaration.getValue());
@@ -333,33 +331,33 @@ public class VariableReplacementAnalysis {
             }
             SimpleEntry<VariableDeclaration, UMLOperation> oldVariable = getVariableDeclaration1(split);
             if (splitVariables.size() > 1 && splitVariables.size() == split.getSplitVariables().size() &&
-                    oldVariable != null) {
+                oldVariable != null) {
                 UMLOperation operationAfter = splitVariableOperations.iterator().next();
                 SplitVariableRefactoring refactoring =
-                        new SplitVariableRefactoring(oldVariable.getKey(), splitVariables,
-                                                     oldVariable.getValue(), operationAfter, splitMap.get(split));
+                    new SplitVariableRefactoring(oldVariable.getKey(), splitVariables,
+                                                 oldVariable.getValue(), operationAfter, splitMap.get(split));
                 if (!existsConflictingExtractVariableRefactoring(refactoring) &&
-                        !existsConflictingParameterRenameInOperationDiff(refactoring)) {
+                    !existsConflictingParameterRenameInOperationDiff(refactoring)) {
                     variableSplits.add(refactoring);
                 }
             } else {
                 CandidateSplitVariableRefactoring candidate =
-                        new CandidateSplitVariableRefactoring(split.getBefore(), split.getSplitVariables(),
-                                                              operation1, operation2, splitMap.get(split));
+                    new CandidateSplitVariableRefactoring(split.getBefore(), split.getSplitVariables(),
+                                                          operation1, operation2, splitMap.get(split));
                 candidateAttributeSplits.add(candidate);
             }
         }
     }
 
     private void processVariableReplacementWithMethodInvocation(
-            VariableReplacementWithMethodInvocation variableReplacement, AbstractCodeMapping mapping,
-            Map<String, Map<VariableReplacementWithMethodInvocation, Set<AbstractCodeMapping>>> variableInvocationExpressionMap,
-            VariableReplacementWithMethodInvocation.Direction direction) {
+        VariableReplacementWithMethodInvocation variableReplacement, AbstractCodeMapping mapping,
+        Map<String, Map<VariableReplacementWithMethodInvocation, Set<AbstractCodeMapping>>> variableInvocationExpressionMap,
+        VariableReplacementWithMethodInvocation.Direction direction) {
         String expression = variableReplacement.getInvokedOperation().getExpression();
         if (expression != null && variableReplacement.getDirection().equals(direction)) {
             if (variableInvocationExpressionMap.containsKey(expression)) {
                 Map<VariableReplacementWithMethodInvocation, Set<AbstractCodeMapping>> map =
-                        variableInvocationExpressionMap.get(expression);
+                    variableInvocationExpressionMap.get(expression);
                 if (map.containsKey(variableReplacement)) {
                     if (mapping != null) {
                         map.get(variableReplacement).add(mapping);
@@ -377,7 +375,7 @@ public class VariableReplacementAnalysis {
                     mappings.add(mapping);
                 }
                 Map<VariableReplacementWithMethodInvocation, Set<AbstractCodeMapping>> map =
-                        new LinkedHashMap<>();
+                    new LinkedHashMap<>();
                 map.put(variableReplacement, mappings);
                 variableInvocationExpressionMap.put(expression, map);
             }
@@ -386,12 +384,12 @@ public class VariableReplacementAnalysis {
 
     private void findVariableMerges() {
         Map<MergeVariableReplacement, Set<AbstractCodeMapping>> mergeMap =
-                new LinkedHashMap<>();
+            new LinkedHashMap<>();
         Map<String, Map<VariableReplacementWithMethodInvocation, Set<AbstractCodeMapping>>>
-                variableInvocationExpressionMap =
-                new LinkedHashMap<>();
+            variableInvocationExpressionMap =
+            new LinkedHashMap<>();
         Map<String, Map<Replacement, Set<AbstractCodeMapping>>> variableInvocationVariableMap =
-                new LinkedHashMap<>();
+            new LinkedHashMap<>();
         for (AbstractCodeMapping mapping : mappings) {
             for (Replacement replacement : mapping.getReplacements()) {
                 if (replacement instanceof MergeVariableReplacement) {
@@ -405,24 +403,24 @@ public class VariableReplacementAnalysis {
                     }
                 } else if (replacement instanceof VariableReplacementWithMethodInvocation) {
                     VariableReplacementWithMethodInvocation variableReplacement =
-                            (VariableReplacementWithMethodInvocation) replacement;
+                        (VariableReplacementWithMethodInvocation) replacement;
                     processVariableReplacementWithMethodInvocation(variableReplacement, mapping,
                                                                    variableInvocationExpressionMap,
                                                                    VariableReplacementWithMethodInvocation.Direction.VARIABLE_TO_INVOCATION);
                 } else if (replacement.getType().equals(Replacement.ReplacementType.VARIABLE_NAME)) {
                     for (StatementObject statement : nonMappedLeavesT2) {
                         VariableDeclaration variableDeclaration =
-                                statement.getVariableDeclaration(replacement.getBefore());
+                            statement.getVariableDeclaration(replacement.getBefore());
                         if (variableDeclaration != null) {
                             AbstractExpression initializer = variableDeclaration.getInitializer();
                             if (initializer != null) {
                                 OperationInvocation invocation = initializer.invocationCoveringEntireFragment();
                                 if (invocation != null) {
                                     VariableReplacementWithMethodInvocation variableReplacement =
-                                            new VariableReplacementWithMethodInvocation(replacement.getBefore(),
-                                                                                        initializer.getString(),
-                                                                                        invocation,
-                                                                                        VariableReplacementWithMethodInvocation.Direction.VARIABLE_TO_INVOCATION);
+                                        new VariableReplacementWithMethodInvocation(replacement.getBefore(),
+                                                                                    initializer.getString(),
+                                                                                    invocation,
+                                                                                    VariableReplacementWithMethodInvocation.Direction.VARIABLE_TO_INVOCATION);
                                     processVariableReplacementWithMethodInvocation(variableReplacement, mapping,
                                                                                    variableInvocationExpressionMap,
                                                                                    VariableReplacementWithMethodInvocation.Direction.VARIABLE_TO_INVOCATION);
@@ -432,10 +430,10 @@ public class VariableReplacementAnalysis {
                     }
                     if (replacement.getAfter().contains(".")) {
                         String compositeVariable =
-                                replacement.getAfter().substring(0, replacement.getAfter().indexOf("."));
+                            replacement.getAfter().substring(0, replacement.getAfter().indexOf("."));
                         if (variableInvocationVariableMap.containsKey(compositeVariable)) {
                             Map<Replacement, Set<AbstractCodeMapping>> map =
-                                    variableInvocationVariableMap.get(compositeVariable);
+                                variableInvocationVariableMap.get(compositeVariable);
                             if (map.containsKey(replacement)) {
                                 map.get(replacement).add(mapping);
                             } else {
@@ -447,7 +445,7 @@ public class VariableReplacementAnalysis {
                             Set<AbstractCodeMapping> mappings = new LinkedHashSet<>();
                             mappings.add(mapping);
                             Map<Replacement, Set<AbstractCodeMapping>> map =
-                                    new LinkedHashMap<>();
+                                new LinkedHashMap<>();
                             map.put(replacement, mappings);
                             variableInvocationVariableMap.put(compositeVariable, map);
                         }
@@ -464,9 +462,9 @@ public class VariableReplacementAnalysis {
                         OperationInvocation invocation = initializer.invocationCoveringEntireFragment();
                         if (invocation != null) {
                             VariableReplacementWithMethodInvocation variableReplacement =
-                                    new VariableReplacementWithMethodInvocation(parameterName,
-                                                                                initializer.getString(), invocation,
-                                                                                VariableReplacementWithMethodInvocation.Direction.VARIABLE_TO_INVOCATION);
+                                new VariableReplacementWithMethodInvocation(parameterName,
+                                                                            initializer.getString(), invocation,
+                                                                            VariableReplacementWithMethodInvocation.Direction.VARIABLE_TO_INVOCATION);
                             processVariableReplacementWithMethodInvocation(variableReplacement, null,
                                                                            variableInvocationExpressionMap,
                                                                            VariableReplacementWithMethodInvocation.Direction.VARIABLE_TO_INVOCATION);
@@ -477,12 +475,12 @@ public class VariableReplacementAnalysis {
         }
         for (String key : variableInvocationExpressionMap.keySet()) {
             Map<VariableReplacementWithMethodInvocation, Set<AbstractCodeMapping>> map =
-                    variableInvocationExpressionMap.get(key);
+                variableInvocationExpressionMap.get(key);
             Set<AbstractCodeMapping> mappings = new LinkedHashSet<>();
             Set<String> mergedVariables = new LinkedHashSet<>();
             for (VariableReplacementWithMethodInvocation replacement : map.keySet()) {
                 if (!PrefixSuffixUtils.normalize(key)
-                        .equals(PrefixSuffixUtils.normalize(replacement.getBefore()))) {
+                    .equals(PrefixSuffixUtils.normalize(replacement.getBefore()))) {
                     mergedVariables.add(replacement.getBefore());
                     mappings.addAll(map.get(replacement));
                 }
@@ -498,7 +496,7 @@ public class VariableReplacementAnalysis {
             Set<String> mergedVariables = new LinkedHashSet<>();
             for (Replacement replacement : map.keySet()) {
                 if (!PrefixSuffixUtils.normalize(key)
-                        .equals(PrefixSuffixUtils.normalize(replacement.getBefore()))) {
+                    .equals(PrefixSuffixUtils.normalize(replacement.getBefore()))) {
                     mergedVariables.add(replacement.getBefore());
                     mappings.addAll(map.get(replacement));
                 }
@@ -513,7 +511,7 @@ public class VariableReplacementAnalysis {
             Set<UMLOperation> mergedVariableOperations = new LinkedHashSet<>();
             for (String variableName : merge.getMergedVariables()) {
                 SimpleEntry<VariableDeclaration, UMLOperation> declaration =
-                        getVariableDeclaration1(merge, variableName);
+                    getVariableDeclaration1(merge, variableName);
                 if (declaration != null) {
                     mergedVariables.add(declaration.getKey());
                     mergedVariableOperations.add(declaration.getValue());
@@ -521,19 +519,19 @@ public class VariableReplacementAnalysis {
             }
             SimpleEntry<VariableDeclaration, UMLOperation> newVariable = getVariableDeclaration2(merge);
             if (mergedVariables.size() > 1 &&
-                    mergedVariables.size() == merge.getMergedVariables().size() && newVariable != null) {
+                mergedVariables.size() == merge.getMergedVariables().size() && newVariable != null) {
                 UMLOperation operationBefore = mergedVariableOperations.iterator().next();
                 MergeVariableRefactoring refactoring =
-                        new MergeVariableRefactoring(mergedVariables, newVariable.getKey(), operationBefore,
-                                                     newVariable.getValue(), mergeMap.get(merge));
+                    new MergeVariableRefactoring(mergedVariables, newVariable.getKey(), operationBefore,
+                                                 newVariable.getValue(), mergeMap.get(merge));
                 if (!existsConflictingInlineVariableRefactoring(refactoring) &&
-                        !existsConflictingParameterRenameInOperationDiff(refactoring)) {
+                    !existsConflictingParameterRenameInOperationDiff(refactoring)) {
                     variableMerges.add(refactoring);
                 }
             } else {
                 CandidateMergeVariableRefactoring candidate =
-                        new CandidateMergeVariableRefactoring(merge.getMergedVariables(), merge.getAfter(),
-                                                              operation1, operation2, mergeMap.get(merge));
+                    new CandidateMergeVariableRefactoring(merge.getMergedVariables(), merge.getAfter(),
+                                                          operation1, operation2, mergeMap.get(merge));
                 candidateAttributeMerges.add(candidate);
             }
         }
@@ -541,67 +539,67 @@ public class VariableReplacementAnalysis {
 
     private void findConsistentVariableRenames() {
         Map<Replacement, Set<AbstractCodeMapping>> variableDeclarationReplacementOccurrenceMap =
-                getVariableDeclarationReplacementOccurrenceMap();
+            getVariableDeclarationReplacementOccurrenceMap();
         Set<Replacement> allConsistentVariableDeclarationRenames =
-                allConsistentRenames(variableDeclarationReplacementOccurrenceMap);
+            allConsistentRenames(variableDeclarationReplacementOccurrenceMap);
         for (Replacement replacement : allConsistentVariableDeclarationRenames) {
             VariableDeclarationReplacement vdReplacement = (VariableDeclarationReplacement) replacement;
             Set<AbstractCodeMapping> set = variableDeclarationReplacementOccurrenceMap.get(vdReplacement);
             if ((set.size() > 1 && consistencyCheck(vdReplacement.getVariableDeclaration1(),
                                                     vdReplacement.getVariableDeclaration2(), set)) ||
-                    (set.size() == 1 &&
-                            replacementInLocalVariableDeclaration(vdReplacement.getVariableNameReplacement(),
-                                                                  set))) {
+                (set.size() == 1 &&
+                    replacementInLocalVariableDeclaration(vdReplacement.getVariableNameReplacement(),
+                                                          set))) {
                 RenameVariableRefactoring ref =
-                        new RenameVariableRefactoring(vdReplacement.getVariableDeclaration1(),
-                                                      vdReplacement.getVariableDeclaration2(),
-                                                      vdReplacement.getOperation1(),
-                                                      vdReplacement.getOperation2(), set);
+                    new RenameVariableRefactoring(vdReplacement.getVariableDeclaration1(),
+                                                  vdReplacement.getVariableDeclaration2(),
+                                                  vdReplacement.getOperation1(),
+                                                  vdReplacement.getOperation2(), set);
                 if (!existsConflictingExtractVariableRefactoring(ref) &&
-                        !existsConflictingMergeVariableRefactoring(ref) &&
-                        !existsConflictingSplitVariableRefactoring(ref)) {
+                    !existsConflictingMergeVariableRefactoring(ref) &&
+                    !existsConflictingSplitVariableRefactoring(ref)) {
                     variableRenames.add(ref);
                     if (!vdReplacement.getVariableDeclaration1().getType()
-                            .equals(vdReplacement.getVariableDeclaration2().getType()) ||
-                            !vdReplacement.getVariableDeclaration1().getType()
-                                    .equalsQualified(vdReplacement.getVariableDeclaration2().getType())) {
+                        .equals(vdReplacement.getVariableDeclaration2().getType()) ||
+                        !vdReplacement.getVariableDeclaration1().getType()
+                            .equalsQualified(vdReplacement.getVariableDeclaration2().getType())) {
                         ChangeVariableTypeRefactoring refactoring =
-                                new ChangeVariableTypeRefactoring(vdReplacement.getVariableDeclaration1(),
-                                                                  vdReplacement.getVariableDeclaration2(),
-                                                                  vdReplacement.getOperation1(),
-                                                                  vdReplacement.getOperation2(), set);
+                            new ChangeVariableTypeRefactoring(vdReplacement.getVariableDeclaration1(),
+                                                              vdReplacement.getVariableDeclaration2(),
+                                                              vdReplacement.getOperation1(),
+                                                              vdReplacement.getOperation2(), set);
                         refactoring.addRelatedRefactoring(ref);
                         refactorings.add(refactoring);
                     }
                 }
             } else {
                 RenameVariableRefactoring ref =
-                        new RenameVariableRefactoring(vdReplacement.getVariableDeclaration1(),
-                                                      vdReplacement.getVariableDeclaration2(),
-                                                      vdReplacement.getOperation1(),
-                                                      vdReplacement.getOperation2(), set);
+                    new RenameVariableRefactoring(vdReplacement.getVariableDeclaration1(),
+                                                  vdReplacement.getVariableDeclaration2(),
+                                                  vdReplacement.getOperation1(),
+                                                  vdReplacement.getOperation2(), set);
                 refactorings.remove(ref);
             }
         }
         Map<Replacement, Set<AbstractCodeMapping>> replacementOccurrenceMap =
-                getReplacementOccurrenceMap(Replacement.ReplacementType.VARIABLE_NAME);
+            getReplacementOccurrenceMap(Replacement.ReplacementType.VARIABLE_NAME);
         Set<Replacement> allConsistentRenames = allConsistentRenames(replacementOccurrenceMap);
         Map<Replacement, Set<AbstractCodeMapping>> finalConsistentRenames =
-                new LinkedHashMap<>();
+            new LinkedHashMap<>();
         for (Replacement replacement : allConsistentRenames) {
             SimpleEntry<VariableDeclaration, UMLOperation> v1 = getVariableDeclaration1(replacement);
             SimpleEntry<VariableDeclaration, UMLOperation> v2 = getVariableDeclaration2(replacement);
             Set<AbstractCodeMapping> set = replacementOccurrenceMap.get(replacement);
             if ((set.size() > 1 && v1 != null && v2 != null &&
-                    consistencyCheck(v1.getKey(), v2.getKey(), set)) ||
-                    potentialParameterRename(replacement, set) ||
-                    v1 == null || v2 == null ||
-                    (set.size() == 1 && replacementInLocalVariableDeclaration(replacement, set))) {
+                consistencyCheck(v1.getKey(), v2.getKey(), set)) ||
+                potentialParameterRename(replacement, set) ||
+                v1 == null || v2 == null ||
+                (set.size() == 1 && replacementInLocalVariableDeclaration(replacement, set))) {
                 finalConsistentRenames.put(replacement, set);
             }
             if (v1 != null && !v1.getKey().isParameter() && v2 != null && v2.getKey().isParameter() &&
-                    consistencyCheck(v1.getKey(), v2.getKey(), set) &&
-                    !operation1.getParameterNameList().contains(v2.getKey().getVariableName())) {
+                consistencyCheck(v1.getKey(), v2.getKey(), set) &&
+                !operation1.getParameterNameList().contains(v2.getKey().getVariableName())) {
                 finalConsistentRenames.put(replacement, set);
             }
         }
@@ -611,35 +609,35 @@ public class VariableReplacementAnalysis {
             if (v1 != null && v2 != null) {
                 Set<AbstractCodeMapping> variableReferences = finalConsistentRenames.get(replacement);
                 RenameVariableRefactoring ref =
-                        new RenameVariableRefactoring(v1.getKey(), v2.getKey(), v1.getValue(), v2.getValue(),
-                                                      variableReferences);
+                    new RenameVariableRefactoring(v1.getKey(), v2.getKey(), v1.getValue(), v2.getValue(),
+                                                  variableReferences);
                 if (!existsConflictingExtractVariableRefactoring(ref) &&
-                        !existsConflictingMergeVariableRefactoring(ref) &&
-                        !existsConflictingSplitVariableRefactoring(ref) &&
-                        v1.getKey().isVarargsParameter() == v2.getKey().isVarargsParameter()) {
+                    !existsConflictingMergeVariableRefactoring(ref) &&
+                    !existsConflictingSplitVariableRefactoring(ref) &&
+                    v1.getKey().isVarargsParameter() == v2.getKey().isVarargsParameter()) {
                     variableRenames.add(ref);
                     if (!v1.getKey().getType().equals(v2.getKey().getType()) ||
-                            !v1.getKey().getType().equalsQualified(v2.getKey().getType())) {
+                        !v1.getKey().getType().equalsQualified(v2.getKey().getType())) {
                         ChangeVariableTypeRefactoring refactoring =
-                                new ChangeVariableTypeRefactoring(v1.getKey(), v2.getKey(), v1.getValue(),
-                                                                  v2.getValue(), variableReferences);
+                            new ChangeVariableTypeRefactoring(v1.getKey(), v2.getKey(), v1.getValue(),
+                                                              v2.getValue(), variableReferences);
                         refactoring.addRelatedRefactoring(ref);
                         refactorings.add(refactoring);
                     }
                 }
             } else if (!PrefixSuffixUtils.normalize(replacement.getBefore())
-                    .equals(PrefixSuffixUtils.normalize(replacement.getAfter())) &&
-                    (!operation1.getAllVariables().contains(replacement.getAfter()) ||
-                            cyclicRename(finalConsistentRenames.keySet(), replacement)) &&
-                    (!operation2.getAllVariables().contains(replacement.getBefore()) ||
-                            cyclicRename(finalConsistentRenames.keySet(), replacement)) &&
-                    !fieldAssignmentWithPreviouslyExistingParameter(
-                            replacementOccurrenceMap.get(replacement)) &&
-                    !fieldAssignmentToPreviouslyExistingAttribute(
-                            replacementOccurrenceMap.get(replacement))) {
+                .equals(PrefixSuffixUtils.normalize(replacement.getAfter())) &&
+                (!operation1.getAllVariables().contains(replacement.getAfter()) ||
+                    cyclicRename(finalConsistentRenames.keySet(), replacement)) &&
+                (!operation2.getAllVariables().contains(replacement.getBefore()) ||
+                    cyclicRename(finalConsistentRenames.keySet(), replacement)) &&
+                !fieldAssignmentWithPreviouslyExistingParameter(
+                    replacementOccurrenceMap.get(replacement)) &&
+                !fieldAssignmentToPreviouslyExistingAttribute(
+                    replacementOccurrenceMap.get(replacement))) {
                 CandidateAttributeRefactoring candidate = new CandidateAttributeRefactoring(
-                        replacement.getBefore(), replacement.getAfter(), operation1, operation2,
-                        replacementOccurrenceMap.get(replacement));
+                    replacement.getBefore(), replacement.getAfter(), operation1, operation2,
+                    replacementOccurrenceMap.get(replacement));
                 if (v1 != null) {
                     candidate.setOriginalVariableDeclaration(v1.getKey());
                 }
@@ -658,42 +656,42 @@ public class VariableReplacementAnalysis {
             String fragment2 = mapping.getFragment2().getString();
             //TODO check if this corresponds to the assignment of attributes in kotlin
             if (fragment1.contains("=") && fragment1.endsWith("\n") && fragment2.contains("=") &&
-                    fragment2.endsWith("\n")) {
+                fragment2.endsWith("\n")) {
                 String value1 =
-                        fragment1.substring(fragment1.indexOf("=") + 1, fragment1.lastIndexOf("\n"));
+                    fragment1.substring(fragment1.indexOf("=") + 1, fragment1.lastIndexOf("\n"));
                 String value2 =
-                        fragment2.substring(fragment2.indexOf("=") + 1, fragment2.lastIndexOf("\n"));
+                    fragment2.substring(fragment2.indexOf("=") + 1, fragment2.lastIndexOf("\n"));
                 String attribute1 =
-                        PrefixSuffixUtils.normalize(fragment1.substring(0, fragment1.indexOf("=")));
+                    PrefixSuffixUtils.normalize(fragment1.substring(0, fragment1.indexOf("=")));
                 String attribute2 =
-                        PrefixSuffixUtils.normalize(fragment2.substring(0, fragment2.indexOf("=")));
+                    PrefixSuffixUtils.normalize(fragment2.substring(0, fragment2.indexOf("=")));
                 if (value1.equals(attribute1) &&
-                        classDiff.getOriginalClass().containsAttributeWithName(attribute1) &&
-                        classDiff.getNextClass().containsAttributeWithName(attribute1)) {
+                    classDiff.getOriginalClass().containsAttributeWithName(attribute1) &&
+                    classDiff.getNextClass().containsAttributeWithName(attribute1)) {
                     return true;
                 }
                 return value2.equals(attribute2) &&
-                        classDiff.getOriginalClass().containsAttributeWithName(attribute2) &&
-                        classDiff.getNextClass().containsAttributeWithName(attribute2);
+                    classDiff.getOriginalClass().containsAttributeWithName(attribute2) &&
+                    classDiff.getNextClass().containsAttributeWithName(attribute2);
             }
         }
         return false;
     }
 
     private boolean fieldAssignmentWithPreviouslyExistingParameter(
-            Set<AbstractCodeMapping> mappings) {
+        Set<AbstractCodeMapping> mappings) {
         if (mappings.size() == 1) {
             AbstractCodeMapping mapping = mappings.iterator().next();
             String fragment1 = mapping.getFragment1().getString();
             String fragment2 = mapping.getFragment2().getString();
             if (fragment1.contains("=") && fragment1.endsWith("\n") && fragment2.contains("=") &&
-                    fragment2.endsWith("\n")) {
+                fragment2.endsWith("\n")) {
                 String value1 =
-                        fragment1.substring(fragment1.indexOf("=") + 1, fragment1.lastIndexOf("\n"));
+                    fragment1.substring(fragment1.indexOf("=") + 1, fragment1.lastIndexOf("\n"));
                 String value2 =
-                        fragment2.substring(fragment2.indexOf("=") + 1, fragment2.lastIndexOf("\n"));
+                    fragment2.substring(fragment2.indexOf("=") + 1, fragment2.lastIndexOf("\n"));
                 if (operation1.getParameterNameList().contains(value1) &&
-                        operation2.getParameterNameList().contains(value1) && operationDiff != null) {
+                    operation2.getParameterNameList().contains(value1) && operationDiff != null) {
                     for (UMLParameter addedParameter : operationDiff.getAddedParameters()) {
                         if (addedParameter.getName().equals(value2)) {
                             return true;
@@ -706,16 +704,16 @@ public class VariableReplacementAnalysis {
     }
 
     private Map<Replacement, Set<AbstractCodeMapping>> getReplacementOccurrenceMap(
-            Replacement.ReplacementType type) {
+        Replacement.ReplacementType type) {
         Map<Replacement, Set<AbstractCodeMapping>> map =
-                new LinkedHashMap<>();
+            new LinkedHashMap<>();
         for (AbstractCodeMapping mapping : mappings) {
             for (Replacement replacement : mapping.getReplacements()) {
                 if (replacement.getType().equals(type) && !returnVariableMapping(mapping, replacement) &&
-                        !mapping.containsReplacement(Replacement.ReplacementType.CONCATENATION) &&
-                        !containsMethodInvocationReplacementWithDifferentExpressionNameAndArguments(
-                                mapping.getReplacements()) &&
-                        replacementNotInsideMethodSignatureOfAnonymousClass(mapping, replacement)) {
+                    !mapping.containsReplacement(Replacement.ReplacementType.CONCATENATION) &&
+                    !containsMethodInvocationReplacementWithDifferentExpressionNameAndArguments(
+                        mapping.getReplacements()) &&
+                    replacementNotInsideMethodSignatureOfAnonymousClass(mapping, replacement)) {
                     if (map.containsKey(replacement)) {
                         map.get(replacement).add(mapping);
                     } else {
@@ -724,19 +722,19 @@ public class VariableReplacementAnalysis {
                         map.put(replacement, list);
                     }
                 } else if (replacement.getType()
-                        .equals(Replacement.ReplacementType.VARIABLE_REPLACED_WITH_ARRAY_ACCESS)) {
+                    .equals(Replacement.ReplacementType.VARIABLE_REPLACED_WITH_ARRAY_ACCESS)) {
                     String before = replacement.getBefore().contains("[") ?
-                            replacement.getBefore().substring(0, replacement.getBefore().indexOf("[")) :
-                            replacement.getBefore();
+                        replacement.getBefore().substring(0, replacement.getBefore().indexOf("[")) :
+                        replacement.getBefore();
                     String after = replacement.getAfter().contains("[") ?
-                            replacement.getAfter().substring(0, replacement.getAfter().indexOf("[")) :
-                            replacement.getAfter();
+                        replacement.getAfter().substring(0, replacement.getAfter().indexOf("[")) :
+                        replacement.getAfter();
                     Replacement variableReplacement =
-                            new Replacement(before, after, Replacement.ReplacementType.VARIABLE_NAME);
+                        new Replacement(before, after, Replacement.ReplacementType.VARIABLE_NAME);
                     if (!returnVariableMapping(mapping, replacement) &&
-                            !containsMethodInvocationReplacementWithDifferentExpressionNameAndArguments(
-                                    mapping.getReplacements()) &&
-                            replacementNotInsideMethodSignatureOfAnonymousClass(mapping, replacement)) {
+                        !containsMethodInvocationReplacementWithDifferentExpressionNameAndArguments(
+                            mapping.getReplacements()) &&
+                        replacementNotInsideMethodSignatureOfAnonymousClass(mapping, replacement)) {
                         if (map.containsKey(variableReplacement)) {
                             map.get(variableReplacement).add(mapping);
                         } else {
@@ -747,27 +745,27 @@ public class VariableReplacementAnalysis {
                     }
                 } else if (replacement.getType().equals(Replacement.ReplacementType.METHOD_INVOCATION)) {
                     MethodInvocationReplacement methodInvocationReplacement =
-                            (MethodInvocationReplacement) replacement;
+                        (MethodInvocationReplacement) replacement;
                     OperationInvocation invocation1 = methodInvocationReplacement.getInvokedOperationBefore();
                     OperationInvocation invocation2 = methodInvocationReplacement.getInvokedOperationAfter();
                     if (invocation1.getName().equals(invocation2.getName()) &&
-                            invocation1.getArguments().size() == invocation2.getArguments().size()) {
+                        invocation1.getArguments().size() == invocation2.getArguments().size()) {
                         for (int i = 0; i < invocation1.getArguments().size(); i++) {
                             String argument1 = invocation1.getArguments().get(i);
                             String argument2 = invocation2.getArguments().get(i);
                             if (argument1.contains("[") || argument2.contains("[")) {
                                 String before =
-                                        argument1.contains("[") ? argument1.substring(0, argument1.indexOf("[")) :
-                                                argument1;
+                                    argument1.contains("[") ? argument1.substring(0, argument1.indexOf("[")) :
+                                        argument1;
                                 String after =
-                                        argument2.contains("[") ? argument2.substring(0, argument2.indexOf("[")) :
-                                                argument2;
+                                    argument2.contains("[") ? argument2.substring(0, argument2.indexOf("[")) :
+                                        argument2;
                                 Replacement variableReplacement =
-                                        new Replacement(before, after, Replacement.ReplacementType.VARIABLE_NAME);
+                                    new Replacement(before, after, Replacement.ReplacementType.VARIABLE_NAME);
                                 if (!returnVariableMapping(mapping, replacement) &&
-                                        !containsMethodInvocationReplacementWithDifferentExpressionNameAndArguments(
-                                                mapping.getReplacements()) &&
-                                        replacementNotInsideMethodSignatureOfAnonymousClass(mapping, replacement)) {
+                                    !containsMethodInvocationReplacementWithDifferentExpressionNameAndArguments(
+                                        mapping.getReplacements()) &&
+                                    replacementNotInsideMethodSignatureOfAnonymousClass(mapping, replacement)) {
                                     if (map.containsKey(variableReplacement)) {
                                         map.get(variableReplacement).add(mapping);
                                     } else {
@@ -787,23 +785,23 @@ public class VariableReplacementAnalysis {
 
     private Map<Replacement, Set<AbstractCodeMapping>> getVariableDeclarationReplacementOccurrenceMap() {
         Map<Replacement, Set<AbstractCodeMapping>> map =
-                new LinkedHashMap<>();
+            new LinkedHashMap<>();
         for (AbstractCodeMapping mapping : mappings) {
             for (Replacement replacement : mapping.getReplacements()) {
                 if (replacement.getType().equals(Replacement.ReplacementType.VARIABLE_NAME) &&
-                        !returnVariableMapping(mapping, replacement) &&
-                        !mapping.containsReplacement(Replacement.ReplacementType.CONCATENATION) &&
-                        !containsMethodInvocationReplacementWithDifferentExpressionNameAndArguments(
-                                mapping.getReplacements()) &&
-                        replacementNotInsideMethodSignatureOfAnonymousClass(mapping, replacement)) {
+                    !returnVariableMapping(mapping, replacement) &&
+                    !mapping.containsReplacement(Replacement.ReplacementType.CONCATENATION) &&
+                    !containsMethodInvocationReplacementWithDifferentExpressionNameAndArguments(
+                        mapping.getReplacements()) &&
+                    replacementNotInsideMethodSignatureOfAnonymousClass(mapping, replacement)) {
                     SimpleEntry<VariableDeclaration, UMLOperation> v1 =
-                            getVariableDeclaration1(replacement, mapping);
+                        getVariableDeclaration1(replacement, mapping);
                     SimpleEntry<VariableDeclaration, UMLOperation> v2 =
-                            getVariableDeclaration2(replacement, mapping);
+                        getVariableDeclaration2(replacement, mapping);
                     if (v1 != null && v2 != null) {
                         VariableDeclarationReplacement r =
-                                new VariableDeclarationReplacement(v1.getKey(), v2.getKey(), v1.getValue(),
-                                                                   v2.getValue());
+                            new VariableDeclarationReplacement(v1.getKey(), v2.getKey(), v1.getValue(),
+                                                               v2.getValue());
                         if (map.containsKey(r)) {
                             map.get(r).add(mapping);
                         } else {
@@ -827,28 +825,28 @@ public class VariableReplacementAnalysis {
                 for (Replacement replacement : map.keySet()) {
                     VariableDeclarationReplacement vdR = (VariableDeclarationReplacement) replacement;
                     if (parameterDiff.getRemovedParameter().getVariableDeclaration()
-                            .equals(vdR.getVariableDeclaration1()) &&
-                            parameterDiff.getAddedParameter().getVariableDeclaration()
-                                    .equals(vdR.getVariableDeclaration2())) {
+                        .equals(vdR.getVariableDeclaration1()) &&
+                        parameterDiff.getAddedParameter().getVariableDeclaration()
+                            .equals(vdR.getVariableDeclaration2())) {
                         matchedParameterDiffs.add(parameterDiff);
                         break;
                     }
                 }
             }
             Set<VariableDeclarationReplacement> keysToBeRemoved =
-                    new LinkedHashSet<>();
+                new LinkedHashSet<>();
             for (UMLParameterDiff parameterDiff : matchedParameterDiffs) {
                 for (Replacement replacement : map.keySet()) {
                     VariableDeclarationReplacement vdR = (VariableDeclarationReplacement) replacement;
                     if (parameterDiff.getRemovedParameter().getVariableDeclaration()
-                            .equals(vdR.getVariableDeclaration1()) &&
-                            !parameterDiff.getAddedParameter().getVariableDeclaration()
-                                    .equals(vdR.getVariableDeclaration2())) {
+                        .equals(vdR.getVariableDeclaration1()) &&
+                        !parameterDiff.getAddedParameter().getVariableDeclaration()
+                            .equals(vdR.getVariableDeclaration2())) {
                         keysToBeRemoved.add(vdR);
                     } else if (!parameterDiff.getRemovedParameter().getVariableDeclaration()
-                            .equals(vdR.getVariableDeclaration1()) &&
-                            parameterDiff.getAddedParameter().getVariableDeclaration()
-                                    .equals(vdR.getVariableDeclaration2())) {
+                        .equals(vdR.getVariableDeclaration1()) &&
+                        parameterDiff.getAddedParameter().getVariableDeclaration()
+                            .equals(vdR.getVariableDeclaration2())) {
                         keysToBeRemoved.add(vdR);
                     }
                 }
@@ -861,7 +859,7 @@ public class VariableReplacementAnalysis {
     }
 
     private boolean containsMethodInvocationReplacementWithDifferentExpressionNameAndArguments(
-            Set<Replacement> replacements) {
+        Set<Replacement> replacements) {
         for (Replacement replacement : replacements) {
             if (replacement instanceof MethodInvocationReplacement) {
                 MethodInvocationReplacement r = (MethodInvocationReplacement) replacement;
@@ -910,12 +908,12 @@ public class VariableReplacementAnalysis {
     }
 
     private Set<Replacement> allConsistentRenames(
-            Map<Replacement, Set<AbstractCodeMapping>> replacementOccurrenceMap) {
+        Map<Replacement, Set<AbstractCodeMapping>> replacementOccurrenceMap) {
         Set<Replacement> renames = replacementOccurrenceMap.keySet();
         Set<Replacement> allConsistentRenames = new LinkedHashSet<>();
         Set<Replacement> allInconsistentRenames = new LinkedHashSet<>();
         ConsistentReplacementDetector
-                .updateRenames(allConsistentRenames, allInconsistentRenames, renames);
+            .updateRenames(allConsistentRenames, allInconsistentRenames, renames);
         allConsistentRenames.removeAll(allInconsistentRenames);
         return allConsistentRenames;
     }
@@ -942,9 +940,9 @@ public class VariableReplacementAnalysis {
             AbstractCodeFragment statement1 = referenceMapping.getFragment1();
             AbstractCodeFragment statement2 = referenceMapping.getFragment2();
             if (statement1 instanceof CompositeStatementObject &&
-                    statement2 instanceof CompositeStatementObject &&
-                    statement1.getLocationInfo().getCodeElementType()
-                            .equals(LocationInfo.CodeElementType.ENHANCED_FOR_STATEMENT)) {
+                statement2 instanceof CompositeStatementObject &&
+                statement1.getLocationInfo().getCodeElementType()
+                    .equals(CodeElementType.ENHANCED_FOR_STATEMENT)) {
                 CompositeStatementObject comp1 = (CompositeStatementObject) statement1;
                 CompositeStatementObject comp2 = (CompositeStatementObject) statement2;
                 allVariableDeclarations1.addAll(comp1.getAllVariableDeclarations());
@@ -956,18 +954,18 @@ public class VariableReplacementAnalysis {
             }
         }
         return v1 != null && v2 != null &&
-                v1.equalVariableDeclarationType(v2) &&
-                !containsVariableDeclarationWithName(allVariableDeclarations1, v2.getVariableName()) &&
-                (!containsVariableDeclarationWithName(allVariableDeclarations2, v1.getVariableName()) ||
-                        operation2.loopWithVariables(v1.getVariableName(), v2.getVariableName()) != null) &&
-                consistencyCheck(v1, v2, set);
+            v1.equalVariableDeclarationType(v2) &&
+            !containsVariableDeclarationWithName(allVariableDeclarations1, v2.getVariableName()) &&
+            (!containsVariableDeclarationWithName(allVariableDeclarations2, v1.getVariableName()) ||
+                operation2.loopWithVariables(v1.getVariableName(), v2.getVariableName()) != null) &&
+            consistencyCheck(v1, v2, set);
     }
 
     private boolean consistencyCheck(VariableDeclaration v1, VariableDeclaration v2,
                                      Set<AbstractCodeMapping> set) {
         return !variableAppearsInExtractedMethod(v1, v2) &&
-                !variableAppearsInTheInitializerOfTheOtherVariable(v1, v2) &&
-                !inconsistentVariableMapping(v1, v2, set);
+            !variableAppearsInTheInitializerOfTheOtherVariable(v1, v2) &&
+            !inconsistentVariableMapping(v1, v2, set);
     }
 
     private boolean variableAppearsInTheInitializerOfTheOtherVariable(VariableDeclaration v1,
@@ -1021,14 +1019,14 @@ public class VariableReplacementAnalysis {
         if (v1 != null && v2 != null) {
             for (AbstractCodeMapping mapping : mappings) {
                 List<VariableDeclaration> variableDeclarations1 =
-                        mapping.getFragment1().getVariableDeclarations();
+                    mapping.getFragment1().getVariableDeclarations();
                 List<VariableDeclaration> variableDeclarations2 =
-                        mapping.getFragment2().getVariableDeclarations();
+                    mapping.getFragment2().getVariableDeclarations();
                 if (variableDeclarations1.contains(v1)) {
                     if (variableDeclarations2.size() > 0 && !variableDeclarations2.contains(v2)) {
                         return true;
                     } else if (variableDeclarations2.size() == 0 && v1.getInitializer() != null &&
-                            mapping.getFragment2().getString().startsWith(v1.getInitializer().getString())) {
+                        mapping.getFragment2().getString().startsWith(v1.getInitializer().getString())) {
                         return true;
                     }
                 }
@@ -1036,7 +1034,7 @@ public class VariableReplacementAnalysis {
                     if (variableDeclarations1.size() > 0 && !variableDeclarations1.contains(v1)) {
                         return true;
                     } else if (variableDeclarations1.size() == 0 && v2.getInitializer() != null &&
-                            mapping.getFragment1().getString().startsWith(v2.getInitializer().getString())) {
+                        mapping.getFragment1().getString().startsWith(v2.getInitializer().getString())) {
                         return true;
                     }
                 }
@@ -1046,17 +1044,17 @@ public class VariableReplacementAnalysis {
                         AbstractCodeFragment statement2 = referenceMapping.getFragment2();
                         boolean containsMapping = true;
                         if (statement1 instanceof CompositeStatementObject &&
-                                statement2 instanceof CompositeStatementObject &&
-                                statement1.getLocationInfo().getCodeElementType()
-                                        .equals(LocationInfo.CodeElementType.ENHANCED_FOR_STATEMENT)) {
+                            statement2 instanceof CompositeStatementObject &&
+                            statement1.getLocationInfo().getCodeElementType()
+                                .equals(CodeElementType.ENHANCED_FOR_STATEMENT)) {
                             CompositeStatementObject comp1 = (CompositeStatementObject) statement1;
                             CompositeStatementObject comp2 = (CompositeStatementObject) statement2;
                             containsMapping =
-                                    comp1.contains(mapping.getFragment1()) && comp2.contains(mapping.getFragment2());
+                                comp1.contains(mapping.getFragment1()) && comp2.contains(mapping.getFragment2());
                         }
                         if (containsMapping &&
-                                (bothFragmentsUseVariable(v1, mapping) || bothFragmentsUseVariable(v2, mapping)) &&
-                                operation2.loopWithVariables(v1.getVariableName(), v2.getVariableName()) == null) {
+                            (bothFragmentsUseVariable(v1, mapping) || bothFragmentsUseVariable(v2, mapping)) &&
+                            operation2.loopWithVariables(v1.getVariableName(), v2.getVariableName()) == null) {
                             return true;
                         }
                     }
@@ -1067,11 +1065,11 @@ public class VariableReplacementAnalysis {
     }
 
     private SimpleEntry<VariableDeclaration, UMLOperation> getVariableDeclaration1(
-            Replacement replacement) {
+        Replacement replacement) {
         for (AbstractCodeMapping mapping : mappings) {
             if (mapping.getReplacements().contains(replacement)) {
                 VariableDeclaration vd =
-                        mapping.getFragment1().searchVariableDeclaration(replacement.getBefore());
+                    mapping.getFragment1().searchVariableDeclaration(replacement.getBefore());
                 if (vd != null) {
                     return new SimpleEntry<>(vd, mapping.getOperation1());
                 }
@@ -1095,7 +1093,7 @@ public class VariableReplacementAnalysis {
     }
 
     private SimpleEntry<VariableDeclaration, UMLOperation> getVariableDeclaration1(
-            MergeVariableReplacement replacement, String variableName) {
+        MergeVariableReplacement replacement, String variableName) {
         for (AbstractCodeMapping mapping : mappings) {
             Set<String> foundMergedVariables = new LinkedHashSet<>();
             for (Replacement r : mapping.getReplacements()) {
@@ -1104,7 +1102,7 @@ public class VariableReplacementAnalysis {
                 }
             }
             if (mapping.getReplacements().contains(replacement) ||
-                    foundMergedVariables.equals(replacement.getMergedVariables())) {
+                foundMergedVariables.equals(replacement.getMergedVariables())) {
                 VariableDeclaration vd = mapping.getFragment1().searchVariableDeclaration(variableName);
                 if (vd != null) {
                     return new SimpleEntry<>(vd, mapping.getOperation1());
@@ -1129,11 +1127,11 @@ public class VariableReplacementAnalysis {
     }
 
     private SimpleEntry<VariableDeclaration, UMLOperation> getVariableDeclaration2(
-            Replacement replacement) {
+        Replacement replacement) {
         for (AbstractCodeMapping mapping : mappings) {
             if (mapping.getReplacements().contains(replacement)) {
                 VariableDeclaration vd =
-                        mapping.getFragment2().searchVariableDeclaration(replacement.getAfter());
+                    mapping.getFragment2().searchVariableDeclaration(replacement.getAfter());
                 if (vd != null) {
                     return new SimpleEntry<>(vd, mapping.getOperation2());
                 }
@@ -1157,7 +1155,7 @@ public class VariableReplacementAnalysis {
     }
 
     private SimpleEntry<VariableDeclaration, UMLOperation> getVariableDeclaration2(
-            SplitVariableReplacement replacement, String variableName) {
+        SplitVariableReplacement replacement, String variableName) {
         for (AbstractCodeMapping mapping : mappings) {
             if (mapping.getReplacements().contains(replacement)) {
                 Set<String> foundSplitVariables = new LinkedHashSet<>();
@@ -1167,7 +1165,7 @@ public class VariableReplacementAnalysis {
                     }
                 }
                 if (mapping.getReplacements().contains(replacement) ||
-                        foundSplitVariables.equals(replacement.getSplitVariables())) {
+                    foundSplitVariables.equals(replacement.getSplitVariables())) {
                     VariableDeclaration vd = mapping.getFragment2().searchVariableDeclaration(variableName);
                     if (vd != null) {
                         return new SimpleEntry<>(vd, mapping.getOperation2());
@@ -1193,7 +1191,7 @@ public class VariableReplacementAnalysis {
     }
 
     private SimpleEntry<VariableDeclaration, UMLOperation> getVariableDeclaration2(
-            MergeVariableReplacement replacement) {
+        MergeVariableReplacement replacement) {
         for (AbstractCodeMapping mapping : mappings) {
             Set<String> foundMergedVariables = new LinkedHashSet<>();
             for (Replacement r : mapping.getReplacements()) {
@@ -1202,9 +1200,9 @@ public class VariableReplacementAnalysis {
                 }
             }
             if (mapping.getReplacements().contains(replacement) ||
-                    foundMergedVariables.equals(replacement.getMergedVariables())) {
+                foundMergedVariables.equals(replacement.getMergedVariables())) {
                 VariableDeclaration vd =
-                        mapping.getFragment2().searchVariableDeclaration(replacement.getAfter());
+                    mapping.getFragment2().searchVariableDeclaration(replacement.getAfter());
                 if (vd != null) {
                     return new SimpleEntry<>(vd, mapping.getOperation2());
                 }
@@ -1235,29 +1233,29 @@ public class VariableReplacementAnalysis {
                         if (v2 != null && v2.getInitializer() != null) {
                             UMLOperation extractedMethod = mapper.getOperation2();
                             Map<String, List<OperationInvocation>> methodInvocationMap =
-                                    v2.getInitializer().getMethodInvocationMap();
+                                v2.getInitializer().getMethodInvocationMap();
                             for (String key : methodInvocationMap.keySet()) {
                                 for (OperationInvocation invocation : methodInvocationMap.get(key)) {
                                     if (invocation
-                                            .matchesOperation(extractedMethod, operation2.variableTypeMap(), null)) {
+                                        .matchesOperation(extractedMethod, operation2.variableTypeMap(), null)) {
                                         return false;
                                     } else {
                                         //check if the extracted method is called in the initializer of a variable used in the initializer of v2
                                         List<String> initializerVariables = v2.getInitializer().getVariables();
                                         for (String variable : initializerVariables) {
                                             for (VariableDeclaration declaration : operation2
-                                                    .getAllVariableDeclarations()) {
+                                                .getAllVariableDeclarations()) {
                                                 if (declaration.getVariableName().equals(variable) &&
-                                                        declaration.getInitializer() != null) {
+                                                    declaration.getInitializer() != null) {
                                                     Map<String, List<OperationInvocation>> methodInvocationMap2 =
-                                                            declaration.getInitializer().getMethodInvocationMap();
+                                                        declaration.getInitializer().getMethodInvocationMap();
                                                     for (String key2 : methodInvocationMap2.keySet()) {
                                                         for (OperationInvocation invocation2 : methodInvocationMap2.get(
-                                                                key2)) {
+                                                            key2)) {
                                                             if (invocation2
-                                                                    .matchesOperation(extractedMethod,
-                                                                                      operation2.variableTypeMap(),
-                                                                                      null)) {
+                                                                .matchesOperation(extractedMethod,
+                                                                                  operation2.variableTypeMap(),
+                                                                                  null)) {
                                                                 return false;
                                                             }
                                                         }
@@ -1274,17 +1272,17 @@ public class VariableReplacementAnalysis {
                 }
                 for (StatementObject nonMappedStatement : mapper.getNonMappedLeavesT2()) {
                     VariableDeclaration variableDeclaration2 =
-                            nonMappedStatement.getVariableDeclaration(v1.getVariableName());
+                        nonMappedStatement.getVariableDeclaration(v1.getVariableName());
                     if (variableDeclaration2 != null && variableDeclaration2.getType().equals(v1.getType())) {
                         for (AbstractCodeMapping mapping : mapper.getMappings()) {
                             if (mapping.getFragment2().equals(nonMappedStatement.getParent())) {
                                 if (mapping.getFragment1() instanceof CompositeStatementObject) {
                                     CompositeStatementObject composite1 =
-                                            (CompositeStatementObject) mapping.getFragment1();
+                                        (CompositeStatementObject) mapping.getFragment1();
                                     List<StatementObject> leaves1 = composite1.getLeaves();
                                     for (StatementObject leaf1 : leaves1) {
                                         VariableDeclaration variableDeclaration1 =
-                                                leaf1.getVariableDeclaration(variableDeclaration2.getVariableName());
+                                            leaf1.getVariableDeclaration(variableDeclaration2.getVariableName());
                                         if (variableDeclaration1 != null) {
                                             return true;
                                         }
@@ -1303,9 +1301,9 @@ public class VariableReplacementAnalysis {
         if (operationDiff != null) {
             for (UMLParameterDiff parameterDiff : operationDiff.getParameterDiffList()) {
                 if (ref.getMergedVariables()
-                        .contains(parameterDiff.getRemovedParameter().getVariableDeclaration()) &&
-                        ref.getNewVariable()
-                                .equals(parameterDiff.getAddedParameter().getVariableDeclaration())) {
+                    .contains(parameterDiff.getRemovedParameter().getVariableDeclaration()) &&
+                    ref.getNewVariable()
+                        .equals(parameterDiff.getAddedParameter().getVariableDeclaration())) {
                     return true;
 
                 }
@@ -1318,9 +1316,9 @@ public class VariableReplacementAnalysis {
         if (operationDiff != null) {
             for (UMLParameterDiff parameterDiff : operationDiff.getParameterDiffList()) {
                 if (ref.getSplitVariables()
-                        .contains(parameterDiff.getAddedParameter().getVariableDeclaration()) &&
-                        ref.getOldVariable()
-                                .equals(parameterDiff.getRemovedParameter().getVariableDeclaration())) {
+                    .contains(parameterDiff.getAddedParameter().getVariableDeclaration()) &&
+                    ref.getOldVariable()
+                        .equals(parameterDiff.getRemovedParameter().getVariableDeclaration())) {
                     return true;
 
                 }
@@ -1334,7 +1332,7 @@ public class VariableReplacementAnalysis {
             if (refactoring instanceof ExtractVariableRefactoring) {
                 ExtractVariableRefactoring extractVariableRef = (ExtractVariableRefactoring) refactoring;
                 if (extractVariableRef.getVariableDeclaration().equals(ref.getRenamedVariable()) &&
-                        extractVariableRef.getOperationAfter().equals(ref.getOperationAfter())) {
+                    extractVariableRef.getOperationAfter().equals(ref.getOperationAfter())) {
                     return true;
                 }
             }
@@ -1369,9 +1367,9 @@ public class VariableReplacementAnalysis {
     private boolean existsConflictingMergeVariableRefactoring(RenameVariableRefactoring ref) {
         for (MergeVariableRefactoring merge : variableMerges) {
             if (merge.getOperationBefore().equals(ref.getOperationBefore()) &&
-                    merge.getOperationAfter().equals(ref.getOperationAfter()) &&
-                    merge.getMergedVariables().contains(ref.getOriginalVariable()) &&
-                    merge.getNewVariable().equals(ref.getRenamedVariable())) {
+                merge.getOperationAfter().equals(ref.getOperationAfter()) &&
+                merge.getMergedVariables().contains(ref.getOriginalVariable()) &&
+                merge.getNewVariable().equals(ref.getRenamedVariable())) {
                 return true;
             }
         }
@@ -1381,9 +1379,9 @@ public class VariableReplacementAnalysis {
     private boolean existsConflictingSplitVariableRefactoring(RenameVariableRefactoring ref) {
         for (SplitVariableRefactoring split : variableSplits) {
             if (split.getOperationBefore().equals(ref.getOperationBefore()) &&
-                    split.getOperationAfter().equals(ref.getOperationAfter()) &&
-                    split.getSplitVariables().contains(ref.getRenamedVariable()) &&
-                    split.getOldVariable().equals(ref.getOriginalVariable())) {
+                split.getOperationAfter().equals(ref.getOperationAfter()) &&
+                split.getSplitVariables().contains(ref.getRenamedVariable()) &&
+                split.getOldVariable().equals(ref.getOriginalVariable())) {
                 return true;
             }
         }
@@ -1409,10 +1407,10 @@ public class VariableReplacementAnalysis {
     }
 
     private SimpleEntry<VariableDeclaration, UMLOperation> getVariableDeclaration1(
-            Replacement replacement, AbstractCodeMapping mapping) {
+        Replacement replacement, AbstractCodeMapping mapping) {
         if (mapping.getReplacements().contains(replacement)) {
             VariableDeclaration vd =
-                    mapping.getFragment1().searchVariableDeclaration(replacement.getBefore());
+                mapping.getFragment1().searchVariableDeclaration(replacement.getBefore());
             if (vd != null) {
                 return new SimpleEntry<>(vd, mapping.getOperation1());
             }
@@ -1435,10 +1433,10 @@ public class VariableReplacementAnalysis {
     }
 
     private SimpleEntry<VariableDeclaration, UMLOperation> getVariableDeclaration2(
-            Replacement replacement, AbstractCodeMapping mapping) {
+        Replacement replacement, AbstractCodeMapping mapping) {
         if (mapping.getReplacements().contains(replacement)) {
             VariableDeclaration vd =
-                    mapping.getFragment2().searchVariableDeclaration(replacement.getAfter());
+                mapping.getFragment2().searchVariableDeclaration(replacement.getAfter());
             if (vd != null) {
                 return new SimpleEntry<>(vd, mapping.getOperation2());
             }

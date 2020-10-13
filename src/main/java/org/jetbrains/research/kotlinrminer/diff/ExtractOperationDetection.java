@@ -1,6 +1,5 @@
 package org.jetbrains.research.kotlinrminer.diff;
 
-
 import org.jetbrains.research.kotlinrminer.api.RefactoringMinerTimedOutException;
 import org.jetbrains.research.kotlinrminer.decomposition.*;
 import org.jetbrains.research.kotlinrminer.decomposition.replacement.Replacement;

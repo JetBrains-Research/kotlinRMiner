@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.research.kotlinrminer.LocationInfo;
+import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.*;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
@@ -17,7 +17,6 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
     private final LocationInfo locationInfo;
     private final String name;
     private final List<UMLParameter> parameters;
-    //TODO: Figure out how to deal with generic types in Kotlin
     private final List<UMLTypeParameter> typeParameters;
     private final List<UMLAnnotation> annotations;
     private String visibility;
@@ -147,9 +146,7 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
     public boolean testAnnotationCheck(UMLOperation operation) {
         if (this.hasTestAnnotation() && !operation.hasTestAnnotation())
             return false;
-        if (!this.hasTestAnnotation() && operation.hasTestAnnotation())
-            return false;
-        return true;
+        return this.hasTestAnnotation() || !operation.hasTestAnnotation();
     }
 
     public UMLJavadoc getJavadoc() {
@@ -298,10 +295,6 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         if (this.isAbstract != operation.isAbstract) {
             return false;
         }
-		/*if(this.isStatic != operation.isStatic)
-			return false;
-		if(this.isFinal != operation.isFinal)
-			return false;*/
         if (this.parameters.size() != operation.parameters.size()) {
             return false;
         }
@@ -363,9 +356,7 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
                         returnParameter != null && returnParameter.getType().getClassType().equals("Boolean")) {
                         return true;
                     }
-                    if (statement.getString().equals("return null\n")) {
-                        return true;
-                    }
+                    return statement.getString().equals("return null\n");
                 }
             }
         }
@@ -379,10 +370,6 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         if (this.isAbstract != operation.isAbstract) {
             return false;
         }
-		/*if(this.isStatic != operation.isStatic)
-			return false;
-		if(this.isFinal != operation.isFinal)
-			return false;*/
         if (this.parameters.size() != operation.parameters.size()) {
             return false;
         }

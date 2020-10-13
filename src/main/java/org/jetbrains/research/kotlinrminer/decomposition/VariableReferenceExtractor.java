@@ -4,8 +4,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jetbrains.research.kotlinrminer.LocationInfo;
-
 public class VariableReferenceExtractor {
 
     public static Set<AbstractCodeMapping> findReferences(VariableDeclaration declaration1,
@@ -35,9 +33,9 @@ public class VariableReferenceExtractor {
         Set<AbstractCodeMapping> references = new LinkedHashSet<>();
         for (AbstractCodeMapping mapping : mappings) {
             if (mapping.getFragment1().getLocationInfo().getCodeElementType().equals(
-                    LocationInfo.CodeElementType.RETURN_STATEMENT) &&
+                    CodeElementType.RETURN_STATEMENT) &&
                     mapping.getFragment2().getLocationInfo().getCodeElementType().equals(
-                            LocationInfo.CodeElementType.RETURN_STATEMENT)) {
+                            CodeElementType.RETURN_STATEMENT)) {
                 references.add(mapping);
             }
         }

@@ -21,10 +21,10 @@ public class GitService {
         if (folder.exists()) {
             RepositoryBuilder builder = new RepositoryBuilder();
             repository = builder
-                    .setGitDir(new File(folder, ".git"))
-                    .readEnvironment()
-                    .findGitDir()
-                    .build();
+                .setGitDir(new File(folder, ".git"))
+                .readEnvironment()
+                .findGitDir()
+                .build();
         } else {
             throw new FileNotFoundException(repositoryPath);
         }
@@ -71,7 +71,7 @@ public class GitService {
         }
     }
 
-    public Repository cloneIfNotExists(String projectPath, String cloneUrl/*, String branch*/) throws Exception {
+    public Repository cloneIfNotExists(String projectPath, String cloneUrl) throws Exception {
         File folder = new File(projectPath);
         Repository repository;
         if (folder.exists()) {

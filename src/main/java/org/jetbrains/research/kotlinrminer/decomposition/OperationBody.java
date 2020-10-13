@@ -1,8 +1,6 @@
 package org.jetbrains.research.kotlinrminer.decomposition;
 
 import org.jetbrains.kotlin.psi.*;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
-import org.jetbrains.research.kotlinrminer.LocationInfo.*;
 
 import java.util.ArrayList;
 import java.util.List;

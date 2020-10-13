@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.kotlin.psi.*;
-import org.jetbrains.research.kotlinrminer.LocationInfo;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
 import org.jetbrains.research.kotlinrminer.diff.UMLModelDiff;
 import org.jetbrains.research.kotlinrminer.uml.UMLOperation;
@@ -25,7 +24,7 @@ public class OperationInvocation extends AbstractCall {
 
     public OperationInvocation(KtFile ktFile, String filePath, KtCallExpression invocation) {
         this.locationInfo = new LocationInfo(ktFile, filePath, invocation,
-                                             LocationInfo.CodeElementType.METHOD_INVOCATION);
+                                             CodeElementType.METHOD_INVOCATION);
         this.methodName = invocation.getCalleeExpression().getText();
         this.typeArguments = invocation.getValueArguments().size();
         this.arguments = new ArrayList<>();
@@ -42,7 +41,7 @@ public class OperationInvocation extends AbstractCall {
 
     public OperationInvocation(KtFile ktFile, String filePath, KtPrimaryConstructor invocation) {
         this.locationInfo = new LocationInfo(ktFile, filePath, invocation,
-                                             LocationInfo.CodeElementType.CONSTRUCTOR_INVOCATION);
+                                             CodeElementType.CONSTRUCTOR_INVOCATION);
         this.methodName = "this";
         this.typeArguments = invocation.getTypeParameters().size();
         this.arguments = new ArrayList<>();
@@ -74,7 +73,7 @@ public class OperationInvocation extends AbstractCall {
         } else if (subExpression1.length() > subExpression2.length()) {
             String modified = subExpression2;
             String previousCommonPrefix = "";
-            String commonPrefix = null;
+            String commonPrefix;
             while ((commonPrefix = PrefixSuffixUtils.longestCommonPrefix(modified, subExpression1))
                 .length() > previousCommonPrefix.length()) {
                 modified =

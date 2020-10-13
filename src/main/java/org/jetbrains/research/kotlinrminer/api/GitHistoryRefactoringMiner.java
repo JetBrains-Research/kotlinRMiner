@@ -92,8 +92,10 @@ public class GitHistoryRefactoringMiner {
     }
 
     protected UMLModel createModelInKotlin(Map<String, String> fileContents, Set<String> repositoryDirectories) throws
-            Exception {
-        return new UMLModelPsiReader(fileContents, repositoryDirectories).getUmlModel();
+        Exception {
+        UMLModelPsiReader psiReader = new UMLModelPsiReader(repositoryDirectories);
+        psiReader.parseFiles(fileContents);
+        return psiReader.getUmlModel();
     }
 
     private void populateFileContents(Repository repository,
