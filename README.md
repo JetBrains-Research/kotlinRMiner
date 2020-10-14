@@ -3,7 +3,7 @@
 
 A library that detects performed refactorings in code changes written in Kotlin.
 
-##About
+## About
 The library is based on [RefactoringMiner](https://github.com/tsantalis/RefactoringMiner), a tool that detects performed refactorings in code changes written in Java.
 The tool analyzes commit history of a Git project, parses code changes in each commit, uses detection rules and heuristics to detect performed refactorings, and returns a list of detected refactorings in each  commit with a description. 
 
@@ -27,7 +27,7 @@ Currently, kotlinRMiner supports the detection of the following refactorings:
 17. Extract And Move Method
 18. Move And Inline Method
 
-##Usage
+## Usage
 Use a library as CLI:
 1. Clone the repository 
 
@@ -48,6 +48,6 @@ The list of supported options:
     -bc  <git-repo-folder> <start-commit-sha1> <end-commit-sha1>    Detect refactorings between <start-commit-sha1> and <end-commit-sha1> for a project <git-repo-folder>.    
     -all <git-repo-folder> <branch>                                 Detect all refactorings at the <branch> for <git-repo-folder>. If <branch> is not specified, commits from master branch are analyzed.
 ```
-##Contacts
+## Contacts
 If you have any questions or suggestions, don't hesitate to open an issue.
 If you want to contribute, please create pull requests.
