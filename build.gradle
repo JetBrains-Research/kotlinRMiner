@@ -25,4 +25,16 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
 
-mainClassName='org.jetbrains.research.KotlinRMiner'
+jar {
+    manifest {
+        attributes "Main-Class": "org.jetbrains.research.kotlinrminer.KotlinRMiner"
+
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}

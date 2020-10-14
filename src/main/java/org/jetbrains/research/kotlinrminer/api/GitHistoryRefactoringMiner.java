@@ -20,29 +20,8 @@ public class GitHistoryRefactoringMiner {
     private static final String BITBUCKET_URL = "https://bitbucket.org/";
     private final RefactoringType[] refactoringTypesToConsider = RefactoringType.ALL;
 
-    public void detectAtCommit(Repository repository, String commitId, RefactoringHandler handler) {
-        String cloneURL = repository.getConfig().getString("remote", "origin", "url");
-        File metadataFolder = repository.getDirectory();
-        File projectFolder = metadataFolder.getParentFile();
-        GitService gitService = new GitService();
-        RevWalk walk = new RevWalk(repository);
-        try {
-            RevCommit commit = walk.parseCommit(repository.resolve(commitId));
-            if (commit.getParentCount() > 0) {
-                walk.parseCommit(commit.getParent(0));
-                this.detectRefactorings(gitService, repository, projectFolder, commit, handler);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            walk.close();
-            walk.dispose();
-        }
-    }
-
     protected List<Refactoring> detectRefactorings(GitService gitService,
                                                    Repository repository,
-                                                   File projectFolder,
                                                    RevCommit currentCommit,
                                                    RefactoringHandler handler) throws Exception {
         List<Refactoring> refactoringsAtRevision;
@@ -79,6 +58,80 @@ public class GitHistoryRefactoringMiner {
             walk.dispose();
         }
         return refactoringsAtRevision;
+    }
+
+    private void detect(GitService gitService,
+                        Repository repository,
+                        final RefactoringHandler handler,
+                        Iterator<RevCommit> i) {
+        int commitsCount = 0;
+        int errorCommitsCount = 0;
+        int refactoringsCount = 0;
+
+        File metadataFolder = repository.getDirectory();
+        File projectFolder = metadataFolder.getParentFile();
+        String projectName = projectFolder.getName();
+
+        long time = System.currentTimeMillis();
+        while (i.hasNext()) {
+            RevCommit currentCommit = i.next();
+            try {
+                List<Refactoring> refactoringsAtRevision =
+                    detectRefactorings(gitService, repository, currentCommit, handler);
+                refactoringsCount += refactoringsAtRevision.size();
+
+            } catch (Exception e) {
+                handler.handleException(currentCommit.getId().getName(), e);
+                errorCommitsCount++;
+            }
+
+            commitsCount++;
+            long time2 = System.currentTimeMillis();
+            if ((time2 - time) > 20000) {
+                time = time2;
+            }
+        }
+
+        handler.onFinish(refactoringsCount, commitsCount, errorCommitsCount);
+        System.out.printf("Analyzed %s [Commits: %d, Errors: %d, Refactorings: %d]%n", projectName,
+                          commitsCount, errorCommitsCount, refactoringsCount);
+    }
+
+    public void detectAtCommit(Repository repository, String commitId, RefactoringHandler handler) {
+        String cloneURL = repository.getConfig().getString("remote", "origin", "url");
+        File metadataFolder = repository.getDirectory();
+        File projectFolder = metadataFolder.getParentFile();
+        GitService gitService = new GitService();
+        RevWalk walk = new RevWalk(repository);
+        try {
+            RevCommit commit = walk.parseCommit(repository.resolve(commitId));
+            if (commit.getParentCount() > 0) {
+                walk.parseCommit(commit.getParent(0));
+                this.detectRefactorings(gitService, repository, commit, handler);
+            }
+        } catch (Exception e) {
+            handler.handleException(commitId, e);
+        } finally {
+            walk.close();
+            walk.dispose();
+        }
+    }
+
+    public void detectAll(Repository repository, String branch, final RefactoringHandler handler) throws Exception {
+        GitService gitService = new GitService();
+        RevWalk walk = gitService.createAllRevsWalk(repository, branch);
+        try {
+            detect(gitService, repository, handler, walk.iterator());
+        } finally {
+            walk.dispose();
+        }
+    }
+
+    public void detectBetweenCommits(Repository repository, String startCommitId, String endCommitId,
+                                     RefactoringHandler handler) throws Exception {
+        GitService gitService = new GitService();
+        Iterable<RevCommit> walk = gitService.createRevsWalkBetweenCommits(repository, startCommitId, endCommitId);
+        detect(gitService, repository, handler, walk.iterator());
     }
 
     protected List<Refactoring> filter(List<Refactoring> refactoringsAtRevision) {
