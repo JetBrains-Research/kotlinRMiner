@@ -1636,10 +1636,9 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         Set<String> booleanLiterals2 = new LinkedHashSet<>(statement2.getBooleanLiterals());
         removeCommonElements(booleanLiterals1, booleanLiterals2);
 
-/*      TODO: Figure out how to get infix operators
         Set<String> infixOperators1 = new LinkedHashSet<>(statement1.getInfixOperators());
         Set<String> infixOperators2 = new LinkedHashSet<>(statement2.getInfixOperators());
-        removeCommonElements(infixOperators1, infixOperators2);*/
+        removeCommonElements(infixOperators1, infixOperators2);
 
         Set<String> arrayAccesses1 = new LinkedHashSet<>(statement1.getArrayAccesses());
         Set<String> arrayAccesses2 = new LinkedHashSet<>(statement2.getArrayAccesses());
@@ -1653,7 +1652,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         findReplacements(types1, types2, replacementInfo, ReplacementType.TYPE);
 
         //perform operator replacements
-        //TODO: findReplacements(infixOperators1, infixOperators2, replacementInfo, ReplacementType.INFIX_OPERATOR);
+        findReplacements(infixOperators1, infixOperators2, replacementInfo, ReplacementType.INFIX_OPERATOR);
 
         //apply existing replacements on method invocations
         for (String methodInvocation1 : methodInvocations1) {

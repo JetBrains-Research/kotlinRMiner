@@ -26,6 +26,7 @@ public class StatementObject extends AbstractStatement {
     private final List<String> arrayAccesses;
     private final List<String> prefixExpressions;
     private final List<String> postfixExpressions;
+    private final List<String> infixOperators;
     private final List<String> arguments;
     private final List<LambdaExpressionObject> lambdas;
 
@@ -50,6 +51,7 @@ public class StatementObject extends AbstractStatement {
         this.arrayAccesses = visitor.getArrayAccesses();
         this.prefixExpressions = visitor.getPrefixExpressions();
         this.postfixExpressions = visitor.getPostfixExpressions();
+        this.infixOperators = visitor.getInfixOperators();
         this.arguments = visitor.getArguments();
         this.lambdas = visitor.getLambdas();
         setDepth(depth);
@@ -142,6 +144,11 @@ public class StatementObject extends AbstractStatement {
     @Override
     public List<String> getPostfixExpressions() {
         return postfixExpressions;
+    }
+
+    @Override
+    public List<String> getInfixOperators() {
+        return infixOperators;
     }
 
     @Override

@@ -84,6 +84,7 @@ public class CompositeStatementObject extends AbstractStatement {
         return false;
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(locationInfo.getCodeElementType().getName());
@@ -138,6 +139,22 @@ public class CompositeStatementObject extends AbstractStatement {
             }
         }
         return variables;
+    }
+
+
+    public List<LambdaExpressionObject> getAllLambdas() {
+        List<LambdaExpressionObject> lambdas = new ArrayList<LambdaExpressionObject>();
+        lambdas.addAll(getLambdas());
+        for (AbstractStatement statement : statementList) {
+            if (statement instanceof CompositeStatementObject) {
+                CompositeStatementObject composite = (CompositeStatementObject) statement;
+                lambdas.addAll(composite.getAllLambdas());
+            } else if (statement instanceof StatementObject) {
+                StatementObject statementObject = (StatementObject) statement;
+                lambdas.addAll(statementObject.getLambdas());
+            }
+        }
+        return lambdas;
     }
 
     public List<VariableDeclaration> getAllVariableDeclarations() {
@@ -434,6 +451,15 @@ public class CompositeStatementObject extends AbstractStatement {
             postfixExpressions.addAll(expression.getPostfixExpressions());
         }
         return postfixExpressions;
+    }
+
+    @Override
+    public List<String> getInfixOperators() {
+        List<String> infixOperators = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            infixOperators.addAll(expression.getInfixOperators());
+        }
+        return infixOperators;
     }
 
     @Override

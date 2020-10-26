@@ -73,31 +73,10 @@
     },
     {
         "repository": "https://github.com/JetBrains-Research/codetracker.git",
-        "sha1": "bd73697521f58d0c1d91d81d9747b65617aa986f",
-        "refactorings": [
-            {
-                "description": "Add Parameter currentFileType : FileTypes in method private sendDataToServer(request Request, currentFileType FileTypes) : CompletableFuture<Void> from class PluginServer"
-            }
-        ]
-    },
-    {
-        "repository": "https://github.com/JetBrains-Research/codetracker.git",
         "sha1": "0d8728b310668daf7af510e74315556b4eb23a60",
         "refactorings": [
             {
-                "description": "Change Parameter Type t : Document to t : T in method public getData(t T) : List<S> in class org.jetbrains.research.ml.codetracker.tracking.LoggedData"
-            },
-            {
                 "description": "Rename Method private createFile(project Project, task Task, language Language) : VirtualFile? renamed to private getOrCreateFile(project Project, task Task, language Language) : VirtualFile? in class org.jetbrains.research.ml.codetracker.tracking.TaskFileHandler"
-            },
-            {
-                "description": "Change Parameter Type t : Unit to t : T in method public getData(t T) : List<S> in class org.jetbrains.research.ml.codetracker.tracking.LoggedData"
-            },
-            {
-                "description": "Move Method public getData(t Document) : List<String?> from class org.jetbrains.research.ml.codetracker.tracking.DocumentLoggedData to public getData(t T) : List<S> from class org.jetbrains.research.ml.codetracker.tracking.LoggedData"
-            },
-            {
-                "description": "Move Method public getData(t Unit) : List<String> from class org.jetbrains.research.ml.codetracker.tracking.UiLoggedData to public getData(t T) : List<S> from class org.jetbrains.research.ml.codetracker.tracking.LoggedData"
             }
         ]
     },
@@ -133,7 +112,7 @@
                 "description": "Move And Rename Method public userOutlierTooltips() from class jetbrains.datalore.plot.builder.tooltip.TooltipContentGeneratorTest to public configOutlierTooltips() from class jetbrains.datalore.plot.config.TooltipConfigTest"
             },
             {
-                "description": "Move Method public defaultTooltips() from class jetbrains.datalore.plot.builder.tooltip.TooltipContentGeneratorTest to public defaultTooltips() from class jetbrains.datalore.plot.config.TooltipConfigTest"
+                "description": "Move And Rename Method public userTooltips() from class jetbrains.datalore.plot.builder.tooltip.TooltipContentGeneratorTest to public defaultTooltips() from class jetbrains.datalore.plot.config.TooltipConfigTest"
             }
         ]
     },
@@ -158,9 +137,6 @@
             },
             {
                 "description": "Move Method internal createGeomInteractionBuilder(renders List<Aes<*>>, geomKind GeomKind, statKind StatKind, multilayer Boolean) : GeomInteractionBuilder from class jetbrains.datalore.plot.config.PlotConfigClientSideUtil to private createGeomInteractionBuilder(renders List<Aes<*>>, geomKind GeomKind, statKind StatKind, multilayer Boolean) : GeomInteractionBuilder from class jetbrains.datalore.plot.config.GeomInteractionUtil"
-            },
-            {
-                "description": "Move Method private createAxisAesList(geomBuilder GeomInteractionBuilder, geomKind GeomKind) : List<Aes<*>> from class jetbrains.datalore.plot.config.PlotConfigClientSideUtil to private createAxisAesList(geomBuilder GeomInteractionBuilder, geomKind GeomKind) : List<Aes<*>> from class jetbrains.datalore.plot.config.GeomInteractionUtil"
             }
         ]
     },
@@ -212,6 +188,9 @@
             },
             {
                 "description": "Add Parameter messageConsumer : (s: String) -> Unit in method public apply(data DataFrame, statCtx StatContext, messageConsumer (s: String) -> Unit) : DataFrame from class jetbrains.datalore.plot.base.stat.Bin2dStat"
+            },
+            {
+                "description": "Extract Method private getStatName(layerConfig LayerConfig) : String extracted from private createSamplingMessage(samplingExpression String, layerConfig LayerConfig) : String in class jetbrains.datalore.plot.server.config.PlotConfigServerSide"
             }
         ]
     },
@@ -235,31 +214,10 @@
     },
     {
         "repository": "https://github.com/JetBrains/kotless.git",
-        "sha1": "cdbf991f83fd3e9fe2d0b47fc171a9d3c7ccb28e",
-        "refactorings": [
-            {
-                "description": "Add Parameter visitOnce : Boolean in method public visitCallExpressionsWithReferences(binding BindingContext, filter (KtCallExpression) -> Boolean, visitOnce Boolean, body (KtCallExpression) -> Unit) from class Expression.kt"
-            },
-            {
-                "description": "Add Parameter visitOnce : Boolean in method public visitAnnotatedWithReferences(binding BindingContext, filter (KtAnnotated) -> Boolean, visitOnce Boolean, body (KtAnnotated) -> Unit) from class Expression.kt"
-            }
-        ]
-    },
-    {
-        "repository": "https://github.com/JetBrains/kotless.git",
         "sha1": "779e447cd4336832b2daa900f3dc00f78c45c09d",
         "refactorings": [
             {
                 "description": "Add Parameter filter : (KtExpression) -> Boolean in method public visitAllExpressions(context BindingContext, filter (KtExpression) -> Boolean, alreadyGot Set<KtElement>, body (KtExpression) -> Unit) from class Expression.kt"
-            },
-            {
-                "description": "Rename Method public processObject(files Set<KtFile>, binding BindingContext, body (KtObjectDeclaration,KClass<*>) -> Unit) renamed to public processObjects(files Set<KtFile>, binding BindingContext, body (KtObjectDeclaration,KClass<*>) -> Unit) in class io.kotless.parser.processor.SubTypesProcessor"
-            },
-            {
-                "description": "Rename Method public processClass(files Set<KtFile>, binding BindingContext, body (KtClass,KClass<*>) -> Unit) renamed to public processClasses(files Set<KtFile>, binding BindingContext, body (KtClass,KClass<*>) -> Unit) in class io.kotless.parser.processor.SubTypesProcessor"
-            },
-            {
-                "description": "Rename Method public processClassOrObject(files Set<KtFile>, binding BindingContext, body (KtClassOrObject,KClass<*>) -> Unit) renamed to public processClassesOrObjects(files Set<KtFile>, binding BindingContext, body (KtClassOrObject,KClass<*>) -> Unit) in class io.kotless.parser.processor.SubTypesProcessor"
             }
         ]
     },
@@ -278,15 +236,6 @@
         "refactorings": [
             {
                 "description": "Extract Class person.Car from class Person"
-            }
-        ]
-    },
-    {
-        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
-        "sha1": "85f42cbb8cda603dca6544f4c7039ab268256f48",
-        "refactorings": [
-            {
-                "description": "Inline Method public isAgeMoreThanZero() : Boolean inlined to public isAgeValid() : Boolean in class Person"
             }
         ]
     },
@@ -314,6 +263,12 @@
         "refactorings": [
             {
                 "description": "Extract Method protected visitReferenceTree(reference KtElement, target KtElement) extracted from public visitReferenceExpression(expression KtReferenceExpression) in class io.kotless.parser.utils.psi.visitor.KtReferenceFollowingVisitor"
+            },
+            {
+                "description": "Rename Parameter expression : KtReferenceExpression to reference : KtElement in method protected visitReferenceTree(reference KtElement, target KtElement) in class io.kotless.parser.utils.psi.visitor.KtReferenceFollowingVisitor"
+            },
+            {
+                "description": "Change Parameter Type expression : KtReferenceExpression to reference : KtElement in method protected visitReferenceTree(reference KtElement, target KtElement) in class io.kotless.parser.utils.psi.visitor.KtReferenceFollowingVisitor"
             }
         ]
     },
@@ -322,13 +277,16 @@
         "sha1": "e1cbb66d414fdfc7662789bc20b4e288655d4149",
         "refactorings": [
             {
-                "description": "Extract Method private dumpGeneratedFiles(generated Set<TFFile>) extracted from public act() in class io.kotless.plugin.gradle.tasks.gen.KotlessGenerateTask"
-            },
-            {
                 "description": "Rename Parameter file : File to directory : File in method public writeToDirectory(directory File) : File in class io.kotless.terraform.TFFile"
             },
             {
                 "description": "Rename Method public write(file File) renamed to public writeToDirectory(directory File) : File in class io.kotless.terraform.TFFile"
+            },
+            {
+                "description": "Extract Method private parseSources() : Schema extracted from public act() in class io.kotless.plugin.gradle.tasks.gen.KotlessGenerateTask"
+            },
+            {
+                "description": "Extract Method private dumpGeneratedFiles(generated Set<TFFile>) extracted from public act() in class io.kotless.plugin.gradle.tasks.gen.KotlessGenerateTask"
             },
             {
                 "description": "Extract Method private dumpGeneratedFiles(infra TFFile) extracted from public act() in class io.kotless.plugin.gradle.tasks.gen.KotlessLocalGenerateTask"
@@ -350,9 +308,6 @@
         "refactorings": [
             {
                 "description": "Extract Method private sendDataToServer(request Request) : Boolean extracted from public sendTrackingData(file File) in class PluginServer"
-            },
-            {
-                "description": "Extract Method private sendActivityTrackerData() extracted from public sendTrackingData(file File) in class PluginServer"
             }
         ]
     },
@@ -482,6 +437,12 @@
         "refactorings": [
             {
                 "description": "Rename Method private getBaseFolder(element KtElement, binding BindingContext, context ProcessorContext) : File renamed to private getStaticRootFolder(element KtElement, binding BindingContext, context ProcessorContext) : File in class io.kotless.parser.ktor.processor.route.StaticRoutesProcessor"
+            },
+            {
+                "description": "Rename Variable routeCalls : Untyped to calls : Untyped in method private getDynamicPath(element KtElement, binding BindingContext) : URIPath in class io.kotless.parser.ktor.processor.route.DynamicRoutesProcessor"
+            },
+            {
+                "description": "Change Variable Type routeCalls : Untyped to calls : Untyped in method private getDynamicPath(element KtElement, binding BindingContext) : URIPath in class io.kotless.parser.ktor.processor.route.DynamicRoutesProcessor"
             }
         ]
     },
@@ -503,18 +464,6 @@
         "refactorings": [
             {
                 "description": "Rename Method public getMethod(binding BindingContext, func KtNamedFunction) : HttpMethod renamed to public getMethods(binding BindingContext, func KtNamedFunction) : Set<HttpMethod> in class io.kotless.parser.spring.processor.route.SpringAnnotationUtils"
-            }
-        ]
-    },
-    {
-        "repository": "https://github.com/JetBrains/kotless.git",
-        "sha1": "8a3e4f2d9fbca882ec9497b0fbaa2cb94d8dca00",
-        "refactorings": [
-            {
-                "description": "Add Parameter context : BindingContext in method public visitAnnotatedWithReferences(context BindingContext, filter (KtAnnotated) -> Boolean, body (KtAnnotated) -> Unit) from class Expression.kt"
-            },
-            {
-                "description": "Rename Method public visitAnnotated(filter (KtAnnotated) -> Boolean, body (KtAnnotated) -> Unit) renamed to public visitAnnotatedWithReferences(context BindingContext, filter (KtAnnotated) -> Boolean, body (KtAnnotated) -> Unit) in class Expression.kt"
             }
         ]
     },
@@ -569,6 +518,12 @@
         "refactorings": [
             {
                 "description": "Rename Method private tryAddToPhaseFastpath(phase PipelinePhase, block PipelineInterceptor<TSubject, TContext>) : Boolean renamed to private tryAddToPhaseFastPath(phase PipelinePhase, block PipelineInterceptor<TSubject, TContext>) : Boolean in class io.ktor.util.pipeline.Pipeline"
+            },
+            {
+                "description": "Change Variable Type e : Untyped to current : Untyped in method private findPhase(phase PipelinePhase) : PhaseContent<TSubject, TContext> in class io.ktor.util.pipeline.Pipeline"
+            },
+            {
+                "description": "Rename Variable e : Untyped to current : Untyped in method private findPhase(phase PipelinePhase) : PhaseContent<TSubject, TContext> in class io.ktor.util.pipeline.Pipeline"
             }
         ]
     },
@@ -740,15 +695,12 @@
             },
             {
                 "description": "Add Parameter requestData : HttpRequestData in method private executeHttpRequest(engine OkHttpClient, engineRequest Request, callContext CoroutineContext, requestData HttpRequestData) : HttpResponseData from class io.ktor.client.engine.okhttp.OkHttpEngine"
-            }
-        ]
-    },
-    {
-        "repository": "https://github.com/ktorio/ktor.git",
-        "sha1": "e000408b88a9eb3b74a5a500163884d2e45c95b4",
-        "refactorings": [
+            },
             {
-                "description": "Extract Method private sendErrorIfNotCommitted(status Int) extracted from public handle(target String, baseRequest Request, request HttpServletRequest, response HttpServletResponse) in class io.ktor.server.jetty.JettyKtorHandler"
+                "description": "Add Parameter socketOptions : SocketOptions.TCPClientSocketOptions? in method internal attachForWritingImpl(channel ByteChannel, nioChannel WritableByteChannel, selectable Selectable, selector SelectorManager, pool ObjectPool<ByteBuffer>, socketOptions SocketOptions.TCPClientSocketOptions?) : ReaderJob from class CIOWriter.kt"
+            },
+            {
+                "description": "Add Parameter socketOptions : SocketOptions.TCPClientSocketOptions? in method internal attachForReadingImpl(channel ByteChannel, nioChannel ReadableByteChannel, selectable Selectable, selector SelectorManager, pool ObjectPool<ByteBuffer>, socketOptions SocketOptions.TCPClientSocketOptions?) : WriterJob from class CIOReader.kt"
             }
         ]
     },
@@ -756,9 +708,6 @@
         "repository": "https://github.com/ktorio/ktor.git",
         "sha1": "62073708d8499ffb047baaf0d35ffa500341b7f1",
         "refactorings": [
-            {
-                "description": "Extract Method private setTyped(data SessionProviderData<S>, value Any?) extracted from public set(name String, value Any?) in class io.ktor.sessions.SessionData"
-            },
             {
                 "description": "Change Parameter Type session : Any to session : T in method public serialize(session T) : String in class io.ktor.sessions.SessionSerializerReflection"
             },
@@ -794,15 +743,9 @@
         "refactorings": [
             {
                 "description": "Inline Method private checkIfRangeETagHeader(versions List<Version>, ifRange String) : Boolean inlined to private checkIfRangeHeader(content OutgoingContent.ReadChannelContent, call ApplicationCall) : Boolean in class io.ktor.features.PartialContent"
-            }
-        ]
-    },
-    {
-        "repository": "https://github.com/ktorio/ktor.git",
-        "sha1": "f8b38d00eb01ec8c933f099a712a475f5ad1278e",
-        "refactorings": [
+            },
             {
-                "description": "Extract Method private checkIfRangeETagHeader(versions List<Version>, ifRange String) : Boolean extracted from private checkIfRangeHeader(content OutgoingContent.ReadChannelContent, call ApplicationCall) : Boolean in class io.ktor.features.PartialContent"
+                "description": "Inline Method private checkIfRangeDateHeader(ifRange String, versions List<Version>) : Boolean inlined to private checkIfRangeHeader(content OutgoingContent.ReadChannelContent, call ApplicationCall) : Boolean in class io.ktor.features.PartialContent"
             }
         ]
     },
@@ -887,6 +830,9 @@
             },
             {
                 "description": "Rename Method private getVerifierNullableIssuer(jwkProvider JwkProvider, issuer String?, token HttpAuthHeader, schemes JWTAuthSchemes) : JWTVerifier? renamed to private getVerifier(jwkProvider JwkProvider, issuer String?, token HttpAuthHeader, schemes JWTAuthSchemes, jwtConfigure () -> Unit) : JWTVerifier? in class JWTAuth.kt"
+            },
+            {
+                "description": "Add Parameter configure : JWTConfigureFunction in method private getVerifier(jwkProvider JwkProvider, token HttpAuthHeader, schemes JWTAuthSchemes, configure JWTConfigureFunction) : JWTVerifier? from class JWTAuth.kt"
             }
         ]
     },
@@ -932,6 +878,15 @@
         "refactorings": [
             {
                 "description": "Extract Method private launchResponseJob(source ByteReadChannel) extracted from public responseChannel() : ByteWriteChannel in class io.ktor.server.testing.TestApplicationResponse"
+            },
+            {
+                "description": "Change Variable Type result : Untyped to source : ByteReadChannel in method private launchResponseJob(source ByteReadChannel) in class io.ktor.server.testing.TestApplicationResponse"
+            },
+            {
+                "description": "Extract Method internal awaitForResponseCompletion() extracted from public flush() in class io.ktor.server.testing.TestApplicationResponse"
+            },
+            {
+                "description": "Parameterize Variable result : Untyped to source : ByteReadChannel in method private launchResponseJob(source ByteReadChannel) in class io.ktor.server.testing.TestApplicationResponse"
             }
         ]
     },

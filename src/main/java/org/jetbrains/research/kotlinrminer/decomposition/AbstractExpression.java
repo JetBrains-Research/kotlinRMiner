@@ -24,6 +24,7 @@ public class AbstractExpression extends AbstractCodeFragment {
     private final List<String> arguments;
     private final List<String> prefixExpressions;
     private final List<String> postfixExpressions;
+    private final List<String> infixOperators;
     private final List<LambdaExpressionObject> lambdas;
     private final Map<String, List<ObjectCreation>> creationMap;
     private final Map<String, List<OperationInvocation>> methodInvocationMap;
@@ -47,6 +48,7 @@ public class AbstractExpression extends AbstractCodeFragment {
         this.arguments = visitor.getArguments();
         this.prefixExpressions = visitor.getPrefixExpressions();
         this.postfixExpressions = visitor.getPostfixExpressions();
+        this.infixOperators = visitor.getInfixOperators();
         this.lambdas = visitor.getLambdas();
         this.expression = expression.getText();
         this.owner = null;
@@ -96,7 +98,6 @@ public class AbstractExpression extends AbstractCodeFragment {
 
     @Override
     public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
-        //TODO: Implement collecting of methods' invocations
         return this.methodInvocationMap;
     }
 
@@ -149,6 +150,11 @@ public class AbstractExpression extends AbstractCodeFragment {
     @Override
     public List<String> getPostfixExpressions() {
         return postfixExpressions;
+    }
+
+    @Override
+    public List<String> getInfixOperators() {
+        return infixOperators;
     }
 
     @Override

@@ -130,11 +130,9 @@ public class OperationBody {
             processStatement(ktFile, filePath, child, labeledStatement.getBaseExpression());
         } else if (statement instanceof KtReturnExpression) {
             KtReturnExpression returnStatement = (KtReturnExpression) statement;
-            CompositeStatementObject child =
-                new CompositeStatementObject(ktFile, filePath, returnStatement, parent.getDepth() + 1,
-                                             CodeElementType.RETURN_STATEMENT);
+            StatementObject child = new StatementObject(ktFile, filePath, returnStatement, parent.getDepth() + 1,
+                                                        CodeElementType.RETURN_STATEMENT);
             parent.addStatement(child);
-            processStatement(ktFile, filePath, child, returnStatement.getReturnedExpression());
         } else if (statement instanceof KtThrowExpression) {
             KtThrowExpression throwStatement = (KtThrowExpression) statement;
             StatementObject child = new StatementObject(ktFile, filePath, throwStatement, parent.getDepth() + 1,
@@ -222,35 +220,23 @@ public class OperationBody {
 
             List<KtWhenEntry> entries = whenExpression.getEntries();
             for (KtWhenEntry entry : entries) {
+                if (entry.getConditions().length > 0 && entry.getConditions()[0] != null && entry.getConditions()[0] instanceof KtWhenConditionWithExpression) {
+                    AbstractExpression abstractExpression = new AbstractExpression(ktFile, filePath,
+                                                                                   ((KtWhenConditionWithExpression) entry.getConditions()[0]).getExpression(),
+                                                                                   CodeElementType.WHEN_EXPRESSION_CONDITION);
+                    child.addExpression(abstractExpression);
+                }
                 processStatement(ktFile, filePath, child, entry.getExpression());
             }
-        } else if (statement instanceof KtBinaryExpression) {
-            KtBinaryExpression binaryStatement = (KtBinaryExpression) statement;
-            CompositeStatementObject child =
-                new CompositeStatementObject(ktFile, filePath, binaryStatement, parent.getDepth() + 1,
-                                             CodeElementType.BINARY_EXPRESSION);
+        } else if (statement instanceof KtProperty) {
+            KtProperty variableDeclarationStatement = (KtProperty) statement;
+            StatementObject child = new StatementObject(ktFile, filePath, variableDeclarationStatement,
+                                                        parent.getDepth() + 1,
+                                                        CodeElementType.VARIABLE_DECLARATION_STATEMENT);
             parent.addStatement(child);
-            processStatement(ktFile, filePath, child, binaryStatement.getLeft());
-            processStatement(ktFile, filePath, child, binaryStatement.getRight());
-        } else if (statement instanceof KtCallExpression) {
-            KtCallExpression callExpression = (KtCallExpression) statement;
-            StatementObject child =
-                new StatementObject(ktFile, filePath, callExpression, parent.getDepth() + 1,
-                                    CodeElementType.METHOD_INVOCATION);
-            parent.addStatement(child);
-        } else if (statement instanceof KtNameReferenceExpression) {
-            KtNameReferenceExpression nameReferenceExpression = (KtNameReferenceExpression) statement;
-            StatementObject child =
-                new StatementObject(ktFile, filePath, nameReferenceExpression, parent.getDepth() + 1,
-                                    CodeElementType.METHOD_INVOCATION);
-            parent.addStatement(child);
-        } else if (statement instanceof KtDotQualifiedExpression) {
-            KtDotQualifiedExpression dotQualifiedExpression = (KtDotQualifiedExpression) statement;
-            CompositeStatementObject child =
-                new CompositeStatementObject(ktFile, filePath, dotQualifiedExpression, parent.getDepth() + 1,
-                                             CodeElementType.DOT_QUALIFIED_EXPRESSION);
-            processStatement(ktFile, filePath, child, dotQualifiedExpression.getSelectorExpression());
-            processStatement(ktFile, filePath, child, dotQualifiedExpression.getReceiverExpression());
+        } else {
+            StatementObject child = new StatementObject(ktFile, filePath, statement, parent.getDepth() + 1,
+                                                        CodeElementType.EXPRESSION_STATEMENT);
             parent.addStatement(child);
         }
     }
@@ -274,5 +260,9 @@ public class OperationBody {
             invocations.addAll(invocationMap.get(key));
         }
         return invocations;
+    }
+
+    public List<LambdaExpressionObject> getAllLambdas() {
+        return new ArrayList<>(compositeStatement.getAllLambdas());
     }
 }

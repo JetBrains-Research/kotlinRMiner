@@ -3,6 +3,7 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 public enum CodeElementType {
     BINARY_EXPRESSION,
     WHEN_EXPRESSION,
+    WHEN_EXPRESSION_CONDITION,
     COMPANION_OBJECT,
     DOT_QUALIFIED_EXPRESSION,
     OBJECT,

@@ -790,4 +790,10 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         return new ArrayList<>();
     }
 
+    public List<LambdaExpressionObject> getAllLambdas() {
+        if (operationBody != null)
+            return operationBody.getAllLambdas();
+        return new ArrayList<>();
+    }
+
 }

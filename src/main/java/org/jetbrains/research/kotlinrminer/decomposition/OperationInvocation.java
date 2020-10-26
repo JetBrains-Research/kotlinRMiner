@@ -30,11 +30,21 @@ public class OperationInvocation extends AbstractCall {
         this.arguments = new ArrayList<>();
         List<KtValueArgument> args = invocation.getValueArguments();
         for (KtValueArgument argument : args) {
-            if (argument.getName() != null)
+            if (argument.getText() != null)
                 this.arguments.add(argument.getText());
         }
         if (invocation.getCalleeExpression() != null) {
-            this.expression = invocation.getCalleeExpression().getText();
+            String methodCallExpression = "";
+            if (invocation.getPrevSibling() != null && invocation.getPrevSibling().getParent() != null) {
+                if (invocation.getPrevSibling().getParent() instanceof KtDotQualifiedExpression) {
+                    methodCallExpression = invocation.getPrevSibling().getParent().getText();
+                } else {
+                    methodCallExpression = invocation.getCalleeExpression().getContext().getText();
+                }
+            } else {
+                methodCallExpression = invocation.getCalleeExpression().getContext().getText();
+            }
+            this.expression = methodCallExpression;
             processExpression(invocation.getCalleeExpression(), this.subExpressions);
         }
     }
@@ -221,7 +231,8 @@ public class OperationInvocation extends AbstractCall {
             }
         }
         int i = 0;
-        for (UMLParameter parameter : operation.getParametersWithoutReturnType()) {
+        //In Kotlin, it's possible do not specify the type of the element.
+/*        for (UMLParameter parameter : operation.getParametersWithoutReturnType()) {
             UMLType parameterType = parameter.getType();
             if (inferredArgumentTypes.size() > i && inferredArgumentTypes.get(i) != null) {
                 if (!parameterType.getClassType().equals(inferredArgumentTypes.get(i).toString()) &&
@@ -231,7 +242,7 @@ public class OperationInvocation extends AbstractCall {
                 }
             }
             i++;
-        }
+        }*/
         return this.methodName.equals(operation.getName()) &&
             (this.typeArguments == operation.getParameterTypeList().size() || varArgsMatch(operation));
     }

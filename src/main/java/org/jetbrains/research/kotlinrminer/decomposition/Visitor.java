@@ -2,6 +2,8 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.com.intellij.psi.stubs.IStubElementType;
+import org.jetbrains.kotlin.com.intellij.psi.tree.IElementType;
+import org.jetbrains.kotlin.lexer.KtSingleValueToken;
 import org.jetbrains.kotlin.psi.*;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -24,11 +26,13 @@ public class Visitor extends KtVisitor {
     private final List<String> arrayAccesses = new ArrayList<>();
     private final List<String> prefixExpressions = new ArrayList<>();
     private final List<String> postfixExpressions = new ArrayList<>();
+    private List<String> infixOperators = new ArrayList<>();
     private final List<String> arguments = new ArrayList<>();
     private final List<LambdaExpressionObject> lambdas = new ArrayList<>();
     private final DefaultMutableTreeNode root = new DefaultMutableTreeNode();
     private final DefaultMutableTreeNode current = root;
     //TODO: implement adding of created objects to the map
+    //TODO: implement processing of objects
     private final Map<String, List<ObjectCreation>> creationMap = new LinkedHashMap<>();
 
     public Visitor(KtFile file, String filePath) {
@@ -37,45 +41,146 @@ public class Visitor extends KtVisitor {
     }
 
     @Override
-    public Object visitDeclaration(@NotNull KtDeclaration dcl, Object data) {
-        if (dcl instanceof KtVariableDeclaration) {
-            VariableDeclaration variableDeclaration = new VariableDeclaration(dcl.getContainingKtFile(), filePath, dcl);
-            variableDeclarations.add(variableDeclaration);
-            variables.add(dcl.getName());
+    public Object visitExpression(@NotNull KtExpression expression, Object data) {
+        if (expression instanceof KtBinaryExpression) {
+            this.processBinaryExpression((KtBinaryExpression) expression, data);
+        } else if (expression instanceof KtReturnExpression) {
+            this.processReturnExpression((KtReturnExpression) expression, data);
+        } else if (expression instanceof KtDotQualifiedExpression) {
+            this.processDotQualifiedExpression((KtDotQualifiedExpression) expression, data);
+        } else if (expression instanceof KtCallExpression) {
+            this.processCallExpression((KtCallExpression) expression);
+        } else if (expression instanceof KtPrefixExpression) {
+            this.processPrefixExpression((KtPrefixExpression) expression, data);
+        } else if (expression instanceof KtPostfixExpression) {
+            this.processPostfixExpression((KtPostfixExpression) expression);
+        } else if (expression instanceof KtThisExpression) {
+            this.processThisExpression((KtThisExpression) expression);
+        } else if (expression instanceof KtConstantExpression) {
+            this.processConstantExpression((KtConstantExpression) expression);
+        } else if (expression instanceof KtNameReferenceExpression) {
+            this.processReferenceExpression((KtNameReferenceExpression) expression);
+        } else if (expression instanceof KtParenthesizedExpression) {
+            this.visitExpression(((KtParenthesizedExpression) expression).getExpression(),
+                                 data);
+        } else if (expression instanceof KtStringTemplateExpression) {
+            stringLiterals.add(expression.getText());
+        } else if (expression instanceof KtArrayAccessExpression) {
+            arrayAccesses.add(expression.getText());
             if (current.getUserObject() != null) {
                 AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
-                anonymous.getVariableDeclarations().add(variableDeclaration);
+                anonymous.getArrayAccesses().add(expression.getText());
+            }
+        } else if (expression instanceof KtProperty) {
+            processPropertyExpression((KtProperty) expression, data);
+        } else if (expression instanceof KtSafeQualifiedExpression) {
+            processSafeQualifiedExpression((KtSafeQualifiedExpression) expression, data);
+        } else if (expression instanceof KtLambdaExpression) {
+            processLambdaExpression((KtLambdaExpression) expression);
+        }
+        return super.visitExpression(expression, data);
+    }
+
+    private void processDotQualifiedExpression(KtDotQualifiedExpression expression, Object data) {
+        this.visitExpression(expression.getReceiverExpression(), data);
+        if (expression.getSelectorExpression() != null)
+            this.visitExpression(expression.getSelectorExpression(), data);
+    }
+
+    private void processReferenceExpression(KtReferenceExpression expression) {
+        if (expression instanceof KtNameReferenceExpression) {
+            this.variables.add(expression.getText());
+        }
+    }
+
+    private void processReturnExpression(KtReturnExpression expression, Object data) {
+        if (expression.getReturnedExpression() != null)
+            this.visitExpression(expression.getReturnedExpression(), data);
+    }
+
+    private void processBinaryExpression(KtBinaryExpression expression, Object data) {
+        IElementType operationToken = expression.getOperationToken();
+        if (operationToken instanceof KtSingleValueToken) {
+            if (!operationToken.toString().equals("EQ"))
+                this.infixOperators.add(((KtSingleValueToken) operationToken).getValue());
+        }
+        if (expression.getLeft() != null)
+            this.visitExpression(expression.getLeft(), data);
+        if (expression.getRight() != null)
+            this.visitExpression(expression.getRight(), data);
+    }
+
+    private void processPropertyExpression(KtProperty ktProperty, Object data) {
+        if (ktProperty.getInitializer() != null)
+            this.visitExpression(ktProperty.getInitializer(), data);
+        if (ktProperty.getDelegateExpression() != null)
+            this.visitExpression(ktProperty.getDelegateExpression(), data);
+        if (ktProperty.getNameIdentifier() != null) {
+            VariableDeclaration variableDeclaration = new VariableDeclaration(ktFile, filePath, ktProperty);
+            this.variableDeclarations.add(variableDeclaration);
+        }
+    }
+
+    private void processSafeQualifiedExpression(KtSafeQualifiedExpression safeQualifiedExpression, Object data) {
+        if (safeQualifiedExpression.getSelectorExpression() != null)
+            this.visitExpression(safeQualifiedExpression.getSelectorExpression(), data);
+        this.visitExpression(safeQualifiedExpression.getReceiverExpression(), data);
+    }
+
+    private void processLambdaExpression(KtLambdaExpression expression) {
+        LambdaExpressionObject lambda = new LambdaExpressionObject(ktFile, filePath, expression);
+        lambdas.add(lambda);
+/*        if (current.getUserObject() != null) {
+            AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
+            // anonymous.getLambdas().add(lambda);
+        }*/
+        if (expression.getBodyExpression() != null)
+            this.visitExpression(expression.getBodyExpression(), null);
+    }
+
+    private void visitArgument(KtValueArgument argument) {
+        processElementType(argument.getElementType(), argument);
+        KtExpression argumentExpression = argument.getArgumentExpression();
+        if (argumentExpression instanceof KtConstantExpression) {
+            KtConstantExpression constantExpression = (KtConstantExpression) argumentExpression;
+            processElementType(constantExpression.getElementType(), argument);
+        } else if (argumentExpression instanceof KtStringTemplateExpression) {
+            KtStringTemplateExpression stringTemplateExpression = (KtStringTemplateExpression) argumentExpression;
+            processElementType(stringTemplateExpression.getElementType(), argument);
+        } else if (argument instanceof KtLambdaArgument) {
+            KtLambdaArgument lambdaArgument = (KtLambdaArgument) argument;
+            if (lambdaArgument.getLambdaExpression() != null)
+                this.visitExpression(lambdaArgument.getLambdaExpression(), null);
+        } else if (argument.getArgumentExpression() instanceof KtObjectLiteralExpression) {
+            //TODO: process object's creations
+            KtObjectLiteralExpression objectLiteralExpression =
+                (KtObjectLiteralExpression) argument.getArgumentExpression();
+        }
+    }
+
+    private void processElementType(IStubElementType type, KtValueArgument argument) {
+        if (type == INTEGER_CONSTANT || type == FLOAT_CONSTANT) {
+            numberLiterals.add(argument.getText());
+            if (current.getUserObject() != null) {
+                AnonymousClassDeclarationObject anonymous =
+                    (AnonymousClassDeclarationObject) current.getUserObject();
+                anonymous.getNumberLiterals().add(argument.getText());
+            }
+        } else if (type == STRING_TEMPLATE) {
+            stringLiterals.add(argument.getText());
+            if (current.getUserObject() != null) {
+                AnonymousClassDeclarationObject anonymous =
+                    (AnonymousClassDeclarationObject) current.getUserObject();
+                anonymous.getStringLiterals().add(argument.getText());
             }
         }
-        return super.visitDeclaration(dcl, data);
     }
 
-    @Override
-    public Object visitProperty(@NotNull KtProperty property, Object data) {
-        variableDeclarations.add(new VariableDeclaration(ktFile, filePath, property));
-        return super.visitProperty(property, data);
-    }
-
-    @Override
-    public Object visitParameter(@NotNull KtParameter parameter, Object data) {
-        variableDeclarations.add(new VariableDeclaration(ktFile, filePath, parameter));
-        return super.visitParameter(parameter, data);
-    }
-
-    @Override
-    public Object visitLambdaExpression(@NotNull KtLambdaExpression expression, Object data) {
-        LambdaExpressionObject lambda =
-            new LambdaExpressionObject(expression.getContainingKtFile(), filePath, expression);
-        lambdas.add(lambda);
-        if (current.getUserObject() != null) {
-            AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
-            anonymous.getLambdas().add(expression);
+    private void processCallExpression(KtCallExpression expression) {
+        List<KtValueArgument> arguments = expression.getValueArguments();
+        for (KtValueArgument argument : arguments) {
+            processArgument(argument);
         }
-        return super.visitLambdaExpression(expression, data);
-    }
-
-    @Override
-    public Object visitCallExpression(@NotNull KtCallExpression expression, Object data) {
         String methodInvocation = processMethodInvocation(expression);
         OperationInvocation invocation =
             new OperationInvocation(ktFile, filePath, expression);
@@ -86,81 +191,27 @@ public class Visitor extends KtVisitor {
             list.add(invocation);
             methodInvocationMap.put(methodInvocation, list);
         }
-        return super.visitCallExpression(expression, data);
     }
 
-    @Override
-    public Object visitUserType(@NotNull KtUserType type, Object data) {
-        types.add(type.getName());
-        if (current.getUserObject() != null) {
-            AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
-            anonymous.getTypes().add(type.toString());
-        }
-        return super.visitUserType(type, data);
-    }
-
-    @Override
-    public Object visitDynamicType(@NotNull KtDynamicType type, Object data) {
-        types.add(type.getName());
-        if (current.getUserObject() != null) {
-            AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
-            anonymous.getTypes().add(type.toString());
-        }
-        return super.visitDynamicType(type, data);
-    }
-
-    @Override
-    public Object visitFunctionType(@NotNull KtFunctionType type, Object data) {
-        types.add(type.getName());
-        if (current.getUserObject() != null) {
-            AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
-            anonymous.getTypes().add(type.toString());
-        }
-        return super.visitFunctionType(type, data);
-    }
-
-    @Override
-    public Object visitSelfType(@NotNull KtSelfType type, Object data) {
-        types.add(type.getName());
-        if (current.getUserObject() != null) {
-            AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
-            anonymous.getTypes().add(type.toString());
-        }
-        return super.visitSelfType(type, data);
-    }
-
-    @Override
-    public Object visitNullableType(@NotNull KtNullableType nullableType, Object data) {
-        types.add(nullableType.getName());
-        if (current.getUserObject() != null) {
-            AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
-            anonymous.getTypes().add(nullableType.toString());
-        }
-        return super.visitNullableType(nullableType, data);
-    }
-
-    @Override
-    public Object visitPrefixExpression(@NotNull KtPrefixExpression expression, Object data) {
+    private void processPrefixExpression(KtPrefixExpression expression, Object data) {
         prefixExpressions.add(expression.getText());
         if (current.getUserObject() != null) {
             AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
             anonymous.getPrefixExpressions().add(expression.getText());
         }
-        return super.visitPrefixExpression(expression, data);
+        if (expression.getBaseExpression() != null)
+            this.visitExpression(expression.getBaseExpression(), data);
     }
 
-    @Override
-    public Object visitPostfixExpression(@NotNull KtPostfixExpression expression, Object data) {
+    private void processPostfixExpression(KtPostfixExpression expression) {
         postfixExpressions.add(expression.getText());
         if (current.getUserObject() != null) {
             AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
             anonymous.getPostfixExpressions().add(expression.getText());
         }
-        return super.visitPostfixExpression(expression, data);
     }
 
-    @Override
-    public Object visitConstantExpression(@NotNull KtConstantExpression expression, Object data) {
+    private void processConstantExpression(KtConstantExpression expression) {
         IStubElementType elementType = expression.getElementType();
         if (elementType == BOOLEAN_CONSTANT) {
             booleanLiterals.add(expression.getText());
@@ -187,31 +238,9 @@ public class Visitor extends KtVisitor {
                 anonymous.getStringLiterals().add(expression.getText());
             }
         }
-        return super.visitConstantExpression(expression, data);
     }
 
-    @Override
-    public Object visitTypeReference(@NotNull KtTypeReference typeReference, Object data) {
-        typeLiterals.add(typeReference.getText());
-        if (current.getUserObject() != null) {
-            AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
-            anonymous.getTypeLiterals().add(typeReference.getText());
-        }
-        return super.visitTypeReference(typeReference, data);
-    }
-
-    @Override
-    public Object visitArrayAccessExpression(@NotNull KtArrayAccessExpression expression, Object data) {
-        arrayAccesses.add(expression.getText());
-        if (current.getUserObject() != null) {
-            AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
-            anonymous.getArrayAccesses().add(expression.getText());
-        }
-        return super.visitArrayAccessExpression(expression, data);
-    }
-
-    @Override
-    public Object visitThisExpression(@NotNull KtThisExpression expression, Object data) {
+    private void processThisExpression(KtThisExpression expression) {
         if (!(expression.getParent() instanceof KtPropertyAccessor)) {
             variables.add(expression.getText());
             if (current.getUserObject() != null) {
@@ -219,20 +248,28 @@ public class Visitor extends KtVisitor {
                 anonymous.getVariables().add(expression.getText());
             }
         }
-        return super.visitThisExpression(expression, data);
     }
 
-    public static String processMethodInvocation(KtCallExpression node) {
+    private void processArgument(KtValueArgument argument) {
+        this.arguments.add(argument.getText());
+        visitArgument(argument);
+/*        if (current.getUserObject() != null) {
+            AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
+            anonymous.getArguments().add(argument.toString());
+        }*/
+    }
+
+    private static String processMethodInvocation(KtCallExpression node) {
         StringBuilder sb = new StringBuilder();
-        sb.append(node.getCalleeExpression().getText());
-        sb.append("(");
-        List<KtValueArgument> arguments = node.getValueArguments();
-        if (arguments.size() > 0) {
-            for (int i = 0; i < arguments.size() - 1; i++)
-                sb.append(arguments.get(i).getText()).append(", ");
-            sb.append(arguments.get(arguments.size() - 1).getText());
+        if (node.getPrevSibling() != null && node.getPrevSibling().getParent() != null) {
+            if (node.getPrevSibling().getParent() instanceof KtDotQualifiedExpression) {
+                sb.append(node.getPrevSibling().getParent().getText());
+            } else {
+                sb.append(node.getCalleeExpression().getContext().getText());
+            }
+        } else {
+            sb.append(node.getCalleeExpression().getContext().getText());
         }
-        sb.append(")");
         return sb.toString();
     }
 
@@ -295,4 +332,9 @@ public class Visitor extends KtVisitor {
     public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
         return this.methodInvocationMap;
     }
+
+    public List<String> getInfixOperators() {
+        return infixOperators;
+    }
+
 }
