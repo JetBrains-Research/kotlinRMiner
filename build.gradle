@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 group = "org.jetbrains.research.kotlinrminer"
+mainClassName = 'org.jetbrains.research.kotlinrminer.KotlinRMiner'
 version = "1.0"
 
 repositories {

@@ -662,6 +662,9 @@
             },
             {
                 "description": "Move And Rename Class io.ktor.client.features.HttpSocketTimeoutException moved and renamed to io.ktor.network.sockets.SocketTimeoutException"
+            },
+            {
+                "description": "Rename Method public assertFailsWithRootCause(block () -> Unit) renamed to public assertFailsAndContainsCause(block () -> Unit) in class Assertions.kt"
             }
         ]
     },

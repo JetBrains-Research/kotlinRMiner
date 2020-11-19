@@ -36,15 +36,15 @@ public class LocationInfo {
         FileViewProvider fileViewProvider = ktFile.getViewProvider();
         Document document = fileViewProvider.getDocument();
 
-        this.startLine = document != null ? document.getLineNumber(startOffset) : 0;
-        this.endLine = document != null ? document.getLineNumber(endOffset) : 0;
+        this.startLine = document != null ? document.getLineNumber(startOffset) + 1 : 0;
+        this.endLine = document != null ? document.getLineNumber(endOffset) + 1 : 0;
         //columns are 0-based
-        this.startColumn = countColumn(startLine, document);
+        this.startColumn = countColumn(startLine == 0 ? 0 : startLine - 1, document);
         //convert to 1-based
         if (this.startColumn > 0) {
             this.startColumn += 1;
         }
-        this.endColumn = countColumn(endLine, document);
+        this.endColumn = countColumn(endLine == 0 ? 0 : endLine - 1, document);
         //convert to 1-based
         if (this.endColumn > 0) {
             this.endColumn += 1;
