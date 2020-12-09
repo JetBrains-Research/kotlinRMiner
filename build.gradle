@@ -29,13 +29,9 @@ dependencies {
 jar {
     manifest {
         attributes "Main-Class": "org.jetbrains.research.kotlinrminer.KotlinRMiner"
-
     }
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-    from sourceSets.main.output
-
-    dependsOn configurations.runtimeClasspath
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA', 'misc/**'
     from {
-        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }

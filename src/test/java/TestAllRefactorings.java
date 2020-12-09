@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.jgit.lib.Repository;
-import org.jetbrains.research.kotlinrminer.api.GitHistoryRefactoringMiner;
+import org.jetbrains.research.kotlinrminer.api.GitHistoryKotlinRMiner;
 import org.jetbrains.research.kotlinrminer.api.GitService;
 import org.jetbrains.research.kotlinrminer.api.RefactoringHandler;
 import org.junit.jupiter.api.DynamicTest;
@@ -20,7 +20,7 @@ import org.junit.jupiter.api.TestFactory;
  * Tests are defined in resources/data.json
  */
 public class TestAllRefactorings {
-    GitHistoryRefactoringMiner miner = new GitHistoryRefactoringMiner();
+    GitHistoryKotlinRMiner miner = new GitHistoryKotlinRMiner();
     GitService gitService = new GitService();
 
     @TestFactory

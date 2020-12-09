@@ -3,7 +3,7 @@ package org.jetbrains.research.kotlinrminer.api;
 import java.util.List;
 
 /**
- * Handler object that works in conjunction with {@link GitHistoryRefactoringMiner}.
+ * Handler object that works in conjunction with {@link GitHistoryKotlinRMiner}.
  */
 public abstract class RefactoringHandler {
 

@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.StringWriter;
 import java.util.*;
 
-public class GitHistoryRefactoringMiner {
+public class GitHistoryKotlinRMiner {
     private static final String GITHUB_URL = "https://github.com/";
     private static final String BITBUCKET_URL = "https://bitbucket.org/";
     private final RefactoringType[] refactoringTypesToConsider = RefactoringType.ALL;

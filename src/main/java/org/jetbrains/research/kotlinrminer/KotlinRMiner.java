@@ -3,7 +3,7 @@ package org.jetbrains.research.kotlinrminer;
 import java.util.List;
 
 import org.eclipse.jgit.lib.Repository;
-import org.jetbrains.research.kotlinrminer.api.GitHistoryRefactoringMiner;
+import org.jetbrains.research.kotlinrminer.api.GitHistoryKotlinRMiner;
 import org.jetbrains.research.kotlinrminer.api.GitService;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 import org.jetbrains.research.kotlinrminer.api.RefactoringHandler;
@@ -45,7 +45,7 @@ public class KotlinRMiner {
         GitService gitService = new GitService();
         try (Repository repo = gitService.openRepository(folder)) {
             String gitURL = repo.getConfig().getString("remote", "origin", "url");
-            GitHistoryRefactoringMiner detector = new GitHistoryRefactoringMiner();
+            GitHistoryKotlinRMiner detector = new GitHistoryKotlinRMiner();
             StringBuilder sb = new StringBuilder();
             startJSON(sb);
             detector.detectAtCommit(repo, commitId, new RefactoringHandler() {
@@ -80,7 +80,7 @@ public class KotlinRMiner {
         GitService gitService = new GitService();
         try (Repository repo = gitService.openRepository(folder)) {
             String gitURL = repo.getConfig().getString("remote", "origin", "url");
-            GitHistoryRefactoringMiner detector = new GitHistoryRefactoringMiner();
+            GitHistoryKotlinRMiner detector = new GitHistoryKotlinRMiner();
             StringBuilder sb = new StringBuilder();
             startJSON(sb);
             detector.detectAll(repo, branch, new RefactoringHandler() {
@@ -125,7 +125,7 @@ public class KotlinRMiner {
         GitService gitService = new GitService();
         try (Repository repo = gitService.openRepository(folder)) {
             String gitURL = repo.getConfig().getString("remote", "origin", "url");
-            GitHistoryRefactoringMiner detector = new GitHistoryRefactoringMiner();
+            GitHistoryKotlinRMiner detector = new GitHistoryKotlinRMiner();
             StringBuilder sb = new StringBuilder();
             startJSON(sb);
             detector.detectBetweenCommits(repo, startCommit, endCommit, new RefactoringHandler() {

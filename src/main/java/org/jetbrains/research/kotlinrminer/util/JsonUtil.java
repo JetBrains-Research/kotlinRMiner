@@ -1,6 +1,6 @@
 package org.jetbrains.research.kotlinrminer.util;
 
-import org.jetbrains.research.kotlinrminer.api.GitHistoryRefactoringMiner;
+import org.jetbrains.research.kotlinrminer.api.GitHistoryKotlinRMiner;
 import org.jetbrains.research.kotlinrminer.api.Refactoring;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class JsonUtil {
             cloneURL).append("\"").append(",").append("\n");
         sb.append("\t").append("\"").append("sha1").append("\"").append(": ").append("\"").append(
             currentCommitId).append("\"").append(",").append("\n");
-        String url = GitHistoryRefactoringMiner.extractCommitURL(cloneURL, currentCommitId);
+        String url = GitHistoryKotlinRMiner.extractCommitURL(cloneURL, currentCommitId);
         sb.append("\t").append("\"").append("url").append("\"").append(": ").append("\"").append(url).append(
             "\"").append(",").append("\n");
         sb.append("\t").append("\"").append("refactorings").append("\"").append(": ");
