@@ -67,14 +67,14 @@ public class UMLModelPsiReader {
                 if (psiElement instanceof KtObjectDeclaration) {
                     KtObjectDeclaration objectDeclaration = (KtObjectDeclaration) psiElement;
                     processObject(objectDeclaration,
-                                  ktFile.getVirtualFilePath());
+                                  filePath);
                 } else if (psiElement instanceof KtClass) {
                     KtClass ktClass = (KtClass) psiElement;
                     if (ktClass.isEnum()) {
-                        processKtEnum(ktClass, ktFile.getPackageFqName().asString(), ktFile.getVirtualFilePath(),
+                        processKtEnum(ktClass, ktFile.getPackageFqName().asString(), filePath,
                                       importedTypes);
                     } else {
-                        processKtClass(ktClass, ktFile.getPackageFqName().asString(), ktFile.getVirtualFilePath(),
+                        processKtClass(ktClass, ktFile.getPackageFqName().asString(), filePath,
                                        importedTypes);
                     }
                 } else if (psiElement instanceof KtNamedFunction) {
@@ -82,20 +82,21 @@ public class UMLModelPsiReader {
                 }
             }
             if (packageLevelFunctions.size() > 0) {
-                processPackageLevelFunctions(ktFile, packageLevelFunctions);
+                processPackageLevelFunctions(ktFile, packageLevelFunctions, filePath);
             }
         }
     }
 
-    private void processPackageLevelFunctions(KtFile ktFile, List<KtNamedFunction> packageLevelFunctions) {
-        UMLFile umlFile = new UMLFile(ktFile.getVirtualFilePath());
+    private void processPackageLevelFunctions(KtFile ktFile, List<KtNamedFunction> packageLevelFunctions,
+                                              String filePath) {
+        UMLFile umlFile = new UMLFile(filePath);
         LocationInfo locationInfo = generateLocationInfo(ktFile, ktFile.getVirtualFilePath(), ktFile,
                                                          CodeElementType.TYPE_DECLARATION);
         umlFile.setLocationInfo(locationInfo);
         for (KtNamedFunction function : packageLevelFunctions) {
             UMLOperation umlOperation = processMethodDeclaration(ktFile, function,
                                                                  false,
-                                                                 ktFile.getVirtualFilePath());
+                                                                 filePath);
             umlOperation.setClassName(ktFile.getName());
             umlFile.addMethod(umlOperation);
         }
