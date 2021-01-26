@@ -440,9 +440,6 @@
             },
             {
                 "description": "Rename Variable routeCalls : Untyped to calls : Untyped in method private getDynamicPath(element KtElement, binding BindingContext) : URIPath in class io.kotless.parser.ktor.processor.route.DynamicRoutesProcessor"
-            },
-            {
-                "description": "Change Variable Type routeCalls : Untyped to calls : Untyped in method private getDynamicPath(element KtElement, binding BindingContext) : URIPath in class io.kotless.parser.ktor.processor.route.DynamicRoutesProcessor"
             }
         ]
     },
@@ -518,9 +515,6 @@
         "refactorings": [
             {
                 "description": "Rename Method private tryAddToPhaseFastpath(phase PipelinePhase, block PipelineInterceptor<TSubject, TContext>) : Boolean renamed to private tryAddToPhaseFastPath(phase PipelinePhase, block PipelineInterceptor<TSubject, TContext>) : Boolean in class io.ktor.util.pipeline.Pipeline"
-            },
-            {
-                "description": "Change Variable Type e : Untyped to current : Untyped in method private findPhase(phase PipelinePhase) : PhaseContent<TSubject, TContext> in class io.ktor.util.pipeline.Pipeline"
             },
             {
                 "description": "Rename Variable e : Untyped to current : Untyped in method private findPhase(phase PipelinePhase) : PhaseContent<TSubject, TContext> in class io.ktor.util.pipeline.Pipeline"

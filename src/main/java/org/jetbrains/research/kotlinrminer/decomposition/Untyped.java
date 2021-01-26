@@ -8,7 +8,7 @@ import org.jetbrains.research.kotlinrminer.uml.UMLType;
 public class Untyped extends UMLType {
     @Override
     public boolean equals(Object o) {
-        return this == o;
+        return o instanceof Untyped;
     }
 
     @Override
