@@ -1297,10 +1297,12 @@ public class UMLModelDiff {
                             removedOperation)) {
                             refactoring = new PushDownOperationRefactoring(firstMapper);
                         } else if (removedOperation.isConstructor() == addedOperation.isConstructor() &&
+                            !addedOperation.getClassName().equals(removedOperation.getClassName()) &&
                             movedMethodSignature(removedOperation, addedOperation) &&
                             !refactoringListContainsAnotherMoveRefactoringWithTheSameOperations(removedOperation)) {
                             refactoring = new MoveOperationRefactoring(firstMapper);
                         } else if (removedOperation.isConstructor() == addedOperation.isConstructor() &&
+                            !addedOperation.getClassName().equals(removedOperation.getClassName()) &&
                             movedAndRenamedMethodSignature(removedOperation, addedOperation, firstMapper) &&
                             !refactoringListContainsAnotherMoveRefactoringWithTheSameOperations(removedOperation)) {
                             refactoring = new MoveOperationRefactoring(firstMapper);
@@ -1377,10 +1379,12 @@ public class UMLModelDiff {
                             removedOperation)) {
                             refactoring = new PushDownOperationRefactoring(firstMapper);
                         } else if (removedOperation.isConstructor() == addedOperation.isConstructor() &&
+                            !addedOperation.getClassName().equals(removedOperation.getClassName()) &&
                             movedMethodSignature(removedOperation, addedOperation) &&
                             !refactoringListContainsAnotherMoveRefactoringWithTheSameOperations(removedOperation)) {
                             refactoring = new MoveOperationRefactoring(firstMapper);
                         } else if (removedOperation.isConstructor() == addedOperation.isConstructor() &&
+                            !addedOperation.getClassName().equals(removedOperation.getClassName()) &&
                             movedAndRenamedMethodSignature(removedOperation, addedOperation, firstMapper) &&
                             !refactoringListContainsAnotherMoveRefactoringWithTheSameOperations(removedOperation)) {
                             refactoring = new MoveOperationRefactoring(firstMapper);
