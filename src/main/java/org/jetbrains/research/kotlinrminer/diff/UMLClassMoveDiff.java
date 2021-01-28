@@ -14,9 +14,9 @@ public class UMLClassMoveDiff extends UMLClassBaseDiff {
 
     public String toString() {
         return "class " +
-            originalClass.getName() +
+            originalClass.getQualifiedName() +
             " was moved to " +
-            nextClass.getName() +
+            nextClass.getQualifiedName() +
             "\n";
     }
 

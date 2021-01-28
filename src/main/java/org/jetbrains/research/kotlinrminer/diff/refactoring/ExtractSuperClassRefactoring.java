@@ -45,7 +45,7 @@ public class ExtractSuperClassRefactoring implements Refactoring {
     public Set<String> getSubclassSet() {
         Set<String> subclassSet = new LinkedHashSet<>();
         for (UMLClass umlClass : this.subclassSet) {
-            subclassSet.add(umlClass.getName());
+            subclassSet.add(umlClass.getQualifiedName());
         }
         return subclassSet;
     }
@@ -57,7 +57,7 @@ public class ExtractSuperClassRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         for (UMLClass umlClass : this.subclassSet) {
-            pairs.add(new ImmutablePair<>(umlClass.getLocationInfo().getFilePath(), umlClass.getName()));
+            pairs.add(new ImmutablePair<>(umlClass.getLocationInfo().getFilePath(), umlClass.getQualifiedName()));
         }
         return pairs;
     }
@@ -65,7 +65,7 @@ public class ExtractSuperClassRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(new ImmutablePair<>(getExtractedClass().getLocationInfo().getFilePath(),
-                                      getExtractedClass().getName()));
+                                      getExtractedClass().getQualifiedName()));
         return pairs;
     }
 
@@ -75,7 +75,7 @@ public class ExtractSuperClassRefactoring implements Refactoring {
         for (UMLClass subclass : subclassSet) {
             ranges.add(subclass.codeRange()
                            .setDescription("sub-type declaration")
-                           .setCodeElement(subclass.getName()));
+                           .setCodeElement(subclass.getQualifiedName()));
         }
         return ranges;
     }
@@ -85,7 +85,7 @@ public class ExtractSuperClassRefactoring implements Refactoring {
         List<CodeRange> ranges = new ArrayList<>();
         ranges.add(extractedClass.codeRange()
                        .setDescription("extracted super-type declaration")
-                       .setCodeElement(extractedClass.getName()));
+                       .setCodeElement(extractedClass.getQualifiedName()));
         return ranges;
     }
 }

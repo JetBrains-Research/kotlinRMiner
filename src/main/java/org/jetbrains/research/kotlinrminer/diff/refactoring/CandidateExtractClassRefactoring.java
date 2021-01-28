@@ -13,7 +13,7 @@ public class CandidateExtractClassRefactoring implements Comparable<CandidateExt
     }
 
     public boolean innerClassExtract() {
-        return refactoring.getExtractedClass().getName().startsWith(refactoring.getOriginalClass().getName() + ".");
+        return refactoring.getExtractedClass().getQualifiedName().startsWith(refactoring.getOriginalClass().getQualifiedName() + ".");
     }
 
     public boolean subclassExtract() {

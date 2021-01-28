@@ -93,13 +93,13 @@ public class ExtractAttributeRefactoring implements Refactoring {
     public Set<ImmutablePair<String, String>> getInvolvedClassesBeforeRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
         pairs.add(
-                new ImmutablePair<>(getOriginalClass().getLocationInfo().getFilePath(), getOriginalClass().getName()));
+                new ImmutablePair<>(getOriginalClass().getLocationInfo().getFilePath(), getOriginalClass().getQualifiedName()));
         return pairs;
     }
 
     public Set<ImmutablePair<String, String>> getInvolvedClassesAfterRefactoring() {
         Set<ImmutablePair<String, String>> pairs = new LinkedHashSet<>();
-        pairs.add(new ImmutablePair<>(getNextClass().getLocationInfo().getFilePath(), getNextClass().getName()));
+        pairs.add(new ImmutablePair<>(getNextClass().getLocationInfo().getFilePath(), getNextClass().getQualifiedName()));
         return pairs;
     }
 

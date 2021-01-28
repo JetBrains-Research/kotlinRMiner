@@ -217,21 +217,21 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
     }
 
     public boolean matches(String className) {
-        return this.originalClass.getName().equals(className) ||
-            this.nextClass.getName().equals(className);
+        return this.originalClass.getQualifiedName().equals(className) ||
+            this.nextClass.getQualifiedName().equals(className);
     }
 
     public boolean matches(UMLType type) {
-        return this.originalClass.getName().endsWith("." + type.getClassType()) ||
-            this.nextClass.getName().endsWith("." + type.getClassType());
+        return this.originalClass.getQualifiedName().endsWith("." + type.getClassType()) ||
+            this.nextClass.getQualifiedName().endsWith("." + type.getClassType());
     }
 
     public String getOriginalClassName() {
-        return originalClass.getName();
+        return originalClass.getQualifiedName();
     }
 
     public String getNextClassName() {
-        return nextClass.getName();
+        return nextClass.getQualifiedName();
     }
 
     public UMLClass getOriginalClass() {
@@ -1622,7 +1622,7 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (!isEmpty())
-            sb.append(originalClass.getName()).append(":").append("\n");
+            sb.append(originalClass.getQualifiedName()).append(":").append("\n");
         if (visibilityChanged) {
             sb.append("\t").append("visibility changed from ").append(oldVisibility).append(" to ").append(
                 newVisibility).append("\n");
@@ -1661,7 +1661,7 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
     }
 
     public int compareTo(UMLClassBaseDiff other) {
-        return this.originalClass.getName().compareTo(other.originalClass.getName());
+        return this.originalClass.getQualifiedName().compareTo(other.originalClass.getQualifiedName());
     }
 
     private boolean multipleExtractedMethodInvocationsWithDifferentAttributesAsArguments(CandidateAttributeRefactoring candidate,

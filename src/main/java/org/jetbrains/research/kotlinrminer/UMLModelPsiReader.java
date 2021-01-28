@@ -188,7 +188,7 @@ public class UMLModelPsiReader {
         for (KtProperty ktProperty : ktClassProperties) {
             UMLAttribute attribute =
                 processFieldDeclaration(ktClass.getContainingKtFile(), ktProperty, sourceFile);
-            attribute.setClassName(umlClass.getName());
+            attribute.setClassName(umlClass.getQualifiedName());
             umlClass.addAttribute(attribute);
         }
 
@@ -199,7 +199,7 @@ public class UMLModelPsiReader {
                 UMLOperation operation =
                     processMethodDeclaration(ktClass.getContainingKtFile(), function,
                                              umlClass.isInterface(), sourceFile);
-                operation.setClassName(umlClass.getName());
+                operation.setClassName(umlClass.getQualifiedName());
                 umlClass.addOperation(operation);
             }
         }
@@ -207,7 +207,7 @@ public class UMLModelPsiReader {
         List<KtObjectDeclaration> companionObjects = ktClass.getCompanionObjects();
         for (KtObjectDeclaration companionObject : companionObjects) {
             UMLCompanionObject umlCompanionObject = processCompanionObject(companionObject, sourceFile);
-            umlCompanionObject.setClassName(umlClass.getName());
+            umlCompanionObject.setClassName(umlClass.getQualifiedName());
             umlClass.addCompanionObject(umlCompanionObject);
         }
 
@@ -367,7 +367,7 @@ public class UMLModelPsiReader {
                 UMLOperation operation =
                     processMethodDeclaration(objectDeclaration.getContainingKtFile(), function,
                                              object.isInterface(), filePath);
-                operation.setClassName(object.getName());
+                operation.setClassName(object.getQualifiedName());
                 object.addOperation(operation);
             }
             List<KtProperty> properties = body.getProperties();

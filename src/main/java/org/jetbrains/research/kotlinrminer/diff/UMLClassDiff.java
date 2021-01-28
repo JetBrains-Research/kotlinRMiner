@@ -18,7 +18,7 @@ public class UMLClassDiff extends UMLClassBaseDiff {
 
     public UMLClassDiff(UMLClass originalClass, UMLClass nextClass, UMLModelDiff modelDiff) {
         super(originalClass, nextClass, modelDiff);
-        this.className = originalClass.getName();
+        this.className = originalClass.getQualifiedName();
     }
 
     private void reportAddedOperation(UMLOperation umlOperation) {

@@ -92,7 +92,7 @@ public class UMLModelDiff {
 
     private UMLClass looksLikeAddedClass(UMLType type) {
         for (UMLClass umlClass : addedClasses) {
-            if (umlClass.getName().endsWith("." + type.getClassType())) {
+            if (umlClass.getQualifiedName().endsWith("." + type.getClassType())) {
                 return umlClass;
             }
         }
@@ -101,7 +101,7 @@ public class UMLModelDiff {
 
     private UMLClass looksLikeRemovedClass(UMLType type) {
         for (UMLClass umlClass : removedClasses) {
-            if (umlClass.getName().endsWith("." + type.getClassType())) {
+            if (umlClass.getQualifiedName().endsWith("." + type.getClassType())) {
                 return umlClass;
             }
         }
@@ -235,7 +235,8 @@ public class UMLModelDiff {
                 looksLikeAddedClass(
                     subclassDiff.getNewSuperclass()) != null) {
                 UMLClass addedClass = looksLikeAddedClass(subclassDiff.getNewSuperclass());
-                return checkInheritanceRelationship(UMLType.extractTypeObject(addedClass.getName()), finalSuperclass,
+                return checkInheritanceRelationship(UMLType.extractTypeObject(addedClass.getQualifiedName()),
+                                                    finalSuperclass,
                                                     visitedClasses);
             }
             for (UMLType implementedInterface : subclassDiff.getAddedImplementedInterfaces()) {
@@ -284,7 +285,7 @@ public class UMLModelDiff {
 
     public UMLClass getAddedClass(String className) {
         for (UMLClass umlClass : addedClasses) {
-            if (umlClass.getName().equals(className)) {
+            if (umlClass.getQualifiedName().equals(className)) {
                 return umlClass;
             }
         }
@@ -293,7 +294,7 @@ public class UMLModelDiff {
 
     public UMLClass getRemovedClass(String className) {
         for (UMLClass umlClass : removedClasses) {
-            if (umlClass.getName().equals(className)) {
+            if (umlClass.getQualifiedName().equals(className)) {
                 return umlClass;
             }
         }
@@ -345,6 +346,7 @@ public class UMLModelDiff {
                     extractRenamePatterns(renameDiff, renameMap);*/
                     classRenameDiffList.add(renameDiff);
                     Refactoring refactoring;
+                    //if (!removedClass.getName().equals(addedClass.getName())) {
                     if (renameDiff.samePackage()) {
                         refactoring =
                             new RenameClassRefactoring(renameDiff.getOriginalClass(), renameDiff.getRenamedClass());
@@ -353,6 +355,7 @@ public class UMLModelDiff {
                                                                         renameDiff.getRenamedClass());
                     }
                     refactorings.add(refactoring);
+                    //}
                 }
             }
         }
@@ -372,8 +375,8 @@ public class UMLModelDiff {
                         }
                         if (diffs1.size() > 1) {
                             for (UMLClassBaseDiff classDiff : diffs1) {
-                                if (isSubclassOf(originalClassDiff.nextClass.getName(),
-                                                 classDiff.nextClass.getName())) {
+                                if (isSubclassOf(originalClassDiff.nextClass.getQualifiedName(),
+                                                 classDiff.nextClass.getQualifiedName())) {
                                     diff1 = classDiff;
                                     break;
                                 }
@@ -404,8 +407,8 @@ public class UMLModelDiff {
                         }
                         if (diffs2.size() > 1) {
                             for (UMLClassBaseDiff classDiff : diffs2) {
-                                if (isSubclassOf(originalClassDiff.nextClass.getName(),
-                                                 classDiff.nextClass.getName())) {
+                                if (isSubclassOf(originalClassDiff.nextClass.getQualifiedName(),
+                                                 classDiff.nextClass.getQualifiedName())) {
                                     diff2 = classDiff;
                                     break;
                                 }
@@ -822,14 +825,16 @@ public class UMLModelDiff {
         List<Refactoring> refactorings = new ArrayList<>();
         for (UMLClassRenameDiff classRenameDiff : classRenameDiffList) {
             Refactoring refactoring;
-            if (classRenameDiff.samePackage()) {
-                refactoring = new RenameClassRefactoring(classRenameDiff.getOriginalClass(),
-                                                         classRenameDiff.getRenamedClass());
-            } else {
-                refactoring = new MoveAndRenameClassRefactoring(classRenameDiff.getOriginalClass(),
-                                                                classRenameDiff.getRenamedClass());
+            if (!classRenameDiff.getOriginalClass().getName().equals(classRenameDiff.getRenamedClass().getName())) {
+                if (classRenameDiff.samePackage()) {
+                    refactoring = new RenameClassRefactoring(classRenameDiff.getOriginalClass(),
+                                                             classRenameDiff.getRenamedClass());
+                } else {
+                    refactoring = new MoveAndRenameClassRefactoring(classRenameDiff.getOriginalClass(),
+                                                                    classRenameDiff.getRenamedClass());
+                }
+                refactorings.add(refactoring);
             }
-            refactorings.add(refactoring);
         }
         return refactorings;
     }
@@ -1077,9 +1082,9 @@ public class UMLModelDiff {
         List<MoveSourceFolderRefactoring> moveSourceFolderRefactorings = new ArrayList<>();
         for (UMLClassMoveDiff classMoveDiff : classMoveDiffList) {
             UMLClass originalClass = classMoveDiff.getOriginalClass();
-            String originalName = originalClass.getName();
+            String originalName = originalClass.getQualifiedName();
             UMLClass movedClass = classMoveDiff.getMovedClass();
-            String movedName = movedClass.getName();
+            String movedName = movedClass.getQualifiedName();
 
             String originalPath = originalClass.getSourceFile();
             String movedPath = movedClass.getSourceFile();
@@ -1208,7 +1213,8 @@ public class UMLModelDiff {
             TreeSet<UMLClassRenameDiff> diffSet = new TreeSet<>(new ClassRenameComparator());
             for (UMLClass addedClass : addedClasses) {
                 String renamedFile = renamedFileHints.get(removedClass.getSourceFile());
-                if (matcher.match(removedClass, addedClass, renamedFile)) {
+                if (!removedClass.getQualifiedName().equals(addedClass.getQualifiedName()) &&
+                    matcher.match(removedClass, addedClass, renamedFile)) {
                     if (!conflictingMoveOfTopLevelClass(removedClass, addedClass) &&
                         !innerClassWithTheSameName(removedClass, addedClass)) {
                         UMLClassRenameDiff classRenameDiff =
@@ -1524,7 +1530,7 @@ addedOperation.isSetter()) &&
     private String isRenamedClass(UMLClass umlClass) {
         for (UMLClassRenameDiff renameDiff : classRenameDiffList) {
             if (renameDiff.getOriginalClass().equals(umlClass))
-                return renameDiff.getRenamedClass().getName();
+                return renameDiff.getRenamedClass().getQualifiedName();
         }
         return null;
     }
@@ -1532,7 +1538,7 @@ addedOperation.isSetter()) &&
     private String isMovedClass(UMLClass umlClass) {
         for (UMLClassMoveDiff moveDiff : classMoveDiffList) {
             if (moveDiff.getOriginalClass().equals(umlClass))
-                return moveDiff.getMovedClass().getName();
+                return moveDiff.getMovedClass().getQualifiedName();
         }
         return null;
     }
@@ -1554,8 +1560,8 @@ addedOperation.isSetter()) &&
                     generalizationDiffList.add(generalizationDiff);
                     break;
                 }
-                if ((renamedChild != null && renamedChild.equals(addedGeneralization.getChild().getName())) ||
-                    (movedChild != null && movedChild.equals(addedGeneralization.getChild().getName()))) {
+                if ((renamedChild != null && renamedChild.equals(addedGeneralization.getChild().getQualifiedName())) ||
+                    (movedChild != null && movedChild.equals(addedGeneralization.getChild().getQualifiedName()))) {
                     UMLGeneralizationDiff generalizationDiff =
                         new UMLGeneralizationDiff(removedGeneralization, addedGeneralization);
                     addedGeneralizationIterator.remove();
@@ -1617,7 +1623,7 @@ addedOperation.isSetter()) &&
                             break;
                     }
                     boolean extendsAddedClass = classDiff.getNewSuperclass() != null &&
-                        addedClass.getName().endsWith("." + classDiff.getNewSuperclass().getClassType());
+                        addedClass.getQualifiedName().endsWith("." + classDiff.getNewSuperclass().getClassType());
                     UMLAttribute attributeOfExtractedClassType = attributeOfExtractedClassType(addedClass, classDiff);
                     boolean isTestClass = addedClass.isTestClass() && classDiff.getOriginalClass().isTestClass();
                     if ((!commonSuperType && !commonInterface && !extendsAddedClass) || attributeOfExtractedClassType != null || isTestClass) {
@@ -1654,7 +1660,7 @@ addedOperation.isSetter()) &&
     private UMLAttribute attributeOfExtractedClassType(UMLClass umlClass, UMLClassBaseDiff classDiff) {
         List<UMLAttribute> addedAttributes = classDiff.getAddedAttributes();
         for (UMLAttribute addedAttribute : addedAttributes) {
-            if (umlClass.getName().endsWith("." + addedAttribute.getType().getClassType())) {
+            if (umlClass.getQualifiedName().endsWith("." + addedAttribute.getType().getClassType())) {
                 return addedAttribute;
             }
         }
@@ -1707,7 +1713,7 @@ addedOperation.isSetter()) &&
         List<ExtractSuperClassRefactoring> refactorings = new ArrayList<>();
         for (UMLClass addedClass : addedClasses) {
             Set<UMLClass> subclassSet = new LinkedHashSet<>();
-            String addedClassName = addedClass.getName();
+            String addedClassName = addedClass.getQualifiedName();
             for (UMLGeneralization addedGeneralization : addedGeneralizations) {
                 processAddedGeneralization(addedClass, subclassSet, addedGeneralization);
             }
@@ -1722,8 +1728,8 @@ addedOperation.isSetter()) &&
                 String supplier = addedRealization.getSupplier();
                 if (looksLikeSameType(supplier, addedClassName) && topLevelOrSameOuterClass(addedClass,
                                                                                             addedRealization.getClient()) && getAddedClass(
-                    addedRealization.getClient().getName()) == null) {
-                    UMLClassBaseDiff clientClassDiff = getUMLClassDiff(addedRealization.getClient().getName());
+                    addedRealization.getClient().getQualifiedName()) == null) {
+                    UMLClassBaseDiff clientClassDiff = getUMLClassDiff(addedRealization.getClient().getQualifiedName());
                     int implementedInterfaceOperations = 0;
                     boolean clientImplementsSupplier = false;
                     if (clientClassDiff != null) {
@@ -1756,10 +1762,10 @@ addedOperation.isSetter()) &&
         RefactoringMinerTimedOutException {
         String parent = addedGeneralization.getParent();
         UMLClass subclass = addedGeneralization.getChild();
-        if (looksLikeSameType(parent, addedClass.getName()) && topLevelOrSameOuterClass(addedClass,
-                                                                                        subclass) && getAddedClass(
-            subclass.getName()) == null) {
-            UMLClassBaseDiff subclassDiff = getUMLClassDiff(subclass.getName());
+        if (looksLikeSameType(parent, addedClass.getQualifiedName()) && topLevelOrSameOuterClass(addedClass,
+                                                                                                 subclass) && getAddedClass(
+            subclass.getQualifiedName()) == null) {
+            UMLClassBaseDiff subclassDiff = getUMLClassDiff(subclass.getQualifiedName());
             if (subclassDiff != null) {
                 detectSubRefactorings(subclassDiff, addedClass, RefactoringType.EXTRACT_SUPERCLASS);
             }
@@ -2079,10 +2085,10 @@ addedOperation.isSetter()) &&
         if (!removedClass.isTopLevel() && !addedClass.isTopLevel()) {
             //check if classMoveDiffList contains already a move for the outer class to a different target
             for (UMLClassMoveDiff diff : classMoveDiffList) {
-                if ((diff.getOriginalClass().getName().startsWith(removedClass.getPackageName()) &&
-                    !diff.getMovedClass().getName().startsWith(addedClass.getPackageName())) ||
-                    (!diff.getOriginalClass().getName().startsWith(removedClass.getPackageName()) &&
-                        diff.getMovedClass().getName().startsWith(addedClass.getPackageName()))) {
+                if ((diff.getOriginalClass().getQualifiedName().startsWith(removedClass.getPackageName()) &&
+                    !diff.getMovedClass().getQualifiedName().startsWith(addedClass.getPackageName())) ||
+                    (!diff.getOriginalClass().getQualifiedName().startsWith(removedClass.getPackageName()) &&
+                        diff.getMovedClass().getQualifiedName().startsWith(addedClass.getPackageName()))) {
                     return true;
                 }
             }
@@ -2119,9 +2125,9 @@ addedOperation.isSetter()) &&
 
     private boolean innerClassWithTheSameName(UMLClass removedClass, UMLClass addedClass) {
         if (!removedClass.isTopLevel() && !addedClass.isTopLevel()) {
-            String removedClassName = removedClass.getName();
+            String removedClassName = removedClass.getQualifiedName();
             String removedName = removedClassName.substring(removedClassName.lastIndexOf(".") + 1);
-            String addedClassName = addedClass.getName();
+            String addedClassName = addedClass.getQualifiedName();
             String addedName = addedClassName.substring(addedClassName.lastIndexOf(".") + 1);
             return removedName.equals(addedName);
         }

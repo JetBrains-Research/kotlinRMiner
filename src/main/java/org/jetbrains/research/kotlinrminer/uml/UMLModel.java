@@ -154,7 +154,7 @@ public class UMLModel {
 
         modelDiff.checkForMovedClasses(renamedFileHints, umlModel.repositoryDirectories, new UMLClassMatcher.Move());
         modelDiff.checkForRenamedClasses(renamedFileHints, new UMLClassMatcher.Rename());
-        //modelDiff.checkForRenamedClasses(renamedFileHints, new UMLClassMatcher.RelaxedRename());
+        modelDiff.checkForRenamedClasses(renamedFileHints, new UMLClassMatcher.RelaxedRename());
 
         return modelDiff;
     }
