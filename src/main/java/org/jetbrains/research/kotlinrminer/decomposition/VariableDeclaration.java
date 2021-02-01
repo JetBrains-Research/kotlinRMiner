@@ -2,7 +2,6 @@ package org.jetbrains.research.kotlinrminer.decomposition;
 
 import org.jetbrains.kotlin.psi.*;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
-import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo.*;
 import org.jetbrains.research.kotlinrminer.uml.UMLAnnotation;
 import org.jetbrains.research.kotlinrminer.uml.UMLType;
 
@@ -17,6 +16,7 @@ public class VariableDeclaration implements LocationInfoProvider, VariableDeclar
     private LocationInfo locationInfo;
     private boolean isParameter;
     private boolean isAttribute;
+    private boolean isEnumConstant;
     private VariableScope scope;
     private final List<UMLAnnotation> annotations;
 
@@ -102,6 +102,10 @@ public class VariableDeclaration implements LocationInfoProvider, VariableDeclar
 
     public boolean isAttribute() {
         return isAttribute;
+    }
+
+    public boolean isEnumConstant() {
+        return isEnumConstant;
     }
 
     public void setAttribute(boolean isAttribute) {

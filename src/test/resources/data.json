@@ -35,6 +35,9 @@
             },
             {
                 "description": "Rename Class org.jetbrains.research.ml.codetracker.ui.panes.TaskControllerManager renamed to org.jetbrains.research.ml.codetracker.ui.panes.TaskSolvingControllerManager"
+            },
+            {
+                "description": "Change Attribute Type paneControllerClass : KClass<TaskController> to paneControllerClass : KClass<TaskSolvingController> in class org.jetbrains.research.ml.codetracker.ui.panes.TaskSolvingControllerManager"
             }
         ]
     },
@@ -236,6 +239,12 @@
         "refactorings": [
             {
                 "description": "Extract Class person.Car from class Person"
+            },
+            {
+                "description": "Move Attribute public carNumber : String from class Person to public carNumber : String from class person.Car"
+            },
+            {
+                "description": "Move Attribute public carColor : String from class Person to public carColor : String from class person.Car"
             }
         ]
     },
@@ -626,6 +635,9 @@
             },
             {
                 "description": "Rename Parameter location : Any to instance : Any in method public href(instance Any) : String in class io.ktor.locations.LocationsImpl"
+            },
+            {
+                "description": "Move Attribute private conversionService : ConversionService from class io.ktor.locations.Locations to protected conversionService : ConversionService from class io.ktor.locations.LocationsImpl"
             }
         ]
     },
@@ -767,6 +779,21 @@
             },
             {
                 "description": "Pull Up Method public close() from class io.ktor.client.engine.js.JsClientEngine to public close() from class io.ktor.client.engine.HttpClientEngineBase"
+            },
+            {
+                "description": "Pull Up Attribute public coroutineContext : CoroutineContext from class io.ktor.client.engine.ios.IosClientEngine to public coroutineContext : CoroutineContext from class io.ktor.client.engine.HttpClientEngineBase"
+            },
+            {
+                "description": "Pull Up Attribute public coroutineContext : CoroutineContext from class io.ktor.client.engine.curl.CurlClientEngine to public coroutineContext : CoroutineContext from class io.ktor.client.engine.HttpClientEngineBase"
+            },
+            {
+                "description": "Pull Up Attribute public coroutineContext : CoroutineContext from class io.ktor.client.engine.mock.MockEngine to public coroutineContext : CoroutineContext from class io.ktor.client.engine.HttpClientEngineBase"
+            },
+            {
+                "description": "Pull Up Attribute public coroutineContext : CoroutineContext from class io.ktor.server.testing.client.TestHttpClientEngine to public coroutineContext : CoroutineContext from class io.ktor.client.engine.HttpClientEngineBase"
+            },
+            {
+                "description": "Pull Up Attribute public coroutineContext : CoroutineContext from class io.ktor.client.engine.js.JsClientEngine to public coroutineContext : CoroutineContext from class io.ktor.client.engine.HttpClientEngineBase"
             }
         ]
     },

@@ -19,6 +19,7 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
     protected List<UMLOperation> removedOperations;
     protected List<UMLAttribute> addedAttributes;
     protected List<UMLAttribute> removedAttributes;
+    protected List<UMLAttributeDiff> attributeDiffList;
     private final List<UMLOperationBodyMapper> operationBodyMapperList;
     private boolean visibilityChanged;
     private String oldVisibility;
@@ -68,6 +69,7 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
 /*        this.addedAnonymousClasses = new ArrayList<UMLAnonymousClass>();
         this.removedAnonymousClasses = new ArrayList<UMLAnonymousClass>();*/
         this.operationDiffList = new ArrayList<>();
+        this.attributeDiffList = new ArrayList<>();
         this.refactorings = new ArrayList<>();
         this.modelDiff = modelDiff;
     }
@@ -164,6 +166,13 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
             UMLAttribute attributeWithTheSameName = nextClass.attributeWithTheSameNameIgnoringChangedType(attribute);
             if (attributeWithTheSameName == null) {
                 this.removedAttributes.add(attribute);
+            } else if (!attributeDiffListContainsAttribute(attribute, attributeWithTheSameName)) {
+                UMLAttributeDiff attributeDiff =
+                    new UMLAttributeDiff(attribute, attributeWithTheSameName, operationBodyMapperList);
+                if (!attributeDiff.isEmpty()) {
+                    refactorings.addAll(attributeDiff.getRefactorings());
+                    this.attributeDiffList.add(attributeDiff);
+                }
             }
         }
         for (UMLAttribute attribute : nextClass.getAttributes()) {
@@ -171,6 +180,13 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
                 originalClass.attributeWithTheSameNameIgnoringChangedType(attribute);
             if (attributeWithTheSameName == null) {
                 this.addedAttributes.add(attribute);
+            } else if (!attributeDiffListContainsAttribute(attributeWithTheSameName, attribute)) {
+                UMLAttributeDiff attributeDiff =
+                    new UMLAttributeDiff(attributeWithTheSameName, attribute, operationBodyMapperList);
+                if (!attributeDiff.isEmpty()) {
+                    refactorings.addAll(attributeDiff.getRefactorings());
+                    this.attributeDiffList.add(attributeDiff);
+                }
             }
         }
     }
@@ -201,10 +217,10 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
     }
 
     private boolean attributeDiffListContainsAttribute(UMLAttribute attribute1, UMLAttribute attribute2) {
-/*      TODO:  for (UMLAttributeDiff diff : attributeDiffList) {
+        for (UMLAttributeDiff diff : attributeDiffList) {
             if (diff.getRemovedAttribute().equals(attribute1) || diff.getAddedAttribute().equals(attribute2))
                 return true;
-        }*/
+        }
         return false;
     }
 
@@ -1614,7 +1630,7 @@ public abstract class UMLClassBaseDiff implements Comparable<UMLClassBaseDiff> {
     public boolean isEmpty() {
         return addedOperations.isEmpty() && removedOperations.isEmpty() &&
             addedAttributes.isEmpty() && removedAttributes.isEmpty() &&
-            operationDiffList.isEmpty() /*&& attributeDiffList.isEmpty()*/ &&
+            operationDiffList.isEmpty() && attributeDiffList.isEmpty() &&
             operationBodyMapperList.isEmpty() &&
             !visibilityChanged && !abstractionChanged;
     }

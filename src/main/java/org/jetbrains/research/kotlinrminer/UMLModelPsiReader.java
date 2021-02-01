@@ -374,6 +374,7 @@ public class UMLModelPsiReader {
             for (KtProperty property : properties) {
                 UMLAttribute umlAttribute =
                     processFieldDeclaration(property.getContainingKtFile(), property, filePath);
+                umlAttribute.setClassName(object.getQualifiedName());
                 object.addAttribute(umlAttribute);
             }
         }
