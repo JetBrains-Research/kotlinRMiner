@@ -1383,7 +1383,8 @@ public class UMLModelDiff {
                 TreeMap<Integer, List<UMLOperationBodyMapper>> operationBodyMapperMap = new TreeMap<>();
                 for (UMLOperation removedOperation : removedOperations) {
                     UMLOperationBodyMapper operationBodyMapper =
-                        new UMLOperationBodyMapper(removedOperation, addedOperation, null);
+                        new UMLOperationBodyMapper(removedOperation, addedOperation,
+                                                   getUMLClassDiff(removedOperation.getClassName()));
                     int mappings = operationBodyMapper.mappingsWithoutBlocks();
                     if (mappings > 0 && mappedElementsMoreThanNonMappedT1AndT2(mappings, operationBodyMapper)) {
                         int exactMatches = operationBodyMapper.exactMatches();
@@ -1465,7 +1466,8 @@ public class UMLModelDiff {
                     new TreeMap<>();
                 for (UMLOperation addedOperation : addedOperations) {
                     UMLOperationBodyMapper operationBodyMapper =
-                        new UMLOperationBodyMapper(removedOperation, addedOperation, null);
+                        new UMLOperationBodyMapper(removedOperation, addedOperation,
+                                                   getUMLClassDiff(removedOperation.getClassName()));
                     int mappings = operationBodyMapper.mappingsWithoutBlocks();
                     if (mappings > 0 && mappedElementsMoreThanNonMappedT1AndT2(mappings, operationBodyMapper)) {
                         int exactMatches = operationBodyMapper.exactMatches();
