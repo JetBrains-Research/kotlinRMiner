@@ -1,7 +1,7 @@
 # kotlinRMiner
 [![JB Research](https://jb.gg/badges/research-flat-square.svg)](https://research.jetbrains.org/)
 
-A library that detects performed refactorings in code changes written in Kotlin.
+A library that detects performed refactorings in changes in Kotlin code.
 
 ## About
 The library is based on [RefactoringMiner](https://github.com/tsantalis/RefactoringMiner), a tool that detects performed refactorings in code changes written in Java.
@@ -26,6 +26,14 @@ Currently, kotlinRMiner supports the detection of the following refactorings:
 16. Extract Interface
 17. Extract And Move Method
 18. Move And Inline Method
+19. Change Attribute Type
+20. Change Variable Type
+21. Change Parameter Type
+22. Move Attribute
+23. Pull Up Attribute
+24. Push Down Attribute
+25. Rename Attribute
+26. Rename Variable
 
 ## Usage
 Use a library as CLI:
