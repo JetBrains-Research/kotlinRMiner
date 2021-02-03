@@ -403,7 +403,7 @@ public class UMLModelPsiReader {
     }
 
     public PsiFile buildPsiFile(String file, KotlinCoreEnvironment environment, String content) throws IOException {
-        File newFile = new File(file);
+        File newFile = new File("tmp/" + file);
         FileUtilRt.createDirectory(newFile);
         PsiFileFactoryImpl factory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(environment.getProject());
         KotlinLightVirtualFile virtualFile = new KotlinLightVirtualFile(newFile, content);
