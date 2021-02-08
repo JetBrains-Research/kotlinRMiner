@@ -26,7 +26,7 @@ public class Visitor extends KtVisitor {
     private final List<String> arrayAccesses = new ArrayList<>();
     private final List<String> prefixExpressions = new ArrayList<>();
     private final List<String> postfixExpressions = new ArrayList<>();
-    private List<String> infixOperators = new ArrayList<>();
+    private final List<String> infixOperators = new ArrayList<>();
     private final List<String> arguments = new ArrayList<>();
     private final List<LambdaExpressionObject> lambdas = new ArrayList<>();
     private final DefaultMutableTreeNode root = new DefaultMutableTreeNode();
@@ -73,6 +73,10 @@ public class Visitor extends KtVisitor {
             }
         } else if (expression instanceof KtProperty) {
             processPropertyExpression((KtProperty) expression, data);
+        } else if (expression instanceof KtVariableDeclaration) {
+            VariableDeclaration variableDeclaration = new VariableDeclaration(ktFile, filePath, expression);
+            variableDeclarations.add(variableDeclaration);
+            visitElement(((KtProperty) expression).getIdentifyingElement());
         } else if (expression instanceof KtSafeQualifiedExpression) {
             processSafeQualifiedExpression((KtSafeQualifiedExpression) expression, data);
         } else if (expression instanceof KtLambdaExpression) {
@@ -118,6 +122,7 @@ public class Visitor extends KtVisitor {
         if (ktProperty.getNameIdentifier() != null) {
             VariableDeclaration variableDeclaration = new VariableDeclaration(ktFile, filePath, ktProperty);
             this.variableDeclarations.add(variableDeclaration);
+            this.variables.add(ktProperty.getNameIdentifier().getText());
         }
     }
 
@@ -155,6 +160,8 @@ public class Visitor extends KtVisitor {
             //TODO: process object's creations
             KtObjectLiteralExpression objectLiteralExpression =
                 (KtObjectLiteralExpression) argument.getArgumentExpression();
+        } else if (argumentExpression instanceof KtCallExpression) {
+            processCallExpression((KtCallExpression) argumentExpression);
         }
     }
 
@@ -253,10 +260,9 @@ public class Visitor extends KtVisitor {
     private void processArgument(KtValueArgument argument) {
         this.arguments.add(argument.getText());
         visitArgument(argument);
-/*        if (current.getUserObject() != null) {
-            AnonymousClassDeclarationObject anonymous = (AnonymousClassDeclarationObject) current.getUserObject();
-            anonymous.getArguments().add(argument.toString());
-        }*/
+        if (argument.getArgumentExpression() instanceof KtNameReferenceExpression) {
+            variables.add(argument.getText());
+        }
     }
 
     private static String processMethodInvocation(KtCallExpression node) {

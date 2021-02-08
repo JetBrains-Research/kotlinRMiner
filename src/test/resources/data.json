@@ -113,9 +113,6 @@
             },
             {
                 "description": "Move And Rename Method public userOutlierTooltips() from class jetbrains.datalore.plot.builder.tooltip.TooltipContentGeneratorTest to public configOutlierTooltips() from class jetbrains.datalore.plot.config.TooltipConfigTest"
-            },
-            {
-                "description": "Move And Rename Method public userTooltips() from class jetbrains.datalore.plot.builder.tooltip.TooltipContentGeneratorTest to public defaultTooltips() from class jetbrains.datalore.plot.config.TooltipConfigTest"
             }
         ]
     },
@@ -445,9 +442,6 @@
         "sha1": "f9b886f864eb46122936a7ffe4c8d128cfc78765",
         "refactorings": [
             {
-                "description": "Rename Method private getBaseFolder(element KtElement, binding BindingContext, context ProcessorContext) : File renamed to private getStaticRootFolder(element KtElement, binding BindingContext, context ProcessorContext) : File in class io.kotless.parser.ktor.processor.route.StaticRoutesProcessor"
-            },
-            {
                 "description": "Rename Variable routeCalls : Untyped to calls : Untyped in method private getDynamicPath(element KtElement, binding BindingContext) : URIPath in class io.kotless.parser.ktor.processor.route.DynamicRoutesProcessor"
             }
         ]
@@ -527,6 +521,12 @@
             },
             {
                 "description": "Rename Variable e : Untyped to current : Untyped in method private findPhase(phase PipelinePhase) : PhaseContent<TSubject, TContext> in class io.ktor.util.pipeline.Pipeline"
+            },
+            {
+                "description": "Rename Variable e : Untyped to current : Untyped in method private hasPhase(phase PipelinePhase) : Boolean in class io.ktor.util.pipeline.Pipeline"
+            },
+            {
+                "description": "Rename Variable e : Untyped to current : Untyped in method private findPhaseIndex(phase PipelinePhase) : Int in class io.ktor.util.pipeline.Pipeline"
             }
         ]
     },
@@ -920,6 +920,24 @@
         "refactorings": [
             {
                 "description": "Extract Method private finishIfResponseSent(context PipelineContext<*, ApplicationCall>) extracted from private interceptResponse(context PipelineContext<*, ApplicationCall>, message Any) in class io.ktor.features.StatusPages"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "2679b67244efe8e839878e86b5769686475106a4",
+        "refactorings": [
+            {
+                "description": "Inline Variable d : Untyped in method public desc() from class shapes.Square"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/JetBrains-Research/kotlin-refactoring-samples.git",
+        "sha1": "8885862728f411f847ee74a2b3c65f9c2b8f92f6",
+        "refactorings": [
+            {
+                "description": "Extract Variable d : Untyped in method public desc() from class shapes.Square"
             }
         ]
     }

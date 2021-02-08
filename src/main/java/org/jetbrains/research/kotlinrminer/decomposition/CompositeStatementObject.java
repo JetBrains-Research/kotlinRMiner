@@ -61,6 +61,15 @@ public class CompositeStatementObject extends AbstractStatement {
         return leaves;
     }
 
+    @Override
+    public List<String> getInfixExpressions() {
+        List<String> infixExpressions = new ArrayList<>();
+        for (AbstractExpression expression : expressionList) {
+            infixExpressions.addAll(expression.getInfixExpressions());
+        }
+        return infixExpressions;
+    }
+
     public List<CompositeStatementObject> getInnerNodes() {
         List<CompositeStatementObject> innerNodes = new ArrayList<>();
         for (AbstractStatement statement : statementList) {
@@ -143,8 +152,7 @@ public class CompositeStatementObject extends AbstractStatement {
 
 
     public List<LambdaExpressionObject> getAllLambdas() {
-        List<LambdaExpressionObject> lambdas = new ArrayList<LambdaExpressionObject>();
-        lambdas.addAll(getLambdas());
+        List<LambdaExpressionObject> lambdas = new ArrayList<>(getLambdas());
         for (AbstractStatement statement : statementList) {
             if (statement instanceof CompositeStatementObject) {
                 CompositeStatementObject composite = (CompositeStatementObject) statement;
@@ -215,11 +223,11 @@ public class CompositeStatementObject extends AbstractStatement {
         Map<String, Set<String>> map = new LinkedHashMap<>();
         for (StatementObject statement : getLeaves()) {
             String s = statement.getString();
-            if (s.startsWith("this.") && s.endsWith(";\n")) {
+            if (s.startsWith("this.") && s.endsWith("\n")) {
                 String firstLine = s.substring(0, s.indexOf("\n"));
                 if (firstLine.contains("=")) {
                     String attribute = s.substring(5, s.indexOf("="));
-                    String value = s.substring(s.indexOf("=") + 1, s.indexOf(";\n"));
+                    String value = s.substring(s.indexOf("=") + 1, s.indexOf("\n"));
                     if (map.containsKey(value)) {
                         map.get(value).add(attribute);
                     } else {
@@ -373,7 +381,7 @@ public class CompositeStatementObject extends AbstractStatement {
     @Override
     public List<AnonymousClassDeclarationObject> getAnonymousClassDeclarations() {
         //TODO: implement it
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

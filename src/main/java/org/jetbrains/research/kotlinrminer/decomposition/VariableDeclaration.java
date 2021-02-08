@@ -34,7 +34,6 @@ public class VariableDeclaration implements LocationInfoProvider, VariableDeclar
             this.locationInfo =
                 new LocationInfo(ktFile, filePath, fragment, CodeElementType.SINGLE_VARIABLE_DECLARATION);
             this.variableName = String.valueOf(fragment.getName());
-
             this.type = UMLType.extractTypeObject(ktFile, filePath, parameter.getTypeReference(), 0);
             int startOffset = fragment.getStartOffsetInParent();
             int endOffset = startOffset + fragment.getTextLength();
@@ -50,7 +49,10 @@ public class VariableDeclaration implements LocationInfoProvider, VariableDeclar
             //TODO check for the code element type
             this.locationInfo = new LocationInfo(ktFile, filePath, fragment, CodeElementType.FIELD_DECLARATION);
             this.variableName = String.valueOf(((KtProperty) fragment).getNameIdentifier().getText());
-
+            this.initializer = property.getInitializer() != null ?
+                new AbstractExpression(ktFile, filePath,
+                                       property.getInitializer(),
+                                       CodeElementType.VARIABLE_DECLARATION_INITIALIZER) : null;
             this.type = UMLType.extractTypeObject(ktFile, filePath, property.getTypeReference(), 0);
             int startOffset = fragment.getStartOffsetInParent();
             int endOffset = startOffset + fragment.getTextLength();
@@ -64,6 +66,10 @@ public class VariableDeclaration implements LocationInfoProvider, VariableDeclar
             this.locationInfo =
                 new LocationInfo(ktFile, filePath, fragment, CodeElementType.VARIABLE_DECLARATION_EXPRESSION);
             this.variableName = fragment.getName();
+            this.initializer = variableDeclaration.getInitializer() != null ?
+                new AbstractExpression(ktFile, filePath,
+                                       variableDeclaration.getInitializer(),
+                                       CodeElementType.VARIABLE_DECLARATION_INITIALIZER) : null;
             this.type = UMLType.extractTypeObject(ktFile, filePath, variableDeclaration.getTypeReference(), 0);
             int startOffset = fragment.getStartOffsetInParent();
             int endOffset = startOffset + fragment.getTextLength();

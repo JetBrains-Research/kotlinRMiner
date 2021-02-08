@@ -34,7 +34,7 @@ public class OperationInvocation extends AbstractCall {
                 this.arguments.add(argument.getText());
         }
         if (invocation.getCalleeExpression() != null) {
-            String methodCallExpression = "";
+            String methodCallExpression;
             if (invocation.getPrevSibling() != null && invocation.getPrevSibling().getParent() != null) {
                 if (invocation.getPrevSibling().getParent() instanceof KtDotQualifiedExpression) {
                     methodCallExpression = invocation.getPrevSibling().getParent().getText();
@@ -95,6 +95,10 @@ public class OperationInvocation extends AbstractCall {
             }
         }
         return false;
+    }
+
+    public List<String> getSubExpressions() {
+        return subExpressions;
     }
 
     private static boolean dotInsideArguments(int indexOfDot, String thisExpression) {
@@ -195,7 +199,7 @@ public class OperationInvocation extends AbstractCall {
                 inferredArgumentTypes.add(variableTypeMap.get(arg));
             } else if (arg.startsWith("\"") && arg.endsWith("\"")) {
                 inferredArgumentTypes.add(UMLType.extractTypeObject("String"));
-            } else if (arg.startsWith("\'") && arg.endsWith("\'")) {
+            } else if (arg.startsWith("'") && arg.endsWith("'")) {
                 inferredArgumentTypes.add(UMLType.extractTypeObject("Char"));
             } else if (arg.endsWith(".class")) {
                 inferredArgumentTypes.add(UMLType.extractTypeObject("Class"));

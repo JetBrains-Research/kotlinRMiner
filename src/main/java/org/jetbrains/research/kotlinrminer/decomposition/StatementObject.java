@@ -90,6 +90,12 @@ public class StatementObject extends AbstractStatement {
         return variableDeclarations;
     }
 
+    //TODO
+    @Override
+    public List<String> getInfixExpressions() {
+        return new ArrayList<>();
+    }
+
     @Override
     public Map<String, List<OperationInvocation>> getMethodInvocationMap() {
         return this.methodInvocationMap;
@@ -98,7 +104,7 @@ public class StatementObject extends AbstractStatement {
     @Override
     public List<AnonymousClassDeclarationObject> getAnonymousClassDeclarations() {
         // TODO: implement it
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

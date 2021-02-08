@@ -43,6 +43,20 @@ public class ReplacementUtil {
         return temp;
     }
 
+    public static String keepReservedTokens(String input) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            for (String character : SPECIAL_CHARACTERS) {
+                if (character.equals(Character.toString(c))) {
+                    sb.append(c);
+                    break;
+                }
+            }
+        }
+        return sb.toString();
+    }
+
     public static String performReplacement(String completeString, String subString,
                                             String replacement) {
         String temp = completeString;

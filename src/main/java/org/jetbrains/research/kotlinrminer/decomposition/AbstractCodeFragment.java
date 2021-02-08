@@ -66,6 +66,8 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
 
     public abstract List<String> getInfixOperators();
 
+    public abstract List<String> getInfixExpressions();
+
     public abstract List<String> getArguments();
 
     public abstract List<LambdaExpressionObject> getLambdas();
@@ -200,12 +202,12 @@ public abstract class AbstractCodeFragment implements LocationInfoProvider {
 
     private boolean isCastExpressionCoveringEntireFragment(String expression) {
         String statement = getString();
-        int index = statement.indexOf(expression + "\n");
+        int index = statement.indexOf(expression);
         if (index != -1) {
             String prefix = statement.substring(0, index);
             if (prefix.contains("(") && prefix.contains(")")) {
                 String casting = prefix.substring(prefix.indexOf("("), prefix.indexOf(")") + 1);
-                return ("return " + casting + expression + "\n").equals(statement);
+                return ("return " + casting + expression).equals(statement);
             }
         }
         return false;

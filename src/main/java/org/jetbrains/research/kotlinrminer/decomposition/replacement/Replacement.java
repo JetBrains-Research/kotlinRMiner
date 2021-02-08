@@ -44,8 +44,8 @@ public class Replacement {
         if (obj instanceof Replacement) {
             Replacement other = (Replacement) obj;
             return this.before.equals(other.before) &&
-                    this.after.equals(other.after) &&
-                    this.type.equals(other.type);
+                this.after.equals(other.after) &&
+                this.type.equals(other.type);
         }
         return false;
     }
@@ -63,16 +63,16 @@ public class Replacement {
 
     public boolean involvesVariable() {
         return type.equals(ReplacementType.VARIABLE_NAME) ||
-                type.equals(ReplacementType.BOOLEAN_REPLACED_WITH_VARIABLE) ||
-                type.equals(ReplacementType.TYPE_LITERAL_REPLACED_WITH_VARIABLE) ||
-                type.equals(ReplacementType.ARGUMENT_REPLACED_WITH_VARIABLE) ||
-                type.equals(ReplacementType.VARIABLE_REPLACED_WITH_METHOD_INVOCATION) ||
-                type.equals(ReplacementType.VARIABLE_REPLACED_WITH_EXPRESSION_OF_METHOD_INVOCATION) ||
-                type.equals(ReplacementType.VARIABLE_REPLACED_WITH_ARRAY_ACCESS) ||
-                type.equals(ReplacementType.VARIABLE_REPLACED_WITH_PREFIX_EXPRESSION) ||
-                type.equals(ReplacementType.VARIABLE_REPLACED_WITH_STRING_LITERAL) ||
-                type.equals(ReplacementType.VARIABLE_REPLACED_WITH_NULL_LITERAL) ||
-                type.equals(ReplacementType.VARIABLE_REPLACED_WITH_NUMBER_LITERAL);
+            type.equals(ReplacementType.BOOLEAN_REPLACED_WITH_VARIABLE) ||
+            type.equals(ReplacementType.TYPE_LITERAL_REPLACED_WITH_VARIABLE) ||
+            type.equals(ReplacementType.ARGUMENT_REPLACED_WITH_VARIABLE) ||
+            type.equals(ReplacementType.VARIABLE_REPLACED_WITH_METHOD_INVOCATION) ||
+            type.equals(ReplacementType.VARIABLE_REPLACED_WITH_EXPRESSION_OF_METHOD_INVOCATION) ||
+            type.equals(ReplacementType.VARIABLE_REPLACED_WITH_ARRAY_ACCESS) ||
+            type.equals(ReplacementType.VARIABLE_REPLACED_WITH_PREFIX_EXPRESSION) ||
+            type.equals(ReplacementType.VARIABLE_REPLACED_WITH_STRING_LITERAL) ||
+            type.equals(ReplacementType.VARIABLE_REPLACED_WITH_NULL_LITERAL) ||
+            type.equals(ReplacementType.VARIABLE_REPLACED_WITH_NUMBER_LITERAL);
     }
 
     public enum ReplacementType {
@@ -122,7 +122,8 @@ public class Replacement {
         EXPRESSION_REPLACED_WITH_TERNARY_THEN,
         COMPOSITE,
         CONCATENATION,
-        CONDITIONAL
+        CONDITIONAL,
+        INFIX_EXPRESSION,
     }
 }
 

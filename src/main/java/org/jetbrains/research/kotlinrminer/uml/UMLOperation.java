@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.research.kotlinrminer.decomposition.LocationInfo;
 import org.jetbrains.research.kotlinrminer.decomposition.*;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.diff.StringDistance;
@@ -227,6 +226,28 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
         return null;
     }
 
+    public List<VariableDeclaration> getParameterDeclarationList() {
+        List<VariableDeclaration> parameterDeclarationList = new ArrayList<>();
+        for (UMLParameter parameter : parameters) {
+            if (!parameter.getKind().equals("return"))
+                parameterDeclarationList.add(parameter.getVariableDeclaration());
+        }
+        return parameterDeclarationList;
+    }
+
+    public List<VariableDeclaration> getVariableDeclarationsInScope(LocationInfo location) {
+        List<VariableDeclaration> variableDeclarations = new ArrayList<>();
+        for (VariableDeclaration parameterDeclaration : getParameterDeclarationList()) {
+            if (parameterDeclaration.getScope().subsumes(location)) {
+                variableDeclarations.add(parameterDeclaration);
+            }
+        }
+        if (operationBody != null) {
+            variableDeclarations.addAll(operationBody.getVariableDeclarationsInScope(location));
+        }
+        return variableDeclarations;
+    }
+
     public boolean equalReturnParameter(UMLOperation operation) {
         UMLParameter thisReturnParameter = this.getReturnParameter();
         UMLParameter otherReturnParameter = operation.getReturnParameter();
@@ -341,7 +362,7 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
                 StatementObject statement = (StatementObject) statements.get(0);
                 if (statement.getString().startsWith("return ")) {
                     for (String variable : statement.getVariables()) {
-                        if (statement.getString().equals("return " + variable + ";\n") && parameters.size() == 0) {
+                        if (statement.getString().equals("return " + variable + "\n") && parameters.size() == 0) {
                             return true;
                         } else if (statement.getString().equals(
                             "return " + variable + ".keySet()" + "\n") && parameters.size() == 0) {
@@ -356,7 +377,7 @@ public class UMLOperation implements Comparable<UMLOperation>, Serializable, Loc
                         returnParameter != null && returnParameter.getType().getClassType().equals("Boolean")) {
                         return true;
                     }
-                    return statement.getString().equals("return null\n");
+                    return statement.getString().equals("return Null\n");
                 }
             }
         }

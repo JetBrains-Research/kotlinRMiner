@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.psi.KtExpression;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.research.kotlinrminer.diff.CodeRange;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -104,7 +105,7 @@ public class AbstractExpression extends AbstractCodeFragment {
     @Override
     public List<AnonymousClassDeclarationObject> getAnonymousClassDeclarations() {
         //TODO: Implement collecting of anonymous class declarations
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -155,6 +156,12 @@ public class AbstractExpression extends AbstractCodeFragment {
     @Override
     public List<String> getInfixOperators() {
         return infixOperators;
+    }
+
+    //TODO
+    @Override
+    public List<String> getInfixExpressions() {
+        return new ArrayList<>();
     }
 
     @Override
