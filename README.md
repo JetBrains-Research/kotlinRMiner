@@ -34,6 +34,8 @@ Currently, kotlinRMiner supports the detection of the following refactorings:
 24. Push Down Attribute
 25. Rename Attribute
 26. Rename Variable
+27. Inline Variable
+28. Extract variable
 
 ## Usage
 Use a library as CLI:
