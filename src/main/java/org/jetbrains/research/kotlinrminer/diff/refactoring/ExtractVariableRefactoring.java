@@ -57,7 +57,7 @@ public class ExtractVariableRefactoring implements Refactoring {
     }
 
     public String toString() {
-        return getName() + "\t" +
+        return getName() + " " +
                 variableDeclaration +
                 " in method " +
                 operationAfter +
