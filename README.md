@@ -38,7 +38,12 @@ Currently, kotlinRMiner supports the detection of the following refactorings:
 28. Extract variable
 
 ## Usage
-Use a library as CLI:
+#### As a dependency:
+kotlinRMiner is published in [JitPack](https://jitpack.io/), you can add the dependency to your dependencies list:
+
+```implementation 'com.github.JetBrains-Research:kotlinRMiner:v1.2'```
+
+#### As CLI:
 1. Clone the repository 
 
     ```git clone https://github.com/JetBrains-Research/kotlinRMiner.git```
