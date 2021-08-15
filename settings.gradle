@@ -1,0 +1,2 @@
+rootProject.name = "KotlinRMiner"
+include "KotlinRMiner", "KotlinRMiner-CLI"
