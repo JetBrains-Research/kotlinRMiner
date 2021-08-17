@@ -21,8 +21,8 @@ public class LocationInfo {
     private final int startLine;
     private final int endLine;
     private final CodeElementType codeElementType;
-    private int startColumn;
-    private int endColumn;
+    private final int startColumn;
+    private final int endColumn;
 
     public LocationInfo(@NotNull KtFile ktFile, @NotNull String filePath, @NotNull KtElement node,
                         @NotNull CodeElementType codeElementType) {
@@ -36,18 +36,16 @@ public class LocationInfo {
         FileViewProvider fileViewProvider = ktFile.getViewProvider();
         Document document = fileViewProvider.getDocument();
 
-        this.startLine = document != null ? document.getLineNumber(startOffset) + 1 : 0;
-        this.endLine = document != null ? document.getLineNumber(endOffset) + 1 : 0;
-        //columns are 0-based
-        this.startColumn = countColumn(startLine == 0 ? 0 : startLine - 1, document);
-        //convert to 1-based
-        if (this.startColumn > 0) {
-            this.startColumn += 1;
-        }
-        this.endColumn = countColumn(endLine == 0 ? 0 : endLine - 1, document);
-        //convert to 1-based
-        if (this.endColumn > 0) {
-            this.endColumn += 1;
+        if (document != null) {
+            this.startLine = document.getLineNumber(startOffset) + 1;
+            this.endLine = document.getLineNumber(endOffset) + 1;
+            this.startColumn = countColumn(startLine - 1, document) + 1;
+            this.endColumn = countColumn(endLine - 1, document) + 1;
+        } else {
+            this.startLine = 0;
+            this.endLine = 0;
+            this.startColumn = 0;
+            this.endColumn = 0;
         }
     }
 
