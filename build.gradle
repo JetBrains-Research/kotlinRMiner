@@ -10,9 +10,12 @@ allprojects {
     repositories {
         mavenCentral()
         maven { url 'https://jitpack.io' }
+//        maven { url 'https://mvnrepository.com/maven2' }
+        maven { url 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-ide-plugin-dependencies/' }
     }
 
     dependencies {
         compile 'org.eclipse.jgit:org.eclipse.jgit:5.2.1.201812262042-r'
+        //todo -- exclude sl4j-api in api module
     }
 }
