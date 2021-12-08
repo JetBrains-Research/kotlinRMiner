@@ -9,9 +9,10 @@ import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.jgit.lib.Repository;
-import org.jetbrains.research.kotlinrminer.ide.GitHistoryKotlinRMiner;
-import org.jetbrains.research.kotlinrminer.ide.GitService;
-import org.jetbrains.research.kotlinrminer.ide.RefactoringHandler;
+import org.jetbrains.research.kotlinrminer.cli.GitHistoryKotlinRMiner;
+import org.jetbrains.research.kotlinrminer.cli.GitService;
+import org.jetbrains.research.kotlinrminer.cli.RefactoringHandler;
+
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
@@ -48,10 +49,10 @@ public class TestAllRefactorings {
         miner.detectAtCommit(repo, data.sha1, new RefactoringHandler() {
             @Override
             public void handle(String commitId,
-                               List<org.jetbrains.research.kotlinrminer.ide.Refactoring> refactorings) {
+                               List<org.jetbrains.research.kotlinrminer.cli.Refactoring> refactorings) {
                 Set<String> results = refactorings
                     .stream()
-                    .map(org.jetbrains.research.kotlinrminer.ide.Refactoring::toString)
+                    .map(org.jetbrains.research.kotlinrminer.cli.Refactoring::toString)
                     .collect(Collectors.toSet());
 
                 Set<String> expected = data.refactorings
