@@ -15,10 +15,6 @@ intellij {
     buildSearchableOptions.enabled false
 }
 
-test {
-    useJUnitPlatform()
-}
-
 dependencies {
     implementation(project(":kotlinrminer-common"))
     compile 'org.apache.commons:commons-text:1.6'
@@ -27,9 +23,6 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.2'
     compileOnly 'org.jetbrains.kotlin:kotlin-compiler-for-ide:1.5.10-release-955'
     compileOnly 'org.jetbrains.kotlin:kotlin-compiler-cli-for-ide:1.5.10-release-955'
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
 
 publishing {
