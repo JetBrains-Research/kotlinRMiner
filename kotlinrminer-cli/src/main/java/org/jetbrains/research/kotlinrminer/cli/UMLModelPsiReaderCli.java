@@ -39,12 +39,12 @@ import org.jetbrains.kotlin.psi.KtSuperTypeListEntry;
 import org.jetbrains.kotlin.psi.KtTypeParameter;
 import org.jetbrains.kotlin.psi.KtTypeReference;
 import org.jetbrains.research.kotlinrminer.cli.util.EnvironmentManager;
-import org.jetbrains.research.kotlinrminer.ide.decomposition.CodeElementType;
-import org.jetbrains.research.kotlinrminer.ide.decomposition.LocationInfo;
-import org.jetbrains.research.kotlinrminer.ide.decomposition.OperationBody;
-import org.jetbrains.research.kotlinrminer.ide.decomposition.VariableDeclaration;
+import org.jetbrains.research.kotlinrminer.cli.decomposition.LocationInfo;
+import org.jetbrains.research.kotlinrminer.cli.decomposition.OperationBody;
+import org.jetbrains.research.kotlinrminer.cli.decomposition.VariableDeclaration;
 import org.jetbrains.research.kotlinrminer.cli.util.KotlinLightVirtualFile;
-import org.jetbrains.research.kotlinrminer.ide.uml.*;
+import org.jetbrains.research.kotlinrminer.cli.uml.*;
+import org.jetbrains.research.kotlinrminer.common.decomposition.CodeElementType;
 
 /**
  * Parses and processes the files written in Kotlin.

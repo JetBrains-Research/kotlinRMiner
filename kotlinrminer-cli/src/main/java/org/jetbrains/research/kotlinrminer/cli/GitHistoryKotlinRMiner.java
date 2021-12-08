@@ -10,6 +10,7 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.jetbrains.kotlin.com.intellij.openapi.project.Project;
+import org.jetbrains.research.kotlinrminer.cli.uml.UMLModel;
 import org.jetbrains.research.kotlinrminer.common.RefactoringType;
 
 import java.io.File;
@@ -153,7 +154,7 @@ public class GitHistoryKotlinRMiner {
     protected UMLModel createModelInKotlin(@Nullable Project project, Map<String, String> fileContents, Set<String> repositoryDirectories) throws
         Exception {
         UMLModelPsiReaderCli psiReader = new UMLModelPsiReaderCli(repositoryDirectories);
-        psiReader.parseFiles(project, fileContents);
+        psiReader.parseFiles(fileContents);
         return psiReader.getUmlModel();
     }
 
