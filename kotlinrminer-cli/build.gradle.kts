@@ -1,5 +1,5 @@
 dependencies {
-    implementation(project(":kotlinrminer-core"))
+    implementation(project(":kotlinrminer-common"))
     implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.3.72")
 }
 

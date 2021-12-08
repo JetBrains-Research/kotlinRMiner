@@ -1,7 +1,7 @@
 package org.jetbrains.research.kotlinrminer.cli.util;
 
-import org.jetbrains.research.kotlinrminer.core.GitHistoryKotlinRMiner;
-import org.jetbrains.research.kotlinrminer.core.Refactoring;
+import org.jetbrains.research.kotlinrminer.cli.GitHistoryKotlinRMiner;
+import org.jetbrains.research.kotlinrminer.cli.Refactoring;
 
 import java.util.List;
 

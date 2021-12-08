@@ -1,14 +1,9 @@
 package org.jetbrains.research.kotlinrminer.cli;
 
-import java.util.List;
-
 import org.eclipse.jgit.lib.Repository;
 import org.jetbrains.research.kotlinrminer.cli.util.JsonUtil;
 
-import org.jetbrains.research.kotlinrminer.core.GitHistoryKotlinRMiner;
-import org.jetbrains.research.kotlinrminer.core.GitService;
-import org.jetbrains.research.kotlinrminer.core.Refactoring;
-import org.jetbrains.research.kotlinrminer.core.RefactoringHandler;
+import java.util.List;
 
 
 public class KotlinRMiner {
@@ -99,7 +94,7 @@ public class KotlinRMiner {
                 @Override
                 public void onFinish(int refactoringsCount, int commitsCount, int errorCommitsCount) {
                     System.out.printf("Total count: [Commits: %d, Errors: %d, Refactorings: %d]%n",
-                                      commitsCount, errorCommitsCount, refactoringsCount);
+                        commitsCount, errorCommitsCount, refactoringsCount);
                 }
 
                 @Override
@@ -144,7 +139,7 @@ public class KotlinRMiner {
                 @Override
                 public void onFinish(int refactoringsCount, int commitsCount, int errorCommitsCount) {
                     System.out.printf("Total count: [Commits: %d, Errors: %d, Refactorings: %d]%n",
-                                      commitsCount, errorCommitsCount, refactoringsCount);
+                        commitsCount, errorCommitsCount, refactoringsCount);
                 }
 
                 @Override

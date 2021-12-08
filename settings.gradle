@@ -1,6 +1,6 @@
 rootProject.name = "kotlinRMiner"
-include('kotlinrminer-api',
-    'kotlinrminer-core',
+include('kotlinrminer-common',
+    'kotlinrminer-ide',
     'kotlinrminer-cli')
 
 
