@@ -6,7 +6,6 @@ plugins {
 }
 
 group = "org.jetbrains.research.kotlinrminer"
-mainClassName = 'org.jetbrains.research.kotlinrminer.KotlinRMiner'
 version = "1.3"
 
 intellij {
