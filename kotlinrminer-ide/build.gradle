@@ -15,6 +15,10 @@ intellij {
     buildSearchableOptions.enabled false
 }
 
+java {
+    withSourcesJar()
+}
+
 dependencies {
     implementation(project(":kotlinrminer-common"))
     compile 'org.apache.commons:commons-text:1.6'
