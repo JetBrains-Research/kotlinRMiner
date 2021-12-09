@@ -13,7 +13,7 @@ tasks.test {
 tasks.jar {
     manifest {
         attributes["Implementation-Version"] = archiveVersion
-        attributes["Main-Class"] = "org.jetbrains.research.kotlinrminer.KotlinRMiner"
+        attributes["Main-Class"] = "org.jetbrains.research.kotlinrminer.cli.KotlinRMiner"
     }
 
     exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA", "misc/**")
