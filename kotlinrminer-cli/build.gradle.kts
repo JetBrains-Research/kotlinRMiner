@@ -1,5 +1,6 @@
 dependencies {
     implementation(project(":kotlinrminer-common"))
+    implementation("org.eclipse.jgit:org.eclipse.jgit:5.2.1.201812262042-r")
     implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.3.72")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
