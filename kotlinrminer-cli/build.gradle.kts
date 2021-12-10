@@ -16,6 +16,6 @@ tasks.jar {
         attributes["Main-Class"] = "org.jetbrains.research.kotlinrminer.cli.KotlinRMiner"
     }
 
-    exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA", "misc/**")
+    exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
 }
