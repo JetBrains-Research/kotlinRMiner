@@ -214,49 +214,51 @@ public abstract class UMLType implements Serializable, LocationInfoProvider {
         } else if (type instanceof KtTypeReference) {
             KtTypeReference typeReference = (KtTypeReference) type;
             KtTypeElement element = typeReference.getTypeElement();
-            if (element instanceof KtFunctionType) {
-                KtFunctionType functionType = (KtFunctionType) element;
-                UMLType returnType = functionType.getReturnTypeReference() == null ?
-                    null : extractTypeObject(functionType.getReturnTypeReference().getText());
-                if (returnType != null)
-                    returnType.isNullable =
-                        functionType.getReturnTypeReference().getTypeElement() instanceof KtNullableType;
-                UMLType receiver = functionType.getReceiverTypeReference() == null ?
-                    null : extractTypeObject(functionType.getReceiverTypeReference().getText());
-                if (receiver != null)
-                    receiver.isNullable =
-                        functionType.getReceiverTypeReference().getTypeElement() instanceof KtNullableType;
-                List<UMLType> umlTypeList = new ArrayList<>();
-                if (functionType.getParameterList() != null) {
-                    List<KtParameter> parameterList = functionType.getParameterList().getParameters();
-                    for (KtParameter ktParameter : parameterList) {
-                        UMLType umlType = extractTypeObject(ktParameter.getText());
-                        if (ktParameter.getTypeReference() != null)
-                            umlType.isNullable =
-                                ktParameter.getTypeReference().getTypeElement() instanceof KtNullableType;
-                        umlTypeList.add(umlType);
+            if (element != null) {
+                if (element instanceof KtFunctionType) {
+                    KtFunctionType functionType = (KtFunctionType) element;
+                    UMLType returnType = functionType.getReturnTypeReference() == null ?
+                        null : extractTypeObject(functionType.getReturnTypeReference().getText());
+                    if (returnType != null)
+                        returnType.isNullable =
+                            functionType.getReturnTypeReference().getTypeElement() instanceof KtNullableType;
+                    UMLType receiver = functionType.getReceiverTypeReference() == null ?
+                        null : extractTypeObject(functionType.getReceiverTypeReference().getText());
+                    if (receiver != null)
+                        receiver.isNullable =
+                            functionType.getReceiverTypeReference().getTypeElement() instanceof KtNullableType;
+                    List<UMLType> umlTypeList = new ArrayList<>();
+                    if (functionType.getParameterList() != null) {
+                        List<KtParameter> parameterList = functionType.getParameterList().getParameters();
+                        for (KtParameter ktParameter : parameterList) {
+                            UMLType umlType = extractTypeObject(ktParameter.getText());
+                            if (ktParameter.getTypeReference() != null)
+                                umlType.isNullable =
+                                    ktParameter.getTypeReference().getTypeElement() instanceof KtNullableType;
+                            umlTypeList.add(umlType);
+                        }
                     }
-                }
-                return new FunctionType(receiver, returnType, umlTypeList);
-            } else {
-                UMLType umlType = extractTypeObject(element.getText());
-                if (element instanceof KtNullableType)
-                    umlType.isNullable = true;
+                    return new FunctionType(receiver, returnType, umlTypeList);
+                } else {
+                    UMLType umlType = extractTypeObject(element.getText());
+                    if (element instanceof KtNullableType)
+                        umlType.isNullable = true;
 
-                final List<KtAnnotation> annotations = typeReference.getAnnotations();
-                for (KtAnnotation annotation : annotations) {
-                    umlType.annotations.add(new UMLAnnotation(ktFile, filePath, annotation));
-                }
-
-                if (element instanceof KtUserType) {
-                    KtUserType userType = (KtUserType) element;
-                    if (userType.getQualifier() != null) {
-                        LeafType rightType = extractTypeObject(userType.getReferencedName());
-                        UMLType left = extractTypeObject(ktFile, filePath, userType.getQualifier());
-                        return new CompositeType(left, rightType);
+                    final List<KtAnnotation> annotations = typeReference.getAnnotations();
+                    for (KtAnnotation annotation : annotations) {
+                        umlType.annotations.add(new UMLAnnotation(ktFile, filePath, annotation));
                     }
+
+                    if (element instanceof KtUserType) {
+                        KtUserType userType = (KtUserType) element;
+                        if (userType.getQualifier() != null) {
+                            LeafType rightType = extractTypeObject(userType.getReferencedName());
+                            UMLType left = extractTypeObject(ktFile, filePath, userType.getQualifier());
+                            return new CompositeType(left, rightType);
+                        }
+                    }
+                    return umlType;
                 }
-                return umlType;
             }
         } else if (type instanceof KtProperty) {
             KtProperty property = (KtProperty) type;
