@@ -49,12 +49,12 @@ kotlinRMiner is published in [JitPack](https://jitpack.io/), you can add the dep
     ```git clone https://github.com/JetBrains-Research/kotlinRMiner.git```
  
 2. Run ```./gradlew jar``` in the project directory
- 
+
 3. Now you can use a library as CLI
  
-    ```cd build/libs```
+    ```cd kotlinrminer-cli/build/libs```
  
-    ```java -jar kotlinRMiner-1.0.jar <option>```
+    ```java -jar kotlinRMiner-cli-1.0.jar <option>```
  
 The list of supported options:
  
@@ -63,6 +63,16 @@ The list of supported options:
     -bc  <git-repo-folder> <start-commit-sha1> <end-commit-sha1>    Detect refactorings between <start-commit-sha1> and <end-commit-sha1> for a project <git-repo-folder>.    
     -all <git-repo-folder> <branch>                                 Detect all refactorings at the <branch> for <git-repo-folder>. If <branch> is not specified, commits from master branch are analyzed.
 ```
+
+#### Example
+To test the tool, you can clone the repository with the toy refactoring instances in Kotlin
+
+```git clone https://github.com/JetBrains-Research/kotlin-refactoring-samples```
+    
+And run detection of refactorings in all commits in the mster branch
+
+```java -jar kotlinRMiner-cli-1.0.jar -all /path/to/kotlin-refactoring-samples master```
+
 ## Contacts
 If you have any questions or suggestions, don't hesitate to open an issue.
 If you want to contribute, please create pull requests.
