@@ -940,5 +940,62 @@
                 "description": "Extract Variable d : Untyped in method public desc() from class shapes.Square"
             }
         ]
+    },
+    {
+        "repository": "https://github.com/airbnb/paris.git",
+        "sha1": "a993739e60c74f4618d62e30c4176d8293fbd9c8",
+        "refactorings": [
+            {
+                "description": "Rename Method public attrNonResValue() renamed to public errorAttrNonResValue() in class com.airbnb.paris.test.ParisProcessorTest"
+            },
+            {
+                "description": "Rename Method public attrWrongValueType() renamed to public errorAttrWrongValueType() in class com.airbnb.paris.test.ParisProcessorTest"
+            },
+            {
+                "description": "Rename Method public errorPrivateStyle() renamed to public errorPrivateStyleField() in class com.airbnb.paris.test.ParisProcessorTest"
+            },
+            {
+                "description": "Rename Method public styleableChildWrongValueType() renamed to public errorStyleableChildWrongValueType() in class com.airbnb.paris.test.ParisProcessorTest"
+            },
+            {
+                "description": "Rename Method public styleableOutsidePackageNoR() renamed to public errorStyleableOutsidePackageNoR() in class com.airbnb.paris.test.ParisProcessorTest"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/airbnb/paris.git",
+        "sha1": "5620625b5487e58e835a60aa5e46c2c01cd91a9b",
+        "refactorings": [
+            {
+                "description": "Rename Method public background_null() renamed to public setBackground_null() in class com.airbnb.paris.proxies.ViewProxyTest"
+            },
+            {
+                "description": "Rename Method public contentDescription_null() renamed to public setContentDescription_null() in class com.airbnb.paris.proxies.ViewProxyTest"
+            },
+            {
+                "description": "Rename Method public foreground_null() renamed to public setForeground_null() in class com.airbnb.paris.proxies.ViewProxyTest"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/airbnb/paris.git",
+        "sha1": "51890bd3c1f80a435c841eeef5a6b8b68a0fd21c",
+        "refactorings": [
+            {
+                "description": "Rename Class com.airbnb.paris.proxies.ViewStyleApplierTest renamed to com.airbnb.paris.proxies.DeprecatedViewStyleApplierTest"
+            }
+        ]
+    },
+    {
+        "repository": "https://github.com/airbnb/paris.git",
+        "sha1": "1b1199295d03870fb107832699adcb98151f8113",
+        "refactorings": [
+            {
+                "description": "Remove Parameter styleablesInfo : List<BaseStyleableInfo> in method internal findStyleApplier(styleablesInfo List<BaseStyleableInfo>, viewTypeElement TypeElement) : ClassName from class com.airbnb.paris.processor.StyleablesTree"
+            },
+            {
+                "description": "Extract And Move Method public fromEnvironment() : List<BaseStyleableInfo> extracted from public process(annotations Set<TypeElement>, roundEnv RoundEnvironment) : Boolean in class com.airbnb.paris.processor.ParisProcessor & moved to class com.airbnb.paris.processor.models.BaseStyleableInfoExtractor"
+            }
+        ]
     }
 ]
