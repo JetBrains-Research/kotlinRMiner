@@ -46,8 +46,8 @@ public class KotlinRMiner {
             JsonUtil.startJSON(sb);
             detector.detectAtCommit(repo, commitId, new RefactoringHandler() {
                 @Override
-                public void handle(String commitId, List<Refactoring> refactorings) {
-                    JsonUtil.commitJSON(sb, gitURL, commitId, refactorings);
+                public void handle(String commitId, List<Refactoring> refactorings, boolean ktFilesChanged) {
+                    JsonUtil.commitJSON(sb, gitURL, commitId, refactorings, ktFilesChanged);
                 }
 
                 @Override
@@ -83,11 +83,11 @@ public class KotlinRMiner {
                 private int commitCount = 0;
 
                 @Override
-                public void handle(String commitId, List<Refactoring> refactorings) {
+                public void handle(String commitId, List<Refactoring> refactorings, boolean ktFilesChanged) {
                     if (commitCount > 0) {
                         sb.append(",").append("\n");
                     }
-                    JsonUtil.commitJSON(sb, gitURL, commitId, refactorings);
+                    JsonUtil.commitJSON(sb, gitURL, commitId, refactorings, ktFilesChanged);
                     commitCount++;
                 }
 
@@ -128,11 +128,11 @@ public class KotlinRMiner {
                 private int commitCount = 0;
 
                 @Override
-                public void handle(String commitId, List<Refactoring> refactorings) {
+                public void handle(String commitId, List<Refactoring> refactorings, boolean ktFilesChanged) {
                     if (commitCount > 0) {
                         sb.append(",").append("\n");
                     }
-                    JsonUtil.commitJSON(sb, gitURL, commitId, refactorings);
+                    JsonUtil.commitJSON(sb, gitURL, commitId, refactorings, ktFilesChanged);
                     commitCount++;
                 }
 
