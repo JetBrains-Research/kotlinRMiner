@@ -1,4 +1,10 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eclipse.jgit.lib.Repository;
+import org.jetbrains.research.kotlinrminer.cli.GitHistoryKotlinRMiner;
+import org.jetbrains.research.kotlinrminer.cli.GitService;
+import org.jetbrains.research.kotlinrminer.cli.RefactoringHandler;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,14 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.eclipse.jgit.lib.Repository;
-import org.jetbrains.research.kotlinrminer.cli.GitHistoryKotlinRMiner;
-import org.jetbrains.research.kotlinrminer.cli.GitService;
-import org.jetbrains.research.kotlinrminer.cli.RefactoringHandler;
-
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.TestFactory;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests are defined in resources/data.json
@@ -45,24 +44,26 @@ public class TestAllRefactorings {
         String folder = "tmp" + "/"
             + data.repository
             .substring(data.repository.lastIndexOf('/') + 1, data.repository.lastIndexOf('.'));
-        Repository repo = gitService.cloneIfNotExists(folder, data.repository);
-        miner.detectAtCommit(repo, data.sha1, new RefactoringHandler() {
-            @Override
-            public void handle(String commitId,
-                               List<org.jetbrains.research.kotlinrminer.cli.Refactoring> refactorings) {
-                Set<String> results = refactorings
-                    .stream()
-                    .map(org.jetbrains.research.kotlinrminer.cli.Refactoring::toString)
-                    .collect(Collectors.toSet());
+        try (Repository repo = gitService.cloneIfNotExists(folder, data.repository)) {
+            miner.detectAtCommit(repo, data.sha1, new RefactoringHandler() {
+                @Override
+                public void handle(String commitId,
+                                   List<org.jetbrains.research.kotlinrminer.cli.Refactoring> refactorings) {
+                    Set<String> results = refactorings
+                        .stream()
+                        .map(org.jetbrains.research.kotlinrminer.cli.Refactoring::toString)
+                        .collect(Collectors.toSet());
 
-                Set<String> expected = data.refactorings
-                    .stream()
-                    .map(refactoring -> refactoring.description)
-                    .collect(Collectors.toSet());
-                assertEquals(expected, results);
-                repo.close();
-            }
-        });
+                    Set<String> expected = data.refactorings
+                        .stream()
+                        .map(refactoring -> refactoring.description)
+                        .collect(Collectors.toSet());
+                    String url = data.repository.replaceAll("\\.git$", "") + "/commit/" + data.sha1;
+                    System.out.println(url);
+                    assertThat(results).containsExactlyInAnyOrderElementsOf(expected);
+                }
+            });
+        }
     }
 
     public static class CommitData {
