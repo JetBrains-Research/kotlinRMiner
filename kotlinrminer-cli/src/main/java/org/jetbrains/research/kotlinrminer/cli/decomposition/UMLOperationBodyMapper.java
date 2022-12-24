@@ -2776,7 +2776,7 @@ public class UMLOperationBodyMapper implements Comparable<UMLOperationBodyMapper
         int indexOfEquals = s.indexOf("=");
         if (indexOfEquals > -1 && indexOfEquals < s.length() -1 &&
             s.charAt(indexOfEquals + 1) != '=' && s.charAt(indexOfEquals - 1) != '!') {
-            conditional = s.substring(indexOfEquals + 1, s.length() - 2);
+            conditional = s.substring(indexOfEquals + 1, s.length());
         }
         return conditional;
     }
