@@ -20,6 +20,7 @@ java {
 }
 
 jar {
+    dependsOn(":kotlinrminer-common:jar")
     from {
         configurations.compileClasspath.collect {
             if (it.name.equalsIgnoreCase("kotlinrminer-common-${project.version}.jar")) {

@@ -12,6 +12,7 @@ tasks.test {
 }
 
 tasks.jar {
+    dependsOn(":kotlinrminer-common:jar")
     manifest {
         attributes["Implementation-Version"] = archiveVersion
         attributes["Main-Class"] = "org.jetbrains.research.kotlinrminer.cli.KotlinRMiner"
