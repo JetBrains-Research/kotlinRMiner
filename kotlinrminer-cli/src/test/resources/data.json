@@ -350,8 +350,20 @@
         "refactorings": [
             {
                 "description": "Remove Parameter group : String in method public getDependency(project Project, group String, name String) : Dependency? from class io.kotless.plugin.gradle.utils.Dependencies"
+            },
+            {
+                "description": "Add Parameter type : DSLType in method public hasDependency(project Project, type DSLType) from class io.kotless.plugin.gradle.utils.Dependencies"
+            },
+            {
+                "description": "Add Parameter type : DSLType in method public getDependency(project Project, type DSLType) from class io.kotless.plugin.gradle.utils.Dependencies"
+            },
+            {
+                "description": "Rename Method public hasKtorDependency(project Project) renamed to public hasDependency(project Project, type DSLType) in class io.kotless.plugin.gradle.utils.Dependencies"
+            },
+            {
+                "description": "Rename Method public getKtorDependency(project Project) renamed to public getDependency(project Project, type DSLType) in class io.kotless.plugin.gradle.utils.Dependencies"
             }
-        ]
+]
     },
     {
         "repository": "https://github.com/JetBrains/kotless.git",
@@ -434,7 +446,29 @@
             },
             {
                 "description": "Change Parameter Type entity : Webapp.Route53 to entity : Application.Route53 in method public generate(entity Application.Route53, context GenerationContext) : GenerationFactory.GenerationResult in class io.kotless.gen.factory.route53.RecordFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.ApiGateway.Deployment to entity : Application.ApiGateway.Deployment in method public mayRun(entity Application.ApiGateway.Deployment, context GenerationContext) in class io.kotless.gen.factory.apigateway.DeploymentFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.ApiGateway.DynamicRoute to entity : Application.ApiGateway.DynamicRoute in method public mayRun(entity Application.ApiGateway.DynamicRoute, context GenerationContext) in class io.kotless.gen.factory.route.dynamic.DynamicRouteFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.ApiGateway.StaticRoute to entity : Application.ApiGateway.StaticRoute in method public mayRun(entity Application.ApiGateway.StaticRoute, context GenerationContext) in class io.kotless.gen.factory.route.static.StaticRouteFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp to entity : Application in method public mayRun(entity Application, context GenerationContext) in class io.kotless.gen.factory.route.static.StaticRoleFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.Route53 to entity : Application.Route53 in method public mayRun(entity Application.Route53, context GenerationContext) in class io.kotless.gen.factory.route53.CertificateFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.ApiGateway to entity : Application.ApiGateway in method public mayRun(entity Application.ApiGateway, context GenerationContext) in class io.kotless.gen.factory.apigateway.DomainFactory"
+            },
+            {
+                "description": "Change Parameter Type entity : Webapp.Route53 to entity : Application.Route53 in method public mayRun(entity Application.Route53, context GenerationContext) in class io.kotless.gen.factory.route53.RecordFactory"
             }
+
         ]
     },
     {
@@ -575,6 +609,9 @@
             },
             {
                 "description": "Add Parameter module : SerialModule in method private elementSerializer(module SerialModule) : KSerializer<*> from class SerializerLookup.kt"
+            },
+            {
+                "description": "Add Parameter module : SerialModule in method private buildSerializer(value Any, module SerialModule) : KSerializer<*> from class KotlinxSerializer.kt"
             }
         ]
     },
@@ -631,13 +668,10 @@
                 "description": "Move Method private pathAndQuery(location Any) : ResolvedUriInfo from class io.ktor.locations.Locations to private pathAndQuery(location Any) : ResolvedUriInfo from class io.ktor.locations.BackwardCompatibleImpl"
             },
             {
-                "description": "Move Method public href(location Any) : String from class io.ktor.locations.Locations to public href(instance Any) : String from class io.ktor.locations.LocationsImpl"
-            },
-            {
-                "description": "Rename Parameter location : Any to instance : Any in method public href(instance Any) : String in class io.ktor.locations.LocationsImpl"
-            },
-            {
                 "description": "Move Attribute private conversionService : ConversionService from class io.ktor.locations.Locations to protected conversionService : ConversionService from class io.ktor.locations.LocationsImpl"
+            },
+            {
+                "description": "Move Method private getParameterNameFromAnnotation(parameter KParameter) : String from class io.ktor.locations.Locations to private getParameterNameFromAnnotation(parameter KParameter) : String from class io.ktor.locations.BackwardCompatibleImpl"
             }
         ]
     },
@@ -710,6 +744,27 @@
             },
             {
                 "description": "Add Parameter socketOptions : SocketOptions.TCPClientSocketOptions? in method internal attachForReadingImpl(channel ByteChannel, nioChannel ReadableByteChannel, selectable Selectable, selector SelectorManager, pool ObjectPool<ByteBuffer>, socketOptions SocketOptions.TCPClientSocketOptions?) : WriterJob from class CIOReader.kt"
+            },
+            {
+                "description": "Add Parameter socketOptions : SocketOptions.TCPClientSocketOptions? in method internal attachForWritingDirectImpl(channel ByteChannel, nioChannel WritableByteChannel, selectable Selectable, selector SelectorManager, socketOptions SocketOptions.TCPClientSocketOptions?) : ReaderJob from class CIOWriter.kt"
+            },
+            {
+                "description": "Add Parameter socketOptions : SocketOptions.TCPClientSocketOptions? in method internal attachForReadingDirectImpl(channel ByteChannel, nioChannel ReadableByteChannel, selectable Selectable, selector SelectorManager, socketOptions SocketOptions.TCPClientSocketOptions?) : WriterJob from class CIOReader.kt"
+            },
+            {
+                "description": "Add Parameter requestData : HttpRequestData in method internal sendRequest(request ApacheRequestProducer, callContext CoroutineContext, requestData HttpRequestData) : HttpResponseData from class ApacheHttpRequest.kt"
+            },
+            {
+                "description": "Add Parameter requestData : HttpRequestData in method private toChannel(context CoroutineContext, requestData HttpRequestData) : ByteReadChannel from class OkHttpEngine.kt"
+            },
+            {
+                "description": "Change Parameter Type message : CURLMSG to message : CURLMSG? in method private readResponseDataFromEasyHandle(message CURLMSG?, easyHandle EasyHandle, result CURLcode) : CurlResponseData in class io.ktor.client.engine.curl.internal.CurlMultiApiHandler"
+            },
+            {
+                "description": "Add Parameter result : CURLcode in method private readResponseDataFromEasyHandle(message CURLMSG?, easyHandle EasyHandle, result CURLcode) : CurlResponseData from class io.ktor.client.engine.curl.internal.CurlMultiApiHandler"
+            },
+            {
+                "description": "Add Parameter requestData : HttpRequestData in method internal execute(request Request, requestData HttpRequestData) : Response from class OkUtils.kt"
             }
         ]
     },
@@ -755,6 +810,9 @@
             },
             {
                 "description": "Inline Method private checkIfRangeDateHeader(ifRange String, versions List<Version>) : Boolean inlined to private checkIfRangeHeader(content OutgoingContent.ReadChannelContent, call ApplicationCall) : Boolean in class io.ktor.features.PartialContent"
+            },
+            {
+                "description": "Rename Method public testIfModifiedSinceTimeZoned() renamed to public testIfModifiedSinceMultiple() : Unit in class io.ktor.tests.server.features.LastModifiedTest"
             }
         ]
     },

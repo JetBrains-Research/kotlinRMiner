@@ -1,5 +1,6 @@
 package org.jetbrains.research.kotlinrminer.cli.decomposition;
 
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 import org.jetbrains.kotlin.psi.*;
 import org.jetbrains.research.kotlinrminer.common.decomposition.CodeElementType;
 
@@ -11,13 +12,26 @@ import java.util.Set;
 public class OperationBody {
 
     private final CompositeStatementObject compositeStatement;
+    private final boolean isEmpty;
+
+    public OperationBody(KtFile cu, String filePath, KtExpression methodBody, CodeElementType codeElementType) {
+        this.compositeStatement = new CompositeStatementObject(cu, filePath, methodBody, 0, codeElementType);
+        boolean empty = true;
+        for (PsiElement child = methodBody.getFirstChild(); child != null; child = child.getNextSibling()) {
+            if (child instanceof KtExpression) {
+                empty = false;
+                processStatement(cu, filePath, compositeStatement, (KtExpression) child);
+            }
+        }
+        this.isEmpty = empty;
+    }
 
     public OperationBody(KtFile cu, String filePath, KtBlockExpression methodBody) {
-        this.compositeStatement = new CompositeStatementObject(cu, filePath, methodBody, 0, CodeElementType.BLOCK);
-        List<KtExpression> statements = methodBody.getStatements();
-        for (KtExpression statement : statements) {
-            processStatement(cu, filePath, compositeStatement, statement);
-        }
+        this(cu, filePath, methodBody, CodeElementType.BLOCK);
+    }
+
+    public boolean isEmpty() {
+        return isEmpty;
     }
 
     public int statementCount() {

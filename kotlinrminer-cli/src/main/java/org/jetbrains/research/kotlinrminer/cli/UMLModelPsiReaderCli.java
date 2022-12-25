@@ -21,11 +21,11 @@ import org.jetbrains.kotlin.kdoc.psi.api.KDoc;
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocSection;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.psi.KtAnnotation;
-import org.jetbrains.kotlin.psi.KtBlockExpression;
 import org.jetbrains.kotlin.psi.KtClass;
 import org.jetbrains.kotlin.psi.KtClassBody;
 import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtElement;
+import org.jetbrains.kotlin.psi.KtExpression;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtImportDirective;
 import org.jetbrains.kotlin.psi.KtImportList;
@@ -303,11 +303,13 @@ public class UMLModelPsiReaderCli {
             umlOperation.addTypeParameter(umlTypeParameter);
         }
 
-        KtBlockExpression methodBody = methodDeclaration.getBodyBlockExpression();
+        KtExpression methodBody = methodDeclaration.getBodyExpression();
         if (methodBody != null) {
-            OperationBody body = new OperationBody(ktFile.getContainingKtFile(), filePath, methodBody);
+            CodeElementType elementType = methodDeclaration.hasBlockBody() ?
+                CodeElementType.BLOCK : CodeElementType.EXPRESSION_STATEMENT;
+            OperationBody body = new OperationBody(ktFile.getContainingKtFile(), filePath, methodBody, elementType);
             umlOperation.setBody(body);
-            if (methodBody.getStatements().size() == 0) {
+            if (body.isEmpty()) {
                 umlOperation.setEmptyBody(true);
             }
         } else {
@@ -383,21 +385,15 @@ public class UMLModelPsiReaderCli {
 
     private String extractVisibilityModifier(KtNamedDeclaration ktNamedDeclaration) {
         KtModifierList modifiers = ktNamedDeclaration.getModifierList();
-        String visibility;
+        String visibility = "public";
         if (modifiers != null) {
-            if (modifiers.hasModifier(PUBLIC_KEYWORD)) {
-                visibility = "public";
-            } else if (modifiers.hasModifier(PROTECTED_KEYWORD)) {
-                visibility = "protected";
-            } else if (modifiers.hasModifier(PRIVATE_KEYWORD)) {
+            if (modifiers.hasModifier(PRIVATE_KEYWORD)) {
                 visibility = "private";
             } else if (modifiers.hasModifier(INTERNAL_KEYWORD)) {
                 visibility = "internal";
-            } else {
-                visibility = "public";
+            } else if (modifiers.hasModifier(PROTECTED_KEYWORD)) {
+                visibility = "protected";
             }
-        } else {
-            visibility = "public";
         }
         return visibility;
     }

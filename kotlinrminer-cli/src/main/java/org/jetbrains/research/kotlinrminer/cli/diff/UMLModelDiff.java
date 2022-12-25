@@ -463,9 +463,43 @@ public class UMLModelDiff {
         for (UMLFileDiff fileDiff : umlFileDiff) {
             refactorings.addAll(fileDiff.getRefactorings());
         }
-        Map<RenamePattern, Integer> typeRenamePatternMap = typeRenamePatternMap(refactorings);
-        for (RenamePattern pattern : typeRenamePatternMap.keySet()) {
-            if (typeRenamePatternMap.get(pattern) > 1) {
+        processRenameRefactorings(refactorings);
+        processRenameMap(renameMap); // renameMap is empty – unreachable method
+        checkForOperationMovesBetweenCommonClasses();
+        checkForOperationMovesIncludingAddedClasses();
+        checkForOperationMovesIncludingRemovedClasses();
+        refactorings.addAll(identifyExtractSuperclassRefactorings());
+        refactorings.addAll(identifyExtractClassRefactorings(commonClassDiffList));
+        refactorings.addAll(identifyExtractClassRefactorings(classMoveDiffList));
+        refactorings.addAll(identifyExtractClassRefactorings(innerClassMoveDiffList));
+        refactorings.addAll(identifyExtractClassRefactorings(classRenameDiffList));
+        checkForExtractedAndMovedOperations(getOperationBodyMappersInCommonClasses(),
+            getAddedAndExtractedOperationsInCommonClasses());
+        checkForExtractedAndMovedOperations(getOperationBodyMappersInMovedAndRenamedClasses(),
+            getAddedOperationsInMovedAndRenamedClasses());
+        checkForMovedAndInlinedOperations(getOperationBodyMappersInCommonClasses(),
+            getRemovedAndInlinedOperationsInCommonClasses());
+
+        refactorings.addAll(this.refactorings);
+        for (UMLClassDiff classDiff : commonClassDiffList) {
+            inferMethodSignatureRelatedRefactorings(classDiff, refactorings);
+        }
+        for (UMLClassMoveDiff classDiff : classMoveDiffList) {
+            inferMethodSignatureRelatedRefactorings(classDiff, refactorings);
+        }
+        for (UMLClassMoveDiff classDiff : innerClassMoveDiffList) {
+            inferMethodSignatureRelatedRefactorings(classDiff, refactorings);
+        }
+        for (UMLClassRenameDiff classDiff : classRenameDiffList) {
+            inferMethodSignatureRelatedRefactorings(classDiff, refactorings);
+        }
+        return new ArrayList<>(refactorings);
+    }
+
+    private void processRenameRefactorings(Set<Refactoring> refactorings) throws RefactoringMinerTimedOutException {
+        for (Map.Entry<RenamePattern, Integer> entry : typeRenamePatternMap(refactorings).entrySet()) {
+            RenamePattern pattern = entry.getKey();
+            if (entry.getValue() > 1) {
                 UMLClass removedClass = looksLikeRemovedClass(UMLType.extractTypeObject(pattern.getBefore()));
                 UMLClass addedClass = looksLikeAddedClass(UMLType.extractTypeObject(pattern.getAfter()));
                 if (removedClass != null && addedClass != null) {
@@ -489,9 +523,12 @@ public class UMLModelDiff {
                 }
             }
         }
-        for (Replacement pattern : renameMap.keySet()) {
-            Set<CandidateAttributeRefactoring> set = renameMap.get(pattern);
-            for (CandidateAttributeRefactoring candidate : set) {
+    }
+
+    private void processRenameMap(Map<Replacement, Set<CandidateAttributeRefactoring>> renameMap) {
+        for (Map.Entry<Replacement, Set<CandidateAttributeRefactoring>> entry : renameMap.entrySet()) {
+            Replacement pattern = entry.getKey();
+            for (CandidateAttributeRefactoring candidate : entry.getValue()) {
                 if (candidate.getOriginalVariableDeclaration() != null) {
                     List<UMLClassBaseDiff> diffs1 = getUMLClassDiffWithExistingAttributeAfter(pattern);
                     List<UMLClassBaseDiff> diffs2 = getUMLClassDiffWithNewAttributeAfter(pattern);
@@ -563,35 +600,6 @@ public class UMLModelDiff {
                 }
             }
         }
-        checkForOperationMovesBetweenCommonClasses();
-        checkForOperationMovesIncludingAddedClasses();
-        checkForOperationMovesIncludingRemovedClasses();
-        refactorings.addAll(identifyExtractSuperclassRefactorings());
-        refactorings.addAll(identifyExtractClassRefactorings(commonClassDiffList));
-        refactorings.addAll(identifyExtractClassRefactorings(classMoveDiffList));
-        refactorings.addAll(identifyExtractClassRefactorings(innerClassMoveDiffList));
-        refactorings.addAll(identifyExtractClassRefactorings(classRenameDiffList));
-        checkForExtractedAndMovedOperations(getOperationBodyMappersInCommonClasses(),
-            getAddedAndExtractedOperationsInCommonClasses());
-        checkForExtractedAndMovedOperations(getOperationBodyMappersInMovedAndRenamedClasses(),
-            getAddedOperationsInMovedAndRenamedClasses());
-        checkForMovedAndInlinedOperations(getOperationBodyMappersInCommonClasses(),
-            getRemovedAndInlinedOperationsInCommonClasses());
-
-        refactorings.addAll(this.refactorings);
-        for (UMLClassDiff classDiff : commonClassDiffList) {
-            inferMethodSignatureRelatedRefactorings(classDiff, refactorings);
-        }
-        for (UMLClassMoveDiff classDiff : classMoveDiffList) {
-            inferMethodSignatureRelatedRefactorings(classDiff, refactorings);
-        }
-        for (UMLClassMoveDiff classDiff : innerClassMoveDiffList) {
-            inferMethodSignatureRelatedRefactorings(classDiff, refactorings);
-        }
-        for (UMLClassRenameDiff classDiff : classRenameDiffList) {
-            inferMethodSignatureRelatedRefactorings(classDiff, refactorings);
-        }
-        return new ArrayList<>(refactorings);
     }
 
     private List<UMLOperation> getAddedOperationsInCommonClasses() {
