@@ -1,5 +1,6 @@
 # kotlinRMiner
 [![JB Research](https://jb.gg/badges/research-flat-square.svg)](https://research.jetbrains.org/)
+[![Build](https://github.com/JetBrains-Research/kotlinRMiner/actions/workflows/gradle-build.yml/badge.svg?branch=master)](https://github.com/JetBrains-Research/kotlinRMiner/actions/workflows/gradle-build.yml)
 
 A library that detects performed refactorings in changes in Kotlin code.
 
