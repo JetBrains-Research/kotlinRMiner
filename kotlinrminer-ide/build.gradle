@@ -31,10 +31,10 @@ jar {
 
 dependencies {
     compileOnly(project(":kotlinrminer-common"))
-    compile 'org.apache.commons:commons-text:1.6'
-    compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9.2'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.2'
+    api 'org.apache.commons:commons-text:1.6'
+    api group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+    api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9.2'
+    api group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.2'
     compileOnly 'org.jetbrains.kotlin:kotlin-compiler-for-ide:1.5.10-release-955'
     compileOnly 'org.jetbrains.kotlin:kotlin-compiler-cli-for-ide:1.5.10-release-955'
 }
