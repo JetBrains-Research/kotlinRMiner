@@ -6,6 +6,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:2.14.2")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.")
     implementation("commons-io:commons-io:2.11.0")
+    implementation("org.jetbrains:annotations:24.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
     testImplementation("org.mockito:mockito-core:4.2.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")

@@ -1,10 +1,9 @@
 package org.jetbrains.research.kotlinrminer.cli.decomposition;
 
 import org.jetbrains.kotlin.com.intellij.openapi.editor.Document;
+import org.jetbrains.kotlin.com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.kotlin.com.intellij.psi.FileViewProvider;
 import org.jetbrains.kotlin.psi.KtFile;
-
-import static org.jetbrains.research.kotlinrminer.cli.util.PsiUtils.countColumn;
 
 public class VariableScope {
     private final String filePath;
@@ -23,15 +22,16 @@ public class VariableScope {
         FileViewProvider fileViewProvider = ktFile.getViewProvider();
         Document document = fileViewProvider.getDocument();
 
+        CharSequence documentAsCharSequence = document != null ? document.getCharsSequence() : "";
         this.startLine = document != null ? document.getLineNumber(startOffset) : 0;
-        this.endLine = document.getLineNumber(endOffset);
+        this.endLine = document != null ? document.getLineNumber(endOffset) : 0;
         //columns are 0-based
-        this.startColumn = countColumn(startLine, document);
+        this.startColumn = StringUtil.offsetToLineColumn(documentAsCharSequence, startOffset).column;
         //convert to 1-based
         if (this.startColumn > 0) {
             this.startColumn += 1;
         }
-        this.endColumn = countColumn(endLine, document);
+        this.endColumn = StringUtil.offsetToLineColumn(documentAsCharSequence, endOffset).column;
         //convert to 1-based
         if (this.endColumn > 0) {
             this.endColumn += 1;

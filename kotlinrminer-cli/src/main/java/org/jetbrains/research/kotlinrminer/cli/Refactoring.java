@@ -1,7 +1,6 @@
 package org.jetbrains.research.kotlinrminer.cli;
 
 import com.fasterxml.jackson.core.io.JsonStringEncoder;
-import com.fasterxml.jackson.core.util.BufferRecyclers;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.research.kotlinrminer.common.RefactoringType;
 
@@ -30,7 +29,7 @@ public interface Refactoring extends Serializable, CodeRangeProvider {
 
     default String toJSON() {
         StringBuilder sb = new StringBuilder();
-        JsonStringEncoder encoder = BufferRecyclers.getJsonStringEncoder();
+        JsonStringEncoder encoder = JsonStringEncoder.getInstance();
         sb.append("{").append("\n");
         sb.append("\t").append("\"").append("type").append("\"").append(": ").append("\"").append(getName()).append(
                 "\"").append(",").append("\n");
