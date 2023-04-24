@@ -13,7 +13,8 @@ public class JsonUtil {
     public static void commitJSON(StringBuilder sb,
                                   String cloneURL,
                                   String currentCommitId,
-                                  List<Refactoring> refactoringsAtRevision) {
+                                  List<Refactoring> refactoringsAtRevision,
+                                  boolean ktFilesChanged) {
         sb.append("{").append("\n");
         sb.append("\t").append("\"").append("repository").append("\"").append(": ").append("\"").append(
             cloneURL).append("\"").append(",").append("\n");
@@ -22,6 +23,8 @@ public class JsonUtil {
         String url = GitHistoryKotlinRMiner.extractCommitURL(cloneURL, currentCommitId);
         sb.append("\t").append("\"").append("url").append("\"").append(": ").append("\"").append(url).append(
             "\"").append(",").append("\n");
+        sb.append("\t").append("\"").append("ktFilesChanged").append("\"").append(": ").append("\"").append(
+            ktFilesChanged).append("\"").append(",").append("\n");
         sb.append("\t").append("\"").append("refactorings").append("\"").append(": ");
         sb.append("[");
         int counter = 0;

@@ -41,7 +41,8 @@ public class GitHistoryKotlinRMiner {
         try (RevWalk walk = new RevWalk(repository)) {
             // If no kt files changed, there is no refactoring. Also, if there are
             // only ADD's or only REMOVE's there is no refactoring
-            if (!filePathsBefore.isEmpty() && !filePathsCurrent.isEmpty() && currentCommit.getParentCount() > 0) {
+            boolean ktFilesChanged = !filePathsBefore.isEmpty() && !filePathsCurrent.isEmpty();
+            if (ktFilesChanged && currentCommit.getParentCount() > 0) {
                 RevCommit parentCommit = currentCommit.getParent(0);
                 populateFileContents(repository, parentCommit, filePathsBefore, fileContentsBefore,
                     repositoryDirectoriesBefore);
@@ -56,7 +57,7 @@ public class GitHistoryKotlinRMiner {
             } else {
                 refactoringsAtRevision = Collections.emptyList();
             }
-            handler.handle(commitId, refactoringsAtRevision);
+            handler.handle(commitId, refactoringsAtRevision, ktFilesChanged);
 
             walk.dispose();
         }

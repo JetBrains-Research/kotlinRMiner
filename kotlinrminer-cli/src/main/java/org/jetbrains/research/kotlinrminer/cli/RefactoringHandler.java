@@ -24,8 +24,9 @@ public abstract class RefactoringHandler {
      *
      * @param commitId     The sha of the analyzed commit.
      * @param refactorings List of refactorings detected in the commit.
+     * @param ktFilesChanged True if Kotlin files were changed in the commit, false otherwise.
      */
-    public void handle(String commitId, List<Refactoring> refactorings) {
+    public void handle(String commitId, List<Refactoring> refactorings, boolean ktFilesChanged) {
     }
 
     /**

@@ -2,13 +2,12 @@ package org.jetbrains.research.kotlinrminer.cli.decomposition;
 
 import org.jetbrains.kotlin.com.intellij.openapi.editor.Document;
 import org.jetbrains.kotlin.com.intellij.openapi.util.TextRange;
+import org.jetbrains.kotlin.com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.kotlin.com.intellij.psi.FileViewProvider;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.research.kotlinrminer.cli.diff.CodeRange;
 import org.jetbrains.research.kotlinrminer.common.decomposition.CodeElementType;
-
-import static org.jetbrains.research.kotlinrminer.cli.util.PsiUtils.countColumn;
 
 /**
  * Provides an information about the element's location in the file.
@@ -39,8 +38,8 @@ public class LocationInfo {
         if (document != null) {
             this.startLine = document.getLineNumber(startOffset) + 1;
             this.endLine = document.getLineNumber(endOffset) + 1;
-            this.startColumn = countColumn(startLine - 1, document) + 1;
-            this.endColumn = countColumn(endLine - 1, document) + 1;
+            this.startColumn = StringUtil.offsetToLineColumn(document.getCharsSequence(), startOffset).column + 1;
+            this.endColumn = StringUtil.offsetToLineColumn(document.getCharsSequence(), endOffset).column + 1;
         } else {
             this.startLine = 0;
             this.endLine = 0;

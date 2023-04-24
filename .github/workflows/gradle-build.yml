@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        java_version: [ '11' ]
+        java_version: [ '17' ]
 
     name: Run tests with Java ${{matrix.java_version}}
     runs-on: ubuntu-latest

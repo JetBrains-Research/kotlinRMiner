@@ -1,5 +1,7 @@
 package org.jetbrains.research.kotlinrminer.cli.decomposition;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 import org.jetbrains.kotlin.com.intellij.psi.stubs.IStubElementType;
 import org.jetbrains.kotlin.com.intellij.psi.tree.IElementType;
 import org.jetbrains.kotlin.lexer.KtSingleValueToken;
@@ -40,7 +42,7 @@ public class Visitor extends KtVisitor {
     }
 
     @Override
-    public Object visitExpression(KtExpression expression, Object data) {
+    public Object visitExpression(@NotNull KtExpression expression, Object data) {
         if (expression instanceof KtBinaryExpression) {
             this.processBinaryExpression((KtBinaryExpression) expression, data);
         } else if (expression instanceof KtReturnExpression) {
@@ -60,8 +62,10 @@ public class Visitor extends KtVisitor {
         } else if (expression instanceof KtNameReferenceExpression) {
             this.processReferenceExpression((KtNameReferenceExpression) expression);
         } else if (expression instanceof KtParenthesizedExpression) {
-            this.visitExpression(((KtParenthesizedExpression) expression).getExpression(),
-                data);
+            KtExpression ktExpression = ((KtParenthesizedExpression) expression).getExpression();
+            if (ktExpression != null) {
+                this.visitExpression(ktExpression, data);
+            }
         } else if (expression instanceof KtStringTemplateExpression) {
             stringLiterals.add(expression.getText());
         } else if (expression instanceof KtArrayAccessExpression) {
@@ -75,7 +79,10 @@ public class Visitor extends KtVisitor {
         } else if (expression instanceof KtVariableDeclaration) {
             VariableDeclaration variableDeclaration = new VariableDeclaration(ktFile, filePath, expression);
             variableDeclarations.add(variableDeclaration);
-            visitElement(((KtProperty) expression).getIdentifyingElement());
+            PsiElement identifyingElement = ((KtVariableDeclaration) expression).getIdentifyingElement();
+            if (identifyingElement != null) {
+                visitElement(identifyingElement);
+            }
         } else if (expression instanceof KtSafeQualifiedExpression) {
             processSafeQualifiedExpression((KtSafeQualifiedExpression) expression, data);
         } else if (expression instanceof KtLambdaExpression) {
@@ -145,14 +152,11 @@ public class Visitor extends KtVisitor {
     private void visitArgument(KtValueArgument argument) {
         processElementType(argument.getElementType(), argument);
         KtExpression argumentExpression = argument.getArgumentExpression();
-        if (argumentExpression instanceof KtConstantExpression) {
-            KtConstantExpression constantExpression = (KtConstantExpression) argumentExpression;
+        if (argumentExpression instanceof KtConstantExpression constantExpression) {
             processElementType(constantExpression.getElementType(), argument);
-        } else if (argumentExpression instanceof KtStringTemplateExpression) {
-            KtStringTemplateExpression stringTemplateExpression = (KtStringTemplateExpression) argumentExpression;
+        } else if (argumentExpression instanceof KtStringTemplateExpression stringTemplateExpression) {
             processElementType(stringTemplateExpression.getElementType(), argument);
-        } else if (argument instanceof KtLambdaArgument) {
-            KtLambdaArgument lambdaArgument = (KtLambdaArgument) argument;
+        } else if (argument instanceof KtLambdaArgument lambdaArgument) {
             if (lambdaArgument.getLambdaExpression() != null)
                 this.visitExpression(lambdaArgument.getLambdaExpression(), null);
         } else if (argument.getArgumentExpression() instanceof KtObjectLiteralExpression) {
@@ -266,15 +270,19 @@ public class Visitor extends KtVisitor {
 
     private static String processMethodInvocation(KtCallExpression node) {
         StringBuilder sb = new StringBuilder();
+        KtExpression calleeExpression = node.getCalleeExpression();
         if (node.getPrevSibling() != null && node.getPrevSibling().getParent() != null) {
             if (node.getPrevSibling().getParent() instanceof KtDotQualifiedExpression) {
                 sb.append(node.getPrevSibling().getParent().getText());
             } else {
-                sb.append(node.getCalleeExpression().getContext().getText());
+                if (calleeExpression != null && calleeExpression.getContext() != null) {
+                    sb.append(calleeExpression.getContext().getText());
+                }
             }
         } else {
-            sb.append(node.getCalleeExpression().getContext().getText());
-        }
+            if (calleeExpression != null && calleeExpression.getContext() != null) {
+                sb.append(calleeExpression.getContext().getText());
+            }        }
         return sb.toString();
     }
 
