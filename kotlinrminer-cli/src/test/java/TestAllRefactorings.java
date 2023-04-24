@@ -48,7 +48,8 @@ public class TestAllRefactorings {
             miner.detectAtCommit(repo, data.sha1, new RefactoringHandler() {
                 @Override
                 public void handle(String commitId,
-                                   List<org.jetbrains.research.kotlinrminer.cli.Refactoring> refactorings) {
+                                   List<org.jetbrains.research.kotlinrminer.cli.Refactoring> refactorings,
+                                   boolean ktFilesChanged) {
                     Set<String> results = refactorings
                         .stream()
                         .map(org.jetbrains.research.kotlinrminer.cli.Refactoring::toString)
