@@ -8,11 +8,13 @@ import org.jetbrains.research.kotlinrminer.cli.diff.CodeRange;
 public class LambdaExpressionObject implements LocationInfoProvider {
     private final LocationInfo locationInfo;
     private final OperationBody body;
-    private AbstractExpression expression;
+    private final AbstractExpression expression;
 
     public LambdaExpressionObject(KtFile cu, String filePath, KtLambdaExpression lambdaExpression) {
         this.locationInfo = new LocationInfo(cu, filePath, lambdaExpression, CodeElementType.LAMBDA_EXPRESSION);
         this.body = new OperationBody(cu, filePath, lambdaExpression.getBodyExpression());
+        // TODO assign expression field
+        this.expression = null;
     }
 
     public OperationBody getBody() {
