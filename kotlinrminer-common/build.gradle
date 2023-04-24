@@ -6,7 +6,7 @@ plugins {
 
 group = "org.jetbrains.research.kotlinrminer"
 mainClassName = 'org.jetbrains.research.kotlinrminer.KotlinRMiner'
-version = "2.0"
+version = "2.1.1"
 
 test {
     useJUnitPlatform()

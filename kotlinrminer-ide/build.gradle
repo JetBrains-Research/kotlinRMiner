@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "org.jetbrains.research.kotlinrminer"
-version = "2.0"
+version = "2.1.1"
 
 intellij {
     version = '2023.1'
@@ -20,11 +20,10 @@ java {
 }
 
 jar {
-    dependsOn(":kotlinrminer-common:jar")
     from {
         configurations.compileClasspath.collect {
-            if (it.name.equalsIgnoreCase("kotlinrminer-common-${project.version}.jar")) {
-                zipTree(it)
+            if (it.toString().contains("kotlinrminer-common")) {
+                if (it.name.endsWith(".jar")) zipTree(it) else fileTree(it)
             }
         }
     }
