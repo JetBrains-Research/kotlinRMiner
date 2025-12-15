@@ -1,3 +1,7 @@
+# Status: Archived 
+
+No longer maintained
+
 # kotlinRMiner
 [![JB Research](https://jb.gg/badges/research-flat-square.svg)](https://research.jetbrains.org/)
 [![Build](https://github.com/JetBrains-Research/kotlinRMiner/actions/workflows/gradle-build.yml/badge.svg?branch=master)](https://github.com/JetBrains-Research/kotlinRMiner/actions/workflows/gradle-build.yml)
